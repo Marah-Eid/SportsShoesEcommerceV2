@@ -1,0 +1,255 @@
+﻿@model SportsShoesEcommerce.Models.ViewModels.HomeViewModel
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<style>
+    /* Hero Banner Styling */
+    .hero-banner {
+        background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/user/images/card-large-item1.jpg');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        min-height: 70vh;
+        display: flex;
+        align-items: center;
+    }
+
+    /* Premium Shadows & Interactions */
+    .premium-shadow {
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        transition: all 0.4s ease;
+    }
+
+        .premium-shadow:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+    /* Dynamic Category Promo Cards */
+    .promo-card {
+        overflow: hidden;
+        height: 260px;
+        border-radius: 20px;
+        transition: box-shadow 0.4s ease;
+    }
+
+    .promo-img {
+        transition: transform 0.8s ease, opacity 0.6s ease;
+        object-fit: cover;
+        width: 100%;
+        height: 100%;
+        opacity: 0.7;
+    }
+
+    .shop-btn {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .promo-card:hover .promo-img {
+        transform: scale(1.1);
+        opacity: 0.4;
+    }
+
+    .promo-card:hover .shop-btn {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .shadow-text {
+        text-shadow: 2px 2px 10px rgba(0,0,0,0.8);
+        letter-spacing: 2px;
+    }
+
+    /* Elegant Section Titles */
+    .section-title {
+        position: relative;
+        padding-bottom: 15px;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+    }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 60px;
+            height: 4px;
+            background-color: var(--brand-teal, #00C2CB);
+        }
+
+        .section-title.text-center::after {
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+    /* Elegant Horizontal Scroll for Brands */
+    .fancy-slider {
+        display: flex;
+        overflow-x: auto;
+        scroll-behavior: smooth;
+        padding: 2rem 0;
+        gap: 2rem;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+
+        .fancy-slider::-webkit-scrollbar {
+            display: none;
+        }
+
+    .brand-card {
+        min-width: 180px;
+        border-radius: 15px;
+        transition: transform 0.3s;
+    }
+
+        .brand-card:hover {
+            transform: scale(1.05);
+        }
+</style>
+
+<section class="hero-banner text-center text-white mb-5 shadow">
+    <div class="container pb-5">
+        <h5 class="text-uppercase fw-bold mb-3" style="color: var(--brand-teal, #00C2CB); letter-spacing: 3px;">NextStep Exclusives</h5>
+        <h1 class="display-2 fw-bolder mb-4 text-white shadow-text">Step Into Greatness</h1>
+        <p class="lead mb-5 opacity-75 mx-auto" style="max-width: 600px;">Experience the perfect blend of comfort and performance with our latest athletic footwear collection.</p>
+        <a asp-controller="Products" asp-action="Index" class="btn btn-light btn-lg px-5 py-3 rounded-pill fw-bold shadow-lg text-hover-brand transition-hover">
+            Explore All Shoes
+        </a>
+    </div>
+</section>
+
+@if (Model.FeaturedCategories != null && Model.FeaturedCategories.Any())
+{
+    string[] premiumGradients = {
+        "linear-gradient(135deg, #111 0%, #333 100%)",
+        "linear-gradient(135deg, #00C2CB 0%, #005f63 100%)",
+        "linear-gradient(135deg, #444 0%, #111 100%)"
+    };
+
+    <div class="container mb-5 pb-4 mt-neg-5 position-relative" style="margin-top: -80px; z-index: 10;">
+        <div class="row g-4 justify-content-center">
+            @for (int i = 0; i < Model.FeaturedCategories.Count; i++)
+            {
+                var cat = Model.FeaturedCategories[i];
+                bool hasImage = !string.IsNullOrEmpty(cat.ImagePath);
+                string bgStyle = hasImage
+                ? $"background-image: url('{cat.ImagePath}'); background-size: cover; background-position: center;"
+                : $"background: {premiumGradients[i % premiumGradients.Length]};";
+
+                <div class="col-lg-4 col-md-6">
+                    <a asp-controller="Search" asp-action="Index" asp-route-q="@cat.Name" class="text-decoration-none">
+                        <div class="card text-white border-0 premium-shadow promo-card" style="@bgStyle">
+
+                            <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.3);"></div>
+
+                            <div class="card-img-overlay d-flex flex-column justify-content-center align-items-center text-center">
+                                <h2 class="card-title fw-bolder text-uppercase mb-3 shadow-text">@cat.Name</h2>
+                                <span class="btn btn-light rounded-pill px-4 py-2 fw-bold text-dark shop-btn shadow-sm">Shop Collection</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+}
+
+@if (Model.FeaturedProducts.Any())
+{
+    <div class="container py-5 mb-5 border-top">
+        <div class="d-flex justify-content-between align-items-end mb-5">
+            <h3 class="section-title mb-0">Trending Now</h3>
+            <a asp-controller="Products" asp-action="Index" class="fw-bold text-decoration-none text-muted text-hover-brand">View Entire Catalog <i class="fa fa-arrow-right ms-2"></i></a>
+        </div>
+
+        <div class="row">
+            @foreach (var product in Model.FeaturedProducts)
+            {
+                <partial name="_ProductCard" model="product" />
+            }
+        </div>
+    </div>
+}
+
+@if (Model.Brands.Any())
+{
+    <div class="bg-light py-5 mb-5 border-top border-bottom">
+        <div class="container">
+            <h3 class="section-title mb-2 text-center mx-auto" style="width: fit-content;">Our Trusted Brands</h3>
+            <div class="fancy-slider py-4">
+                @foreach (var brand in Model.Brands)
+                {
+                    <a asp-controller="Search" asp-action="Index" asp-route-q="@brand.Name" class="text-decoration-none">
+                        <div class="card border-0 premium-shadow brand-card d-flex align-items-center justify-content-center p-4 bg-white h-100">
+                            <img src="@(string.IsNullOrEmpty(brand.Logo) ? "/user/images/main-logo.png" : brand.Logo)"
+                                 alt="@brand.Name"
+                                 style="max-height: 70px; max-width: 120px; object-fit: contain; filter: grayscale(100%); transition: filter 0.4s;"
+                                 onmouseover="this.style.filter='grayscale(0%)'"
+                                 onmouseout="this.style.filter='grayscale(100%)'">
+                        </div>
+                    </a>
+                }
+            </div>
+        </div>
+    </div>
+}
+
+<div class="bg-dark text-white py-5">
+    <div class="container py-5">
+        <h3 class="section-title mb-5 text-white border-white">What Athletes Say</h3>
+        <div class="row">
+
+            @if (Model.Testimonials.Any())
+            {
+                @foreach (var t in Model.Testimonials)
+                {
+                    <div class="col-md-6 col-lg-3 mb-4">
+                        <div class="card bg-transparent border-light h-100 transition-hover" style="border-radius: 15px;">
+                            <div class="card-body">
+                                <div class="text-warning mb-3 fs-5">
+                                    @for (int i = 1; i <= 5; i++)
+                                    {
+                                        <i class="fa @(i <= t.Rating ? "fa-star" : "fa-star-o")"></i>
+                                    }
+                                </div>
+                                <p class="card-text fst-italic lead" style="font-size: 1rem;">"@t.Content"</p>
+                            </div>
+                            <div class="card-footer bg-transparent border-0 pt-0">
+                                <div class="d-flex align-items-center mt-2">
+                                    <img src="@(t.User?.ProfileImage ?? "/admin/img/undraw_profile.svg")" class="rounded-circle me-3 border border-2 border-white bg-white" style="width: 50px; height: 50px; object-fit: cover;" alt="User">
+                                    <div>
+                                        <h6 class="mb-0 fw-bold">@(t.User?.FullName ?? "Verified Buyer")</h6>
+                                        <small class="text-muted opacity-75">@t.CreatedAt.ToString("MMM dd, yyyy")</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="col-md-6 col-lg-4 mb-4 mx-auto">
+                    <div class="card bg-transparent border-light h-100 transition-hover text-center p-4" style="border-radius: 15px;">
+                        <div class="card-body">
+                            <div class="text-warning mb-3 fs-5">
+                                <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>
+                            </div>
+                            <p class="card-text fst-italic lead" style="font-size: 1.1rem;">"The quality of the shoes here is unmatched. The customer service was incredible and delivery was super fast!"</p>
+                        </div>
+                        <div class="card-footer bg-transparent border-0 pt-0">
+                            <img src="/admin/img/undraw_profile.svg" class="rounded-circle mb-2 border border-2 border-white bg-white" style="width: 60px; height: 60px; object-fit: cover;" alt="User">
+                            <h6 class="mb-0 fw-bold mt-2">Demo User</h6>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

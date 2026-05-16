@@ -1,0 +1,328 @@
+﻿@model SportsShoesEcommerce.Models.ViewModels.ProductDetailsViewModel
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+
+@{
+    ViewData["Title"] = Model.Product.Name;
+
+    var mainImage = Model.Product.ProductImages?.FirstOrDefault(x => x.IsMain)?.ImagePath
+                    ?? Model.Product.ProductImages?.FirstOrDefault()?.ImagePath
+                    ?? "/images/single-product-item1.jpg";
+
+    var activeDiscount = Model.Product.Discounts?.FirstOrDefault(d => d.IsActive && d.StartDate <= DateTime.Now && d.EndDate >= DateTime.Now);
+    decimal salePrice = Model.Product.Price;
+    if (activeDiscount != null)
+    {
+        salePrice = Model.Product.Price - (Model.Product.Price * activeDiscount.DiscountPercentage / 100m);
+    }
+}
+
+<style>
+    /* 1. ULTRA-PREMIUM GALLERY */
+    .premium-gallery {
+        background: #fcfcfc;
+        border-radius: 24px;
+        padding: 2rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .main-img-wrapper {
+        height: 450px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 16px;
+        overflow: hidden;
+    }
+
+        .main-img-wrapper img {
+            max-height: 100%;
+            object-fit: contain;
+            transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        /* The Zoom Effect */
+        .main-img-wrapper:hover img {
+            transform: scale(1.15);
+        }
+
+    /* 2. CUSTOM THUMBNAILS */
+    .thumbnail-card {
+        border-radius: 14px;
+        cursor: pointer;
+        opacity: 0.5;
+        background: #fff;
+        border: 2px solid transparent;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+    }
+
+        .thumbnail-card:hover, .thumbnail-card.active {
+            opacity: 1;
+            border-color: #111;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.08);
+        }
+
+    /* 3. STICKY SIDEBAR */
+    .sticky-details {
+        position: sticky;
+        top: 30px; /* Keeps it on screen as you scroll */
+    }
+
+    /* 4. FLOATING REVIEW TILES */
+    .review-tile {
+        background: #fff;
+        border-radius: 20px;
+        border: 1px solid #f0f0f0;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+        transition: transform 0.3s ease;
+    }
+
+        .review-tile:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.06);
+        }
+
+    /* 5. MINIMALIST STAR SYSTEM */
+    .star-rating-form {
+        display: flex;
+        flex-direction: row-reverse;
+        justify-content: flex-end;
+        gap: 8px;
+    }
+
+        .star-rating-form input {
+            display: none;
+        }
+
+        .star-rating-form label {
+            font-size: 2.2rem;
+            color: #e2e8f0;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+            .star-rating-form input:checked ~ label,
+            .star-rating-form label:hover,
+            .star-rating-form label:hover ~ label {
+                color: #fbbf24;
+                transform: scale(1.1);
+            }
+</style>
+
+<div class="container py-5 mt-3 mb-5">
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb bg-transparent p-0 mb-4 pb-2 border-bottom">
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index" class="text-muted text-decoration-none text-hover-brand"><i class="fa fa-home me-1"></i>Home</a></li>
+            <li class="breadcrumb-item"><a asp-controller="Search" asp-action="Index" asp-route-q="@Model.Product.Category?.Name" class="text-muted text-decoration-none text-hover-brand">@(Model.Product.Category?.Name ?? "Shoes")</a></li>
+            <li class="breadcrumb-item active fw-bold text-dark" aria-current="page">@Model.Product.Name</li>
+        </ol>
+    </nav>
+
+    <div class="row g-5">
+
+        <div class="col-lg-7">
+            <div class="premium-gallery mb-4 border shadow-sm">
+                @if (activeDiscount != null)
+                {
+                    <div class="position-absolute top-0 start-0 m-4" style="z-index: 10;">
+                        <span class="badge bg-danger fs-6 rounded-pill px-3 py-2 shadow-sm" style="letter-spacing: 1px;">SAVE @activeDiscount.DiscountPercentage.ToString("0")%</span>
+                    </div>
+                }
+
+                <div class="main-img-wrapper">
+                    <img id="mainProductImage" src="@mainImage" alt="@Model.Product.Name" class="w-100">
+                </div>
+            </div>
+
+            @if (Model.Product.ProductImages != null && Model.Product.ProductImages.Count > 1)
+            {
+                <div class="d-flex gap-3 overflow-auto pb-3 px-1">
+                    @foreach (var img in Model.Product.ProductImages)
+                    {
+                        <div class="thumbnail-card p-2" onclick="changeMainImage('@img.ImagePath', this)" style="width: 90px; height: 90px; flex-shrink: 0;">
+                            <img src="@img.ImagePath" class="w-100 h-100" style="object-fit: contain;">
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+
+        <div class="col-lg-5">
+            <div class="sticky-details">
+                <span class="badge bg-dark text-white rounded-pill px-3 py-2 mb-3 shadow-sm" style="letter-spacing: 1.5px;">@(Model.Product.Brand?.Name ?? "NextStep")</span>
+
+                <h1 class="display-5 fw-bolder mb-3 text-dark" style="line-height: 1.1;">@Model.Product.Name</h1>
+
+                <div class="d-flex align-items-center mb-4 pb-3 border-bottom">
+                    <div class="text-warning me-2 fs-5">
+                        @for (int i = 1; i <= 5; i++)
+                        {
+                            <i class="fa @(i <= Math.Round(Model.AverageRating) ? "fa-star" : "fa-star-o")"></i>
+                        }
+                    </div>
+                    <span class="text-dark fw-bold me-1">@Model.AverageRating.ToString("0.0")</span>
+                    <a href="#reviewsSection" class="text-muted small text-decoration-none text-hover-brand">(See all @Model.TotalReviews reviews)</a>
+                </div>
+
+                <div class="mb-4">
+                    @if (activeDiscount != null)
+                    {
+                        <span class="fs-4 text-muted text-decoration-line-through me-3">$@Model.Product.Price.ToString("0.00")</span>
+                        <span class="display-5 fw-bolder text-danger">$@salePrice.ToString("0.00")</span>
+                    }
+                    else
+                    {
+                        <span class="display-5 fw-bolder text-dark">$@Model.Product.Price.ToString("0.00")</span>
+                    }
+                </div>
+
+                <p class="text-muted mb-4 fs-6" style="line-height: 1.7;">@Model.Product.Description</p>
+
+                <form asp-controller="Cart" asp-action="AddToCart" method="post" class="bg-light p-4 rounded-4 border shadow-sm">
+                    <input type="hidden" name="productId" value="@Model.Product.Id" />
+
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <label class="fw-bold text-dark mb-0">Select Size</label>
+                            <a href="#" class="text-muted small text-decoration-underline text-hover-brand">Size Guide</a>
+                        </div>
+                        <select class="form-select form-select-lg border-2 shadow-sm" style="border-radius: 12px; cursor: pointer;" required>
+                            <option value="" disabled selected>Choose your size...</option>
+                            <option value="8">US 8</option>
+                            <option value="9">US 9</option>
+                            <option value="10">US 10</option>
+                            <option value="11">US 11</option>
+                        </select>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-dark btn-lg flex-grow-1 rounded-pill fw-bold shadow-lg transition-hover py-3">
+                            Add to Cart
+                        </button>
+                        <button type="submit" asp-controller="Wishlist" asp-action="Add" class="btn btn-outline-dark btn-lg rounded-pill px-4 shadow-sm transition-hover" title="Add to Wishlist">
+                            <i class="fa fa-heart"></i>
+                        </button>
+                    </div>
+                </form>
+
+                <div class="mt-4 px-2">
+                    <div class="d-flex align-items-center text-muted mb-3">
+                        <div class="bg-light rounded-circle p-2 me-3"><i class="fa fa-truck text-dark"></i></div>
+                        <small class="fw-bold">Free shipping on orders over $100</small>
+                    </div>
+                    <div class="d-flex align-items-center text-muted">
+                        <div class="bg-light rounded-circle p-2 me-3"><i class="fa fa-undo text-dark"></i></div>
+                        <small class="fw-bold">Free 30-day returns</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="reviewsSection" class="row border-top pt-5 mt-5">
+
+        <div class="col-lg-4 mb-5">
+            <h3 class="fw-bolder mb-4 text-dark">Reviews</h3>
+
+            <div class="review-tile p-4 p-md-5">
+                @if (SignInManager.IsSignedIn(User))
+                {
+                    <h5 class="fw-bold mb-1">Write a Review</h5>
+                    <p class="text-muted small mb-4">Share your thoughts with other athletes.</p>
+
+                    <form asp-controller="Products" asp-action="AddReview" method="post">
+                        <input type="hidden" name="ProductId" value="@Model.Product.Id" />
+
+                        <div class="star-rating-form mb-4">
+                            <input type="radio" id="star5" name="NewRating" value="5" required />
+                            <label for="star5" class="fa fa-star"></label>
+                            <input type="radio" id="star4" name="NewRating" value="4" />
+                            <label for="star4" class="fa fa-star"></label>
+                            <input type="radio" id="star3" name="NewRating" value="3" />
+                            <label for="star3" class="fa fa-star"></label>
+                            <input type="radio" id="star2" name="NewRating" value="2" />
+                            <label for="star2" class="fa fa-star"></label>
+                            <input type="radio" id="star1" name="NewRating" value="1" />
+                            <label for="star1" class="fa fa-star"></label>
+                        </div>
+
+                        <div class="mb-4">
+                            <textarea class="form-control bg-light p-3" name="NewReviewComment" rows="4" placeholder="How did the shoe feel?" required style="border-radius: 12px; resize: none; border: 2px solid #f0f0f0;"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-dark w-100 rounded-pill fw-bold py-2 shadow-sm transition-hover">Submit Review</button>
+                    </form>
+                }
+                else
+                {
+                    <div class="text-center py-4">
+                        <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                            <i class="fa fa-lock fs-4 text-muted"></i>
+                        </div>
+                        <h6 class="fw-bold text-dark">Members Only</h6>
+                        <p class="text-muted small mb-4">Please sign in to share your experience.</p>
+                        <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-outline-dark rounded-pill fw-bold px-5">Sign In</a>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="col-lg-8 ps-lg-5">
+            @if (Model.Reviews.Any())
+            {
+                <div class="d-flex flex-column gap-4">
+                    @foreach (var review in Model.Reviews)
+                    {
+                        <div class="review-tile p-4">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <div class="d-flex align-items-center">
+                                    <img src="@(review.User?.ProfileImage ?? "/admin/img/undraw_profile.svg")" class="rounded-circle border border-2 me-3" style="width: 55px; height: 55px; object-fit: cover;" alt="User">
+                                    <div>
+                                        <h6 class="fw-bold mb-1 text-dark">@(review.User?.FullName ?? "Verified Buyer")</h6>
+                                        <span class="text-muted small">@review.CreatedAt.ToString("MMMM dd, yyyy")</span>
+                                    </div>
+                                </div>
+                                <div class="text-warning">
+                                    @for (int i = 1; i <= 5; i++)
+                                    {
+                                        <i class="fa @(i <= review.Rating ? "fa-star" : "fa-star-o")"></i>
+                                    }
+                                </div>
+                            </div>
+                            <p class="mb-0 text-muted" style="line-height: 1.6;">@review.Comment</p>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-5 bg-light rounded-4 border border-dashed h-100 d-flex flex-column align-items-center justify-content-center">
+                    <i class="fa fa-star-half-alt fa-3x text-muted opacity-50 mb-3"></i>
+                    <h5 class="fw-bold text-dark">No reviews yet</h5>
+                    <p class="text-muted mb-0">Be the first to review the @Model.Product.Name!</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Smoothly swaps the main image when you click a thumbnail
+        function changeMainImage(src, element) {
+            let mainImage = document.getElementById('mainProductImage');
+            mainImage.style.opacity = '0'; // Fade out slightly
+
+            setTimeout(() => {
+                mainImage.src = src;
+                mainImage.style.opacity = '1'; // Fade back in
+            }, 150);
+
+            let thumbnails = document.querySelectorAll('.thumbnail-card');
+            thumbnails.forEach(t => t.classList.remove('active'));
+            element.classList.add('active');
+        }
+    </script>
+}

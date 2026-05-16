@@ -1,0 +1,21 @@
+﻿@{
+    ViewData["Title"] = "Payment Success";
+}
+
+<div class="text-center mt-5">
+    <h2 class="text-success">Payment Successful</h2>
+    <p>Your order has been placed successfully.</p>
+
+    <a asp-controller="Orders"
+       asp-action="Details"
+       asp-route-id="@ViewBag.OrderId"
+       class="btn btn-dark">
+        View Order Details
+    </a>
+
+    <a asp-controller="Products"
+       asp-action="Index"
+       class="btn btn-outline-secondary">
+        Continue Shopping
+    </a>
+</div>

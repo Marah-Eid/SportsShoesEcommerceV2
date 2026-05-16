@@ -1,0 +1,77 @@
+﻿@model SportsShoesEcommerce.Models.Order
+
+@{
+    ViewData["Title"] = "Order Details";
+}
+
+<h2 class="mb-4">Order Details</h2>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <h5>Order #@Model.Id</h5>
+
+        <p><strong>Date:</strong> @Model.OrderDate.ToString("dd MMM yyyy hh:mm tt")</p>
+        <p><strong>Order Status:</strong> @Model.OrderStatus</p>
+        <p><strong>Payment Status:</strong> @Model.Payment?.PaymentStatus</p>
+        <p><strong>Payment Method:</strong> @Model.Payment?.PaymentMethod</p>
+        <p><strong>Total:</strong> $@Model.TotalPrice</p>
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <h5>Shipping Address</h5>
+
+        <p><strong>City:</strong> @Model.Address?.City</p>
+        <p><strong>Street:</strong> @Model.Address?.Street</p>
+        <p><strong>Postal Code:</strong> @Model.Address?.PostalCode</p>
+    </div>
+</div>
+
+<h4>Products</h4>
+
+<table class="table table-bordered align-middle">
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Variant</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Total</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model.OrderItems)
+        {
+            <tr>
+                <td>@item.ProductVariant?.Product?.Name</td>
+
+                <td>
+                    Size: @item.ProductVariant?.Size
+                    <br />
+                    Color: @item.ProductVariant?.Color
+                </td>
+
+                <td>$@item.Price</td>
+                <td>@item.Quantity</td>
+                <td>$@(item.Price * item.Quantity)</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="text-end">
+    <a asp-controller="Orders"
+       asp-action="Invoice"
+       asp-route-id="@Model.Id"
+       class="btn btn-outline-secondary">
+        View Invoice
+    </a>
+
+    <a asp-controller="Orders"
+       asp-action="MyOrders"
+       class="btn btn-dark">
+        Back to My Orders
+    </a>
+</div>

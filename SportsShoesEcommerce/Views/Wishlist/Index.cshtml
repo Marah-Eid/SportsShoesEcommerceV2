@@ -1,0 +1,65 @@
+﻿@model IEnumerable<SportsShoesEcommerce.Models.Wishlist>
+
+@{
+    ViewData["Title"] = "My Wishlist";
+}
+
+<h2 class="mb-4">My Wishlist</h2>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        Your wishlist is empty.
+    </div>
+
+    <a asp-controller="Products" asp-action="Index" class="btn btn-dark">
+        Continue Shopping
+    </a>
+}
+else
+{
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            var product = item.ProductVariant?.Product;
+
+            var image = product?.ProductImages?.FirstOrDefault(x => x.IsMain)?.ImagePath
+            ?? product?.ProductImages?.FirstOrDefault()?.ImagePath
+            ?? "/images/no-image.png";
+
+            <div class="col-md-3 mb-4">
+                <div class="card h-100">
+                    <img src="@image" class="card-img-top" style="height:220px; object-fit:cover;" />
+
+                    <div class="card-body">
+                        <h5>@product?.Name</h5>
+
+                        <p class="text-muted mb-1">
+                            Size: @item.ProductVariant?.Size
+                            <br />
+                            Color: @item.ProductVariant?.Color
+                        </p>
+
+                        <p class="fw-bold">
+                            $@item.ProductVariant?.VariantPrice
+                        </p>
+
+                        <a asp-controller="Products"
+                           asp-action="Details"
+                           asp-route-id="@product?.Id"
+                           class="btn btn-outline-dark w-100 mb-2">
+                            View Product
+                        </a>
+
+                        <a asp-controller="Wishlist"
+                           asp-action="Remove"
+                           asp-route-id="@item.Id"
+                           class="btn btn-danger w-100">
+                            Remove
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

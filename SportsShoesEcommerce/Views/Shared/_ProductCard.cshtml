@@ -1,0 +1,55 @@
+﻿@model SportsShoesEcommerce.Models.Product
+
+@{
+    // 1. Defend against missing images
+    var mainImage = Model.ProductImages?.FirstOrDefault(x => x.IsMain)?.ImagePath
+                    ?? Model.ProductImages?.FirstOrDefault()?.ImagePath
+                    ?? "/images/single-product-item1.jpg";
+
+    // 2. Check for active discounts to show the red sale badge!
+    var activeDiscount = Model.Discounts?.FirstOrDefault(d => d.IsActive && d.StartDate <= DateTime.Now && d.EndDate >= DateTime.Now);
+    decimal salePrice = Model.Price;
+
+    if (activeDiscount != null)
+    {
+        salePrice = Model.Price - (Model.Price * activeDiscount.DiscountPercentage / 100m);
+    }
+}
+
+<div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+    <div class="card h-100 border-0 shadow-sm position-relative transition-hover" style="border-radius: 15px;">
+
+        @if (activeDiscount != null)
+        {
+            <div class="position-absolute top-0 start-0 m-3" style="z-index: 2;">
+                <span class="badge bg-danger fs-6 rounded-pill px-3 py-2 shadow-sm">-@activeDiscount.DiscountPercentage.ToString("0")%</span>
+            </div>
+        }
+
+        <a asp-controller="Products" asp-action="Details" asp-route-id="@Model.Id" class="text-center p-3 d-block text-decoration-none">
+            <img src="@mainImage" class="card-img-top" alt="@Model.Name" style="height: 220px; object-fit: contain;">
+        </a>
+
+        <div class="card-body text-center pt-0 d-flex flex-column">
+            <p class="text-muted small mb-1 text-uppercase fw-bold">@(Model.Brand?.Name ?? "NextStep")</p>
+
+            <h6 class="card-title fw-bold mb-2">
+                <a asp-controller="Products" asp-action="Details" asp-route-id="@Model.Id" class="text-dark text-decoration-none text-hover-brand">@Model.Name</a>
+            </h6>
+
+            <div class="mb-3 mt-auto">
+                @if (activeDiscount != null)
+                {
+                    <span class="text-muted text-decoration-line-through me-2">$@Model.Price.ToString("0.00")</span>
+                    <span class="text-danger fw-bold fs-5">$@salePrice.ToString("0.00")</span>
+                }
+                else
+                {
+                    <span class="fw-bold fs-5 text-dark">$@Model.Price.ToString("0.00")</span>
+                }
+            </div>
+
+            <a asp-controller="Products" asp-action="Details" asp-route-id="@Model.Id" class="btn btn-outline-dark w-100 rounded-pill fw-bold">View Details</a>
+        </div>
+    </div>
+</div>

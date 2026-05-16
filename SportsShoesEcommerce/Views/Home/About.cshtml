@@ -1,0 +1,143 @@
+﻿@model IEnumerable<SportsShoesEcommerce.Models.Testimonial>
+
+@{
+    ViewData["Title"] = "About Us";
+}
+
+<section class="py-5 bg-light">
+    <div class="container">
+
+        <div class="text-center mb-5">
+            <h1 class="fw-bold">About Us</h1>
+
+            <p class="text-muted mx-auto" style="max-width:700px;">
+                Welcome to Sports Shoes Ecommerce — your trusted destination for premium
+                sports shoes and athletic fashion. We aim to provide high-quality products,
+                modern styles, and a smooth shopping experience for every customer.
+            </p>
+        </div>
+
+        <div class="row text-center mb-5">
+
+            <div class="col-md-4 mb-4">
+                <div class="bg-white shadow-sm rounded p-4 h-100">
+                    <i class="fa-solid fa-shoe-prints fa-2x mb-3 text-dark"></i>
+
+                    <h4>Premium Products</h4>
+
+                    <p class="text-muted">
+                        We carefully select sports shoes that combine comfort,
+                        performance, and modern design.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-4">
+                <div class="bg-white shadow-sm rounded p-4 h-100">
+                    <i class="fa-solid fa-truck-fast fa-2x mb-3 text-dark"></i>
+
+                    <h4>Fast Delivery</h4>
+
+                    <p class="text-muted">
+                        Quick and reliable delivery service to make sure your
+                        products arrive safely and on time.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-4">
+                <div class="bg-white shadow-sm rounded p-4 h-100">
+                    <i class="fa-solid fa-shield-heart fa-2x mb-3 text-dark"></i>
+
+                    <h4>Trusted Experience</h4>
+
+                    <p class="text-muted">
+                        Secure payments, easy shopping, and customer satisfaction
+                        are our top priorities.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row align-items-center mb-5">
+
+            <div class="col-md-6 mb-4">
+                <img src="~/images/about-us.jpg"
+                     class="img-fluid rounded shadow"
+                     alt="About Us" />
+            </div>
+
+            <div class="col-md-6">
+                <h2 class="fw-bold mb-3">Our Mission</h2>
+
+                <p class="text-muted">
+                    Our mission is to help athletes, fitness enthusiasts, and sneaker lovers
+                    find the perfect shoes that fit their lifestyle and performance needs.
+                </p>
+
+                <p class="text-muted">
+                    We believe shopping should be simple, secure, and enjoyable.
+                    That’s why we focus on high-quality products, responsive design,
+                    and excellent customer support.
+                </p>
+
+                <a asp-controller="Products"
+                   asp-action="Index"
+                   class="btn btn-dark mt-3">
+                    Shop Now
+                </a>
+            </div>
+
+        </div>
+
+        <hr class="my-5" />
+
+        <div class="text-center mb-4">
+            <h2 class="fw-bold">Customer Testimonials</h2>
+
+            <p class="text-muted">
+                What our customers say about us
+            </p>
+        </div>
+
+        @if (!Model.Any())
+        {
+            <div class="alert alert-info text-center">
+                No testimonials available yet.
+            </div>
+        }
+        else
+        {
+            <div class="row">
+
+                @foreach (var item in Model)
+                {
+                    <div class="col-md-4 mb-4">
+                        <div class="bg-white shadow-sm rounded p-4 h-100">
+
+                            <div class="mb-3 text-warning">
+                                @for (int i = 0; i < item.Rating; i++)
+                                {
+                                    <i class="fa-solid fa-star"></i>
+                                }
+                            </div>
+
+                            <p class="text-muted">
+                                "@item.Content"
+                            </p>
+
+                            <hr />
+
+                            <small class="text-muted">
+                                @item.CreatedAt.ToString("dd MMM yyyy")
+                            </small>
+                        </div>
+                    </div>
+                }
+
+            </div>
+        }
+
+    </div>
+</section>

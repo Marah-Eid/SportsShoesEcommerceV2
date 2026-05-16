@@ -1,0 +1,80 @@
+﻿@model SportsShoesEcommerce.Models.ViewModels.SearchViewModel
+@{
+    ViewData["Title"] = string.IsNullOrWhiteSpace(Model.Query) ? "Search" : $"Search Results for '{Model.Query}'";
+}
+
+<section class="position-relative py-5 bg-dark text-white overflow-hidden shadow-sm">
+    <div class="container py-4 text-center position-relative" style="z-index: 2;">
+
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb justify-content-center bg-transparent p-0 mb-3">
+                <li class="breadcrumb-item">
+                    <a asp-controller="Home" asp-action="Index" class="text-white opacity-75 text-decoration-none text-hover-brand">Home</a>
+                </li>
+                <li class="breadcrumb-item active text-white" aria-current="page">Search</li>
+            </ol>
+        </nav>
+
+        @if (string.IsNullOrWhiteSpace(Model.Query))
+        {
+            <h1 class="display-4 fw-bolder mb-2">Search <span style="color: var(--brand-teal);">Our Store</span></h1>
+            <p class="lead opacity-75 mb-0">Discover premium sports gear designed for performance.</p>
+        }
+        else
+        {
+            <h1 class="display-4 fw-bolder mb-2">Results for "<span style="color: var(--brand-teal);">@Model.Query</span>"</h1>
+            <p class="lead opacity-75 mb-0">We found @Model.Products.Count matching items for your search.</p>
+        }
+    </div>
+</section>
+
+<div class="container mb-5 pb-5 mt-5" style="min-height: 40vh; animation: fadeIn 0.6s ease-out;">
+
+    @if (!string.IsNullOrWhiteSpace(Model.Query))
+    {
+        if (Model.Products.Any())
+        {
+            <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom border-2">
+                <span class="text-muted fw-bold text-uppercase" style="letter-spacing: 1px; font-size: 0.85rem;">
+                    Showing @Model.Products.Count Results
+                </span>
+            </div>
+
+            <div class="row">
+                @foreach (var product in Model.Products)
+                {
+                    <partial name="_ProductCard" model="product" />
+                }
+            </div>
+        }
+        else
+        {
+            <div class="text-center py-5 my-4">
+                <div class="d-inline-flex align-items-center justify-content-center bg-light rounded-circle mb-4 shadow-sm border" style="width: 120px; height: 120px;">
+                    <i class="fa fa-search fa-3x text-muted opacity-50"></i>
+                </div>
+                <h2 class="fw-bold text-dark mb-3">No matches found</h2>
+                <p class="text-muted fs-5 mb-4 px-md-5 mx-md-5">
+                    We couldn't find any shoes or brands matching "<span class="fw-bold text-dark">@Model.Query</span>". Try checking your spelling or using more general terms.
+                </p>
+                <a asp-controller="Products" asp-action="Index" class="btn btn-dark btn-lg rounded-pill px-5 fw-bold shadow-sm text-hover-brand mt-2">
+                    Browse All Collections
+                </a>
+            </div>
+        }
+    }
+</div>
+
+<style>
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>

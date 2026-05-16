@@ -1,0 +1,14 @@
+﻿@{
+    ViewData["Title"] = "Payment Cancelled";
+}
+
+<div class="text-center mt-5">
+    <h2 class="text-danger">Payment Cancelled</h2>
+    <p>Your payment was cancelled. Your cart is still available.</p>
+
+    <a asp-controller="Cart"
+       asp-action="Index"
+       class="btn btn-dark">
+        Back to Cart
+    </a>
+</div>

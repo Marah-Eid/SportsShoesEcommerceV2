@@ -1,0 +1,83 @@
+﻿@model SportsShoesEcommerce.Models.Order
+
+@{
+    ViewData["Title"] = "Invoice";
+}
+
+<div class="container mt-4" id="invoiceArea">
+    <div class="d-flex justify-content-between mb-4">
+        <div>
+            <h2>Invoice</h2>
+            <p>Sports Shoes Ecommerce</p>
+        </div>
+
+        <div class="text-end">
+            <h5>Invoice #@Model.Id</h5>
+            <p>@Model.OrderDate.ToString("dd MMM yyyy")</p>
+        </div>
+    </div>
+
+    <hr />
+
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <h5>Customer</h5>
+            <p>@Model.User?.FullName</p>
+        </div>
+
+        <div class="col-md-6 text-md-end">
+            <h5>Shipping Address</h5>
+            <p>
+                @Model.Address?.City<br />
+                @Model.Address?.Street<br />
+                @Model.Address?.PostalCode
+            </p>
+        </div>
+    </div>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Size</th>
+                <th>Color</th>
+                <th>Price</th>
+                <th>Qty</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var item in Model.OrderItems)
+            {
+                <tr>
+                    <td>@item.ProductVariant?.Product?.Name</td>
+                    <td>@item.ProductVariant?.Size</td>
+                    <td>@item.ProductVariant?.Color</td>
+                    <td>$@item.Price</td>
+                    <td>@item.Quantity</td>
+                    <td>$@(item.Price * item.Quantity)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="text-end">
+        <h4>Total: $@Model.TotalPrice</h4>
+        <p><strong>Payment:</strong> @Model.Payment?.PaymentStatus</p>
+        <p><strong>Method:</strong> @Model.Payment?.PaymentMethod</p>
+    </div>
+</div>
+
+<div class="text-end mt-3">
+    <button onclick="window.print()" class="btn btn-dark">
+        Print Invoice
+    </button>
+
+    <a asp-controller="Orders"
+       asp-action="Details"
+       asp-route-id="@Model.Id"
+       class="btn btn-outline-secondary">
+        Back to Details
+    </a>
+</div>

@@ -1,0 +1,78 @@
+﻿@model SportsShoesEcommerce.ViewModels.CheckoutViewModel
+
+@{
+    ViewData["Title"] = "Checkout";
+}
+
+<h2 class="mb-4">Checkout</h2>
+
+<div class="row">
+    <div class="col-md-7">
+        <h4>Shipping Address</h4>
+
+        <form asp-controller="Checkout" asp-action="PlaceOrder" method="post">
+            @Html.AntiForgeryToken()
+
+            <div class="mb-3">
+                <label asp-for="City" class="form-label"></label>
+                <input asp-for="City" class="form-control" />
+                <span asp-validation-for="City" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Street" class="form-label"></label>
+                <input asp-for="Street" class="form-control" />
+                <span asp-validation-for="Street" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="PostalCode" class="form-label"></label>
+                <input asp-for="PostalCode" class="form-control" />
+                <span asp-validation-for="PostalCode" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-dark">
+                Place Order
+            </button>
+        </form>
+    </div>
+
+    <div class="col-md-5">
+        <h4>Order Summary</h4>
+
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Qty</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var item in Model.Cart.Items)
+                {
+                    <tr>
+                        <td>
+                            @item.ProductName
+                            <br />
+                            <small class="text-muted">
+                                Size: @item.Size | Color: @item.Color
+                            </small>
+                        </td>
+                        <td>@item.Quantity</td>
+                        <td>$@item.Total</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <h4 class="text-end">
+            Total: $@Model.Cart.TotalPrice
+        </h4>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
