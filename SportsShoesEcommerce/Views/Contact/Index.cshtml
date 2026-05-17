@@ -1,41 +1,606 @@
 ﻿@model SportsShoesEcommerce.Models.ContactMessage
-
 @{
     ViewData["Title"] = "Contact Us";
 }
 
-<h2 class="mb-4">Contact Us</h2>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,800;1,9..144,600;1,9..144,800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-<form asp-controller="Contact" asp-action="Send" method="post">
-    @Html.AntiForgeryToken()
+<style>
+    :root {
+        --ns-cream: #faf6ef;
+        --ns-sand: #f3ead9;
+        --ns-peach: #f5d5b8;
+        --ns-terracotta: #c97b5e;
+        --ns-clay: #b86048;
+        --ns-coffee: #4a3729;
+        --ns-mocha: #6b4f3d;
+        --ns-sage: #8fa68a;
+        --ns-warm-gray: #a89684;
+        --ns-soft-shadow: rgba(74, 55, 41, 0.08);
+    }
 
-    <div class="mb-3">
-        <label asp-for="FullName" class="form-label"></label>
-        <input asp-for="FullName" class="form-control" />
-        <span asp-validation-for="FullName" class="text-danger"></span>
+    .ns-contact {
+        background: var(--ns-cream);
+        color: var(--ns-coffee);
+        font-family: 'Inter', -apple-system, sans-serif;
+        padding: 100px 0 80px;
+        min-height: 100vh;
+        position: relative;
+        overflow-x: hidden;
+    }
+
+        .ns-contact .display-font {
+            font-family: 'Fraunces', Georgia, serif;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 0.95;
+        }
+
+        .ns-contact .mono {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+
+    .ns-contact-wrapper {
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 0 24px;
+    }
+
+    .ns-contact-card {
+        display: grid;
+        grid-template-columns: 0.85fr 1fr;
+        background: var(--ns-cream);
+        border-radius: 32px;
+        overflow: hidden;
+        box-shadow: 0 30px 80px rgba(74, 55, 41, 0.15);
+        border: 1px solid rgba(74, 55, 41, 0.08);
+        min-height: 680px;
+    }
+
+    /* ===== LEFT: INFO PANEL ===== */
+    .ns-contact-info {
+        position: relative;
+        background: linear-gradient(160deg, var(--ns-coffee) 0%, var(--ns-mocha) 100%);
+        color: var(--ns-cream);
+        padding: 60px 48px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        overflow: hidden;
+    }
+
+        .ns-contact-info::before {
+            content: '';
+            position: absolute;
+            top: -150px;
+            right: -100px;
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(201, 123, 94, 0.35) 0%, transparent 70%);
+            filter: blur(40px);
+        }
+
+        .ns-contact-info::after {
+            content: '';
+            position: absolute;
+            bottom: -100px;
+            left: -100px;
+            width: 320px;
+            height: 320px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(245, 213, 184, 0.15) 0%, transparent 70%);
+            filter: blur(40px);
+        }
+
+    .ns-contact-info-top {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+    }
+
+    .ns-contact-logo {
+        font-family: 'Fraunces', serif;
+        font-weight: 800;
+        font-size: 1.4rem;
+        color: var(--ns-cream);
+        letter-spacing: -0.02em;
+    }
+
+        .ns-contact-logo .dot {
+            color: var(--ns-peach);
+        }
+
+    .ns-contact-info-marker {
+        color: var(--ns-peach);
+    }
+
+    .ns-contact-info-mid {
+        position: relative;
+        z-index: 2;
+    }
+
+    .ns-contact-info-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 22px;
+        color: var(--ns-peach);
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.7rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        font-weight: 500;
+    }
+
+        .ns-contact-info-tag::before {
+            content: '';
+            width: 28px;
+            height: 2px;
+            background: currentColor;
+        }
+
+    .ns-contact-info-title {
+        font-size: clamp(2.2rem, 4.5vw, 3.2rem);
+        color: var(--ns-cream);
+        margin: 0 0 22px;
+    }
+
+        .ns-contact-info-title em {
+            color: var(--ns-peach);
+            font-style: italic;
+        }
+
+    .ns-contact-info-text {
+        font-size: 1rem;
+        line-height: 1.65;
+        color: rgba(250, 246, 239, 0.75);
+        max-width: 380px;
+        margin-bottom: 36px;
+    }
+
+    .ns-contact-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+        .ns-contact-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            padding: 16px 0;
+            border-bottom: 1px solid rgba(250, 246, 239, 0.1);
+        }
+
+            .ns-contact-list li:last-child {
+                border-bottom: none;
+            }
+
+    .ns-contact-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        background: rgba(245, 213, 184, 0.15);
+        color: var(--ns-peach);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        flex-shrink: 0;
+    }
+
+    .ns-contact-detail-label {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.65rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: rgba(250, 246, 239, 0.5);
+        margin-bottom: 4px;
+        display: block;
+    }
+
+    .ns-contact-detail-value {
+        font-size: 0.95rem;
+        color: var(--ns-cream);
+        font-weight: 500;
+    }
+
+    .ns-contact-info-bottom {
+        position: relative;
+        z-index: 2;
+        padding-top: 24px;
+        border-top: 1px solid rgba(250, 246, 239, 0.1);
+        display: flex;
+        gap: 10px;
+    }
+
+    .ns-contact-social {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: rgba(250, 246, 239, 0.08);
+        border: 1px solid rgba(250, 246, 239, 0.12);
+        color: var(--ns-cream);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+
+        .ns-contact-social:hover {
+            background: var(--ns-clay);
+            border-color: var(--ns-clay);
+            color: var(--ns-cream);
+            transform: translateY(-3px);
+        }
+
+    /* ===== RIGHT: FORM PANEL ===== */
+    .ns-contact-form-panel {
+        padding: 60px 56px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        background: var(--ns-cream);
+    }
+
+    .ns-contact-form-head {
+        margin-bottom: 32px;
+    }
+
+    .ns-contact-form-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 14px;
+        color: var(--ns-clay);
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.7rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        font-weight: 500;
+    }
+
+        .ns-contact-form-tag::before {
+            content: '';
+            width: 24px;
+            height: 2px;
+            background: currentColor;
+        }
+
+    .ns-contact-form-title {
+        font-family: 'Fraunces', serif;
+        font-weight: 800;
+        font-size: 2.4rem;
+        color: var(--ns-coffee);
+        line-height: 0.95;
+        letter-spacing: -0.03em;
+        margin: 0 0 10px;
+    }
+
+        .ns-contact-form-title em {
+            color: var(--ns-clay);
+            font-style: italic;
+        }
+
+    .ns-contact-form-sub {
+        font-size: 0.95rem;
+        color: var(--ns-mocha);
+        margin: 0;
+    }
+
+    /* Form fields */
+    .ns-field {
+        margin-bottom: 18px;
+    }
+
+    .ns-field-label {
+        display: block;
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+        color: var(--ns-mocha);
+        font-weight: 600;
+        margin-bottom: 8px;
+    }
+
+    .ns-field-wrap {
+        position: relative;
+    }
+
+    .ns-field-icon {
+        position: absolute;
+        left: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--ns-warm-gray);
+        font-size: 0.95rem;
+        pointer-events: none;
+        transition: color 0.3s ease;
+    }
+
+        .ns-field-icon.textarea {
+            top: 22px;
+            transform: none;
+        }
+
+    .ns-contact-form-panel .form-control {
+        background: var(--ns-sand);
+        border: 1.5px solid transparent;
+        border-radius: 14px;
+        padding: 16px 20px 16px 50px;
+        font-size: 0.95rem;
+        color: var(--ns-coffee);
+        font-family: 'Inter', sans-serif;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        width: 100%;
+        height: auto;
+    }
+
+    .ns-contact-form-panel textarea.form-control {
+        resize: vertical;
+        min-height: 130px;
+        padding-top: 18px;
+    }
+
+    .ns-contact-form-panel .form-control::placeholder {
+        color: var(--ns-warm-gray);
+        font-weight: 400;
+    }
+
+    .ns-contact-form-panel .form-control:focus {
+        background: var(--ns-cream);
+        border-color: var(--ns-terracotta);
+        box-shadow: 0 0 0 4px rgba(201, 123, 94, 0.12);
+        outline: none;
+    }
+
+    .ns-field-wrap:focus-within .ns-field-icon {
+        color: var(--ns-clay);
+    }
+
+    .ns-contact-form-panel .text-danger {
+        font-size: 0.78rem;
+        color: var(--ns-clay) !important;
+        margin-top: 6px;
+        display: block;
+        font-weight: 500;
+    }
+
+    .ns-field-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+    }
+
+    /* Submit button */
+    .ns-contact-submit {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        background: var(--ns-coffee);
+        color: var(--ns-cream);
+        padding: 18px 36px;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        letter-spacing: 0.02em;
+        font-family: 'Inter', sans-serif;
+        border: none;
+        cursor: pointer;
+        width: 100%;
+        margin-top: 10px;
+        transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+        .ns-contact-submit:hover {
+            background: var(--ns-clay);
+            transform: translateY(-3px);
+            box-shadow: 0 14px 30px rgba(184, 96, 72, 0.3);
+        }
+
+        .ns-contact-submit .arrow {
+            transition: transform 0.3s ease;
+        }
+
+        .ns-contact-submit:hover .arrow {
+            transform: translateX(6px);
+        }
+
+    .ns-contact-disclaimer {
+        font-size: 0.78rem;
+        color: var(--ns-warm-gray);
+        text-align: center;
+        margin: 16px 0 0;
+        line-height: 1.55;
+    }
+
+    /* Responsive */
+    @@media (max-width: 900px) {
+        .ns-contact {
+            padding: 80px 0 60px;
+        }
+
+        .ns-contact-card {
+            grid-template-columns: 1fr;
+            min-height: auto;
+        }
+
+        .ns-contact-info {
+            padding: 44px 36px;
+        }
+
+        .ns-contact-form-panel {
+            padding: 44px 36px;
+        }
+    }
+
+    @@media (max-width: 600px) {
+        .ns-field-row {
+            grid-template-columns: 1fr;
+            gap: 0;
+        }
+    }
+
+    @@media (max-width: 480px) {
+        .ns-contact {
+            padding: 70px 0 40px;
+        }
+
+        .ns-contact-wrapper {
+            padding: 0 16px;
+        }
+
+        .ns-contact-info {
+            padding: 36px 26px;
+        }
+
+        .ns-contact-form-panel {
+            padding: 36px 26px;
+        }
+
+        .ns-contact-info-title {
+            font-size: 1.9rem;
+        }
+
+        .ns-contact-form-title {
+            font-size: 2rem;
+        }
+    }
+</style>
+
+<div class="ns-contact">
+    <div class="ns-contact-wrapper">
+        <div class="ns-contact-card">
+
+            @* ===== LEFT: INFO PANEL ===== *@
+            <div class="ns-contact-info">
+                <div class="ns-contact-info-top">
+                    <span class="ns-contact-logo">NextStep<span class="dot">.</span></span>
+                    <span class="mono ns-contact-info-marker">003 / CONTACT</span>
+                </div>
+
+                <div class="ns-contact-info-mid">
+                    <div class="ns-contact-info-tag">Get In Touch</div>
+                    <h1 class="ns-contact-info-title display-font">
+                        Let's talk<br /><em>shoes.</em>
+                    </h1>
+                    <p class="ns-contact-info-text">
+                        Questions, feedback, or a custom request? Drop us a line — we read
+                        every message and reply within 24 hours.
+                    </p>
+
+                    <ul class="ns-contact-list">
+                        <li>
+                            <span class="ns-contact-icon"><i class="fa fa-envelope"></i></span>
+                            <div>
+                                <span class="ns-contact-detail-label">Email Us</span>
+                                <span class="ns-contact-detail-value">hello@nextstep.com</span>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="ns-contact-icon"><i class="fa fa-phone"></i></span>
+                            <div>
+                                <span class="ns-contact-detail-label">Call Us</span>
+                                <span class="ns-contact-detail-value">+962 7 0000 0000</span>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="ns-contact-icon"><i class="fa fa-location-dot"></i></span>
+                            <div>
+                                <span class="ns-contact-detail-label">Visit Us</span>
+                                <span class="ns-contact-detail-value">Irbid, Jordan</span>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="ns-contact-icon"><i class="fa fa-clock"></i></span>
+                            <div>
+                                <span class="ns-contact-detail-label">Hours</span>
+                                <span class="ns-contact-detail-value">Sun — Thu, 9AM — 6PM</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="ns-contact-info-bottom">
+                    <a href="#" class="ns-contact-social" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="ns-contact-social" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="ns-contact-social" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="ns-contact-social" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+                </div>
+            </div>
+
+            @* ===== RIGHT: FORM PANEL ===== *@
+            <div class="ns-contact-form-panel">
+                <div class="ns-contact-form-head">
+                    <div class="ns-contact-form-tag">Send a Message</div>
+                    <h2 class="ns-contact-form-title">Drop us a <em>line.</em></h2>
+                    <p class="ns-contact-form-sub">We'll get back to you within 24 hours.</p>
+                </div>
+
+                <form asp-controller="Contact" asp-action="Send" method="post">
+                    @Html.AntiForgeryToken()
+
+                    <div class="ns-field-row">
+                        <div class="ns-field">
+                            <label asp-for="FullName" class="ns-field-label">Full Name</label>
+                            <div class="ns-field-wrap">
+                                <i class="fa fa-user ns-field-icon"></i>
+                                <input asp-for="FullName" class="form-control" placeholder="Your name" />
+                            </div>
+                            <span asp-validation-for="FullName" class="text-danger"></span>
+                        </div>
+
+                        <div class="ns-field">
+                            <label asp-for="PhoneNumber" class="ns-field-label">Phone <span style="color: var(--ns-warm-gray); font-weight: 400;">(optional)</span></label>
+                            <div class="ns-field-wrap">
+                                <i class="fa fa-phone ns-field-icon"></i>
+                                <input asp-for="PhoneNumber" class="form-control" placeholder="+962 7..." />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="ns-field">
+                        <label asp-for="Email" class="ns-field-label">Email Address</label>
+                        <div class="ns-field-wrap">
+                            <i class="fa fa-envelope ns-field-icon"></i>
+                            <input asp-for="Email" class="form-control" placeholder="you@example.com" />
+                        </div>
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="ns-field">
+                        <label asp-for="Message" class="ns-field-label">Your Message</label>
+                        <div class="ns-field-wrap">
+                            <i class="fa fa-comment-dots ns-field-icon textarea"></i>
+                            <textarea asp-for="Message" class="form-control" rows="5" placeholder="Tell us what's on your mind..."></textarea>
+                        </div>
+                        <span asp-validation-for="Message" class="text-danger"></span>
+                    </div>
+
+                    <button type="submit" class="ns-contact-submit">
+                        Send Message
+                        <span class="arrow">→</span>
+                    </button>
+
+                    <p class="ns-contact-disclaimer">
+                        Your information stays private. We never share contact details with third parties.
+                    </p>
+                </form>
+            </div>
+
+        </div>
     </div>
-
-    <div class="mb-3">
-        <label asp-for="Email" class="form-label"></label>
-        <input asp-for="Email" class="form-control" />
-        <span asp-validation-for="Email" class="text-danger"></span>
-    </div>
-
-    <div class="mb-3">
-        <label asp-for="PhoneNumber" class="form-label"></label>
-        <input asp-for="PhoneNumber" class="form-control" />
-    </div>
-
-    <div class="mb-3">
-        <label asp-for="Message" class="form-label"></label>
-        <textarea asp-for="Message" class="form-control" rows="5"></textarea>
-        <span asp-validation-for="Message" class="text-danger"></span>
-    </div>
-
-    <button type="submit" class="btn btn-dark">
-        Send Message
-    </button>
-</form>
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

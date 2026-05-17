@@ -1,255 +1,975 @@
 ﻿@model SportsShoesEcommerce.Models.ViewModels.HomeViewModel
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "NextStep — Step Into Greatness";
 }
 
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,800;1,9..144,600;1,9..144,800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
 <style>
-    /* Hero Banner Styling */
-    .hero-banner {
-        background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/user/images/card-large-item1.jpg');
-        background-size: cover;
-        background-position: center;
-        background-attachment: fixed;
-        min-height: 70vh;
-        display: flex;
-        align-items: center;
+    :root {
+        --ns-cream: #faf6ef;
+        --ns-sand: #f3ead9;
+        --ns-peach: #f5d5b8;
+        --ns-terracotta: #c97b5e;
+        --ns-clay: #b86048;
+        --ns-coffee: #4a3729;
+        --ns-mocha: #6b4f3d;
+        --ns-sage: #8fa68a;
+        --ns-warm-gray: #a89684;
+        --ns-soft-shadow: rgba(74, 55, 41, 0.08);
     }
 
-    /* Premium Shadows & Interactions */
-    .premium-shadow {
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-        transition: all 0.4s ease;
+    .ns-home {
+        background: var(--ns-cream);
+        color: var(--ns-coffee);
+        font-family: 'Inter', -apple-system, sans-serif;
+        font-weight: 400;
+        letter-spacing: -0.005em;
+        overflow-x: hidden;
     }
 
-        .premium-shadow:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        .ns-home .display-font {
+            font-family: 'Fraunces', Georgia, serif;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 0.95;
         }
 
-    /* Dynamic Category Promo Cards */
-    .promo-card {
+        .ns-home .mono {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+
+    /* ===== HERO ===== */
+    .ns-hero {
+        position: relative;
+        background: linear-gradient(160deg, var(--ns-sand) 0%, var(--ns-peach) 100%);
+        color: var(--ns-coffee);
+        min-height: 88vh;
         overflow: hidden;
-        height: 260px;
-        border-radius: 20px;
-        transition: box-shadow 0.4s ease;
+        display: flex;
+        align-items: center;
+        padding: 100px 0 70px;
     }
 
-    .promo-img {
-        transition: transform 0.8s ease, opacity 0.6s ease;
+        .ns-hero::before {
+            content: '';
+            position: absolute;
+            top: -150px;
+            right: -100px;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(201, 123, 94, 0.25) 0%, transparent 70%);
+            filter: blur(40px);
+        }
+
+        .ns-hero::after {
+            content: '';
+            position: absolute;
+            bottom: -100px;
+            left: -150px;
+            width: 450px;
+            height: 450px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(143, 166, 138, 0.18) 0%, transparent 70%);
+            filter: blur(40px);
+        }
+
+    .ns-hero-content {
+        position: relative;
+        z-index: 3;
+    }
+
+    .ns-hero-title {
+        font-size: clamp(3.5rem, 11vw, 9rem);
+        line-height: 0.95;
+        font-weight: 800;
+        color: var(--ns-coffee);
+    }
+
+        .ns-hero-title .accent {
+            color: var(--ns-clay);
+            font-style: italic;
+            font-weight: 800;
+        }
+
+        .ns-hero-title .underline {
+            position: relative;
+            display: inline-block;
+        }
+
+            .ns-hero-title .underline::after {
+                content: '';
+                position: absolute;
+                left: 0;
+                bottom: 0.08em;
+                width: 100%;
+                height: 0.12em;
+                background: var(--ns-terracotta);
+                opacity: 0.4;
+                z-index: -1;
+            }
+
+    .ns-hero-meta {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 28px;
+        color: var(--ns-mocha);
+    }
+
+        .ns-hero-meta .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--ns-clay);
+            animation: ns-pulse 2.5s ease-in-out infinite;
+        }
+
+    @@keyframes ns-pulse {
+        0%, 100% {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        50% {
+            opacity: 0.5;
+            transform: scale(1.4);
+        }
+    }
+
+    .ns-hero-tagline {
+        font-size: 1.1rem;
+        line-height: 1.65;
+        max-width: 480px;
+        color: var(--ns-mocha);
+        margin: 32px 0 40px;
+    }
+
+    .ns-btn-primary {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        background: var(--ns-coffee);
+        color: var(--ns-cream);
+        padding: 17px 36px;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        letter-spacing: 0.02em;
+        text-decoration: none;
+        transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        border: none;
+    }
+
+        .ns-btn-primary:hover {
+            background: var(--ns-clay);
+            color: var(--ns-cream);
+            transform: translateY(-3px);
+            box-shadow: 0 14px 30px rgba(184, 96, 72, 0.3);
+        }
+
+        .ns-btn-primary .arrow {
+            transition: transform 0.3s ease;
+        }
+
+        .ns-btn-primary:hover .arrow {
+            transform: translateX(6px);
+        }
+
+    .ns-hero-stats {
+        display: flex;
+        gap: 50px;
+        margin-top: 64px;
+        padding-top: 32px;
+        border-top: 1px solid rgba(74, 55, 41, 0.15);
+    }
+
+    .ns-stat-num {
+        font-family: 'Fraunces', serif;
+        font-size: 2.4rem;
+        font-weight: 800;
+        line-height: 1;
+        color: var(--ns-clay);
+        font-style: italic;
+    }
+
+    .ns-stat-label {
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+        color: var(--ns-mocha);
+        margin-top: 8px;
+        font-weight: 500;
+    }
+
+    .ns-hero-marker {
+        position: absolute;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.68rem;
+        letter-spacing: 0.2em;
+        color: var(--ns-clay);
+        opacity: 0.7;
+        z-index: 2;
+    }
+
+        .ns-hero-marker.tl {
+            top: 110px;
+            left: 40px;
+        }
+
+        .ns-hero-marker.tr {
+            top: 110px;
+            right: 40px;
+            text-align: right;
+        }
+
+    /* ===== SECTIONS ===== */
+    .ns-section {
+        padding: 110px 0;
+        position: relative;
+    }
+
+    .ns-section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        margin-bottom: 60px;
+        gap: 30px;
+        flex-wrap: wrap;
+    }
+
+    .ns-section-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 18px;
+        color: var(--ns-clay);
+    }
+
+        .ns-section-tag::before {
+            content: '';
+            width: 28px;
+            height: 2px;
+            background: currentColor;
+        }
+
+    .ns-section-title {
+        font-size: clamp(2.4rem, 5.5vw, 4.5rem);
+        margin: 0;
+        color: var(--ns-coffee);
+    }
+
+        .ns-section-title em {
+            color: var(--ns-clay);
+            font-style: italic;
+            font-weight: 800;
+        }
+
+    .ns-section-link {
+        color: var(--ns-coffee);
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.82rem;
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding-bottom: 6px;
+        border-bottom: 2px solid var(--ns-clay);
+        transition: all 0.3s;
+    }
+
+        .ns-section-link:hover {
+            color: var(--ns-clay);
+            gap: 18px;
+        }
+
+    /* ===== CATEGORIES ===== */
+    .ns-categories {
+        background: var(--ns-cream);
+    }
+
+    .ns-cat-grid {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        gap: 20px;
+    }
+
+    .ns-cat-card {
+        position: relative;
+        overflow: hidden;
+        border-radius: 28px;
+        text-decoration: none;
+        background: var(--ns-sand);
+        color: var(--ns-coffee);
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        padding: 36px;
+        min-height: 380px;
+        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
+        box-shadow: 0 4px 20px var(--ns-soft-shadow);
+    }
+
+        .ns-cat-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(74, 55, 41, 0.15);
+            color: var(--ns-coffee);
+        }
+
+    .ns-cat-card-large {
+        grid-column: span 7;
+        min-height: 460px;
+        background: linear-gradient(135deg, var(--ns-peach) 0%, var(--ns-terracotta) 100%);
+    }
+
+    .ns-cat-card-tall {
+        grid-column: span 5;
+        min-height: 460px;
+        background: linear-gradient(135deg, var(--ns-coffee) 0%, var(--ns-mocha) 100%);
+        color: var(--ns-cream);
+    }
+
+        .ns-cat-card-tall:hover {
+            color: var(--ns-cream);
+        }
+
+    .ns-cat-card-wide {
+        grid-column: span 12;
+        min-height: 260px;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        background: linear-gradient(90deg, var(--ns-sand) 0%, var(--ns-peach) 100%);
+    }
+
+    .ns-cat-card-default {
+        grid-column: span 4;
+    }
+
+    .ns-cat-img {
+        position: absolute;
+        inset: 0;
+        background-size: cover;
+        background-position: center;
+        opacity: 0.55;
+        transition: all 0.7s ease;
+    }
+
+    .ns-cat-card:hover .ns-cat-img {
+        opacity: 0.75;
+        transform: scale(1.06);
+    }
+
+    .ns-cat-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, rgba(74,55,41,0.05) 0%, rgba(74,55,41,0.4) 100%);
+        z-index: 1;
+    }
+
+    .ns-cat-card-tall .ns-cat-overlay {
+        background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.3) 100%);
+    }
+
+    .ns-cat-content {
+        position: relative;
+        z-index: 2;
+    }
+
+    .ns-cat-index {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.72rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        opacity: 0.7;
+        margin-bottom: 14px;
+    }
+
+    .ns-cat-name {
+        font-family: 'Fraunces', serif;
+        font-weight: 800;
+        font-size: clamp(2rem, 4vw, 3.4rem);
+        line-height: 0.95;
+        margin-bottom: 24px;
+        letter-spacing: -0.02em;
+    }
+
+    .ns-cat-cta {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 0.82rem;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        font-weight: 600;
+        transition: gap 0.3s ease;
+    }
+
+    .ns-cat-card:hover .ns-cat-cta {
+        gap: 20px;
+    }
+
+    .ns-cat-cta-arrow {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: var(--ns-cream);
+        color: var(--ns-coffee);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+    }
+
+    .ns-cat-card:hover .ns-cat-cta-arrow {
+        background: var(--ns-clay);
+        color: var(--ns-cream);
+    }
+
+    /* ===== TRENDING ===== */
+    .ns-trending {
+        background: var(--ns-sand);
+    }
+
+    /* ===== TRENDING ===== */
+    .ns-trending {
+        background: var(--ns-sand);
+    }
+
+    .ns-product-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 24px;
+    }
+
+        /* Reset Bootstrap column behavior - each card fills its grid cell */
+        .ns-product-grid > [class*="col-"],
+        .ns-product-grid > div {
+            padding: 0 !important;
+            margin: 0 !important;
+            max-width: 100% !important;
+            width: 100% !important;
+            flex: unset !important;
+        }
+
+        .ns-product-grid .card {
+            background: var(--ns-cream) !important;
+            border: 1px solid rgba(74, 55, 41, 0.08) !important;
+            border-radius: 24px !important;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            color: var(--ns-coffee) !important;
+            box-shadow: 0 4px 16px var(--ns-soft-shadow);
+            height: 100%;
+            width: 100%;
+        }
+
+            .ns-product-grid .card:hover {
+                transform: translateY(-8px);
+                border-color: var(--ns-terracotta) !important;
+                box-shadow: 0 20px 40px rgba(184, 96, 72, 0.15);
+            }
+
+            .ns-product-grid .card img,
+            .ns-product-grid .card-img-top {
+                width: 100%;
+                height: 220px;
+                object-fit: cover;
+            }
+
+        .ns-product-grid .card-body {
+            padding: 20px !important;
+        }
+
+        .ns-product-grid .card-title,
+        .ns-product-grid h5,
+        .ns-product-grid h6 {
+            color: var(--ns-coffee) !important;
+            font-weight: 600;
+            font-size: 1rem !important;
+        }
+
+        .ns-product-grid .text-muted {
+            color: var(--ns-mocha) !important;
+        }
+
+    /* Responsive breakpoints */
+    @@media (max-width: 1100px) {
+        .ns-product-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+
+    @@media (max-width: 800px) {
+        .ns-product-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @@media (max-width: 480px) {
+        .ns-product-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    /* ===== BRANDS ===== */
+    .ns-brands {
+        background: var(--ns-cream);
+        padding: 90px 0;
+        overflow: hidden;
+    }
+
+    .ns-brands-header {
+        text-align: center;
+        margin-bottom: 50px;
+    }
+
+    .ns-marquee {
+        display: flex;
+        gap: 50px;
+        animation: ns-marquee 40s linear infinite;
+        width: fit-content;
+    }
+
+    @@keyframes ns-marquee {
+        from {
+            transform: translateX(0);
+        }
+
+        to {
+            transform: translateX(-50%);
+        }
+    }
+
+    .ns-brand-pill {
+        flex-shrink: 0;
+        background: var(--ns-sand);
+        border: 1px solid rgba(74, 55, 41, 0.1);
+        border-radius: 100px;
+        padding: 22px 38px;
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        text-decoration: none;
+        color: var(--ns-coffee);
+        transition: all 0.35s ease;
+        min-width: 220px;
+        justify-content: center;
+    }
+
+        .ns-brand-pill:hover {
+            background: var(--ns-coffee);
+            color: var(--ns-cream);
+            transform: scale(1.05);
+        }
+
+        .ns-brand-pill img {
+            max-height: 40px;
+            max-width: 80px;
+            object-fit: contain;
+            opacity: 0.7;
+            transition: all 0.3s;
+        }
+
+        .ns-brand-pill:hover img {
+            opacity: 1;
+            filter: brightness(0) invert(1);
+        }
+
+        .ns-brand-pill .name {
+            font-family: 'Fraunces', serif;
+            font-weight: 800;
+            font-size: 1.25rem;
+            letter-spacing: 0.02em;
+        }
+
+    /* ===== TESTIMONIALS ===== */
+    .ns-testimonials {
+        background: linear-gradient(180deg, var(--ns-peach) 0%, var(--ns-sand) 100%);
+        position: relative;
+        overflow: hidden;
+    }
+
+        .ns-testimonials::before {
+            content: '"';
+            position: absolute;
+            top: -100px;
+            right: 4%;
+            font-family: 'Fraunces', serif;
+            font-style: italic;
+            font-size: 30rem;
+            line-height: 1;
+            color: var(--ns-clay);
+            opacity: 0.1;
+            pointer-events: none;
+            font-weight: 800;
+        }
+
+    .ns-testimonial-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 24px;
+        position: relative;
+        z-index: 2;
+    }
+
+    .ns-testimonial {
+        background: var(--ns-cream);
+        border: 1px solid rgba(74, 55, 41, 0.08);
+        border-radius: 28px;
+        padding: 36px 32px;
+        transition: all 0.4s ease;
+        box-shadow: 0 4px 20px var(--ns-soft-shadow);
+    }
+
+        .ns-testimonial:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 40px rgba(184, 96, 72, 0.15);
+            border-color: var(--ns-terracotta);
+        }
+
+    .ns-testimonial-stars {
+        display: flex;
+        gap: 5px;
+        margin-bottom: 22px;
+    }
+
+        .ns-testimonial-stars i {
+            color: var(--ns-clay);
+            font-size: 0.95rem;
+        }
+
+            .ns-testimonial-stars i.dim {
+                color: rgba(184, 96, 72, 0.25);
+            }
+
+    .ns-testimonial-text {
+        font-family: 'Fraunces', serif;
+        font-size: 1.1rem;
+        line-height: 1.55;
+        margin-bottom: 30px;
+        color: var(--ns-coffee);
+        font-weight: 400;
+        font-style: italic;
+    }
+
+    .ns-testimonial-user {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding-top: 22px;
+        border-top: 1px solid rgba(74, 55, 41, 0.1);
+    }
+
+    .ns-testimonial-avatar {
+        width: 46px;
+        height: 46px;
+        border-radius: 50%;
         object-fit: cover;
-        width: 100%;
-        height: 100%;
+        background: var(--ns-peach);
+        border: 2px solid var(--ns-terracotta);
+    }
+
+    .ns-testimonial-name {
+        font-weight: 600;
+        font-size: 0.95rem;
+        color: var(--ns-coffee);
+        margin: 0;
+    }
+
+    .ns-testimonial-date {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.7rem;
+        color: var(--ns-mocha);
+        letter-spacing: 0.1em;
         opacity: 0.7;
     }
 
-    .shop-btn {
-        opacity: 0;
-        transform: translateY(20px);
-        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-
-    .promo-card:hover .promo-img {
-        transform: scale(1.1);
-        opacity: 0.4;
-    }
-
-    .promo-card:hover .shop-btn {
-        opacity: 1;
-        transform: translateY(0);
-    }
-
-    .shadow-text {
-        text-shadow: 2px 2px 10px rgba(0,0,0,0.8);
-        letter-spacing: 2px;
-    }
-
-    /* Elegant Section Titles */
-    .section-title {
-        position: relative;
-        padding-bottom: 15px;
-        font-weight: 900;
-        text-transform: uppercase;
-        letter-spacing: 1.5px;
-    }
-
-        .section-title::after {
-            content: '';
-            position: absolute;
-            left: 0;
-            bottom: 0;
-            width: 60px;
-            height: 4px;
-            background-color: var(--brand-teal, #00C2CB);
+    /* ===== RESPONSIVE ===== */
+    @@media (max-width: 992px) {
+        .ns-cat-card-large,
+        .ns-cat-card-tall,
+        .ns-cat-card-default {
+            grid-column: span 12;
+            min-height: 320px;
         }
 
-        .section-title.text-center::after {
-            left: 50%;
-            transform: translateX(-50%);
+        .ns-cat-card-wide {
+            flex-direction: column;
+            align-items: flex-start;
+            text-align: left;
+            min-height: 280px;
         }
 
-    /* Elegant Horizontal Scroll for Brands */
-    .fancy-slider {
-        display: flex;
-        overflow-x: auto;
-        scroll-behavior: smooth;
-        padding: 2rem 0;
-        gap: 2rem;
-        -ms-overflow-style: none;
-        scrollbar-width: none;
-    }
-
-        .fancy-slider::-webkit-scrollbar {
+        .ns-hero-marker {
             display: none;
         }
 
-    .brand-card {
-        min-width: 180px;
-        border-radius: 15px;
-        transition: transform 0.3s;
+        .ns-hero-stats {
+            flex-wrap: wrap;
+            gap: 30px;
+        }
     }
 
-        .brand-card:hover {
-            transform: scale(1.05);
+    @@media (max-width: 576px) {
+        .ns-section {
+            padding: 70px 0;
         }
+
+        .ns-hero {
+            padding: 90px 0 50px;
+            min-height: 80vh;
+        }
+
+        .ns-hero-stats {
+            gap: 24px;
+        }
+    }
 </style>
 
-<section class="hero-banner text-center text-white mb-5 shadow">
-    <div class="container pb-5">
-        <h5 class="text-uppercase fw-bold mb-3" style="color: var(--brand-teal, #00C2CB); letter-spacing: 3px;">NextStep Exclusives</h5>
-        <h1 class="display-2 fw-bolder mb-4 text-white shadow-text">Step Into Greatness</h1>
-        <p class="lead mb-5 opacity-75 mx-auto" style="max-width: 600px;">Experience the perfect blend of comfort and performance with our latest athletic footwear collection.</p>
-        <a asp-controller="Products" asp-action="Index" class="btn btn-light btn-lg px-5 py-3 rounded-pill fw-bold shadow-lg text-hover-brand transition-hover">
-            Explore All Shoes
-        </a>
-    </div>
-</section>
+<div class="ns-home">
 
-@if (Model.FeaturedCategories != null && Model.FeaturedCategories.Any())
-{
-    string[] premiumGradients = {
-        "linear-gradient(135deg, #111 0%, #333 100%)",
-        "linear-gradient(135deg, #00C2CB 0%, #005f63 100%)",
-        "linear-gradient(135deg, #444 0%, #111 100%)"
-    };
+    @* ===================== HERO ===================== *@
+    <section class="ns-hero">
+        <span class="ns-hero-marker tl">001 / NEXTSTEP</span>
+        <span class="ns-hero-marker tr">EST. 2025<br />ATHLETIC FOOTWEAR</span>
 
-    <div class="container mb-5 pb-4 mt-neg-5 position-relative" style="margin-top: -80px; z-index: 10;">
-        <div class="row g-4 justify-content-center">
-            @for (int i = 0; i < Model.FeaturedCategories.Count; i++)
-            {
-                var cat = Model.FeaturedCategories[i];
-                bool hasImage = !string.IsNullOrEmpty(cat.ImagePath);
-                string bgStyle = hasImage
-                ? $"background-image: url('{cat.ImagePath}'); background-size: cover; background-position: center;"
-                : $"background: {premiumGradients[i % premiumGradients.Length]};";
+        <div class="container ns-hero-content">
+            <div class="row align-items-center">
+                <div class="col-lg-10">
+                    <div class="ns-hero-meta mono">
+                        <span class="dot"></span>
+                        <span>New Drop — Spring Collection Live</span>
+                    </div>
 
-                <div class="col-lg-4 col-md-6">
-                    <a asp-controller="Search" asp-action="Index" asp-route-q="@cat.Name" class="text-decoration-none">
-                        <div class="card text-white border-0 premium-shadow promo-card" style="@bgStyle">
+                    <h1 class="ns-hero-title display-font">
+                        Step Into<br />
+                        <span class="accent"><span class="underline">Greatness.</span></span>
+                    </h1>
 
-                            <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.3);"></div>
+                    <p class="ns-hero-tagline">
+                        Performance-engineered footwear for athletes who refuse to settle.
+                        Built for the next step, whatever that means for you.
+                    </p>
 
-                            <div class="card-img-overlay d-flex flex-column justify-content-center align-items-center text-center">
-                                <h2 class="card-title fw-bolder text-uppercase mb-3 shadow-text">@cat.Name</h2>
-                                <span class="btn btn-light rounded-pill px-4 py-2 fw-bold text-dark shop-btn shadow-sm">Shop Collection</span>
-                            </div>
+                    <div class="d-flex gap-3 flex-wrap">
+                        <a asp-controller="Products" asp-action="Index" class="ns-btn-primary">
+                            Explore Catalog
+                            <span class="arrow">→</span>
+                        </a>
+                    </div>
+
+                    <div class="ns-hero-stats">
+                        <div>
+                            <div class="ns-stat-num">50+</div>
+                            <div class="ns-stat-label">Premium Brands</div>
                         </div>
+                        <div>
+                            <div class="ns-stat-num">10K+</div>
+                            <div class="ns-stat-label">Happy Athletes</div>
+                        </div>
+                        <div>
+                            <div class="ns-stat-num">24H</div>
+                            <div class="ns-stat-label">Fast Delivery</div>
+                        </div>
+                        <div>
+                            <div class="ns-stat-num">★ 4.9</div>
+                            <div class="ns-stat-label">Customer Rating</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    @* ===================== CATEGORIES ===================== *@
+    @if (Model.FeaturedCategories != null && Model.FeaturedCategories.Any())
+    {
+        <section class="ns-section ns-categories">
+            <div class="container">
+                <div class="ns-section-header">
+                    <div>
+                        <div class="ns-section-tag mono">Shop By Category</div>
+                        <h2 class="ns-section-title display-font">Find Your <em>Fit.</em></h2>
+                    </div>
+                    <a asp-controller="Products" asp-action="Index" class="ns-section-link">
+                        All Categories <span>→</span>
                     </a>
                 </div>
-            }
-        </div>
-    </div>
-}
 
-@if (Model.FeaturedProducts.Any())
-{
-    <div class="container py-5 mb-5 border-top">
-        <div class="d-flex justify-content-between align-items-end mb-5">
-            <h3 class="section-title mb-0">Trending Now</h3>
-            <a asp-controller="Products" asp-action="Index" class="fw-bold text-decoration-none text-muted text-hover-brand">View Entire Catalog <i class="fa fa-arrow-right ms-2"></i></a>
-        </div>
+                <div class="ns-cat-grid">
+                    @for (int i = 0; i < Model.FeaturedCategories.Count; i++)
+                    {
+                        var cat = Model.FeaturedCategories[i];
+                        bool hasImage = !string.IsNullOrEmpty(cat.ImagePath);
 
-        <div class="row">
-            @foreach (var product in Model.FeaturedProducts)
-            {
-                <partial name="_ProductCard" model="product" />
-            }
-        </div>
-    </div>
-}
+                        string sizeClass = i switch
+                        {
+                            0 => "ns-cat-card-large",
+                            1 => "ns-cat-card-tall",
+                            2 => "ns-cat-card-wide",
+                            _ => "ns-cat-card-default"
+                        };
 
-@if (Model.Brands.Any())
-{
-    <div class="bg-light py-5 mb-5 border-top border-bottom">
-        <div class="container">
-            <h3 class="section-title mb-2 text-center mx-auto" style="width: fit-content;">Our Trusted Brands</h3>
-            <div class="fancy-slider py-4">
-                @foreach (var brand in Model.Brands)
-                {
-                    <a asp-controller="Search" asp-action="Index" asp-route-q="@brand.Name" class="text-decoration-none">
-                        <div class="card border-0 premium-shadow brand-card d-flex align-items-center justify-content-center p-4 bg-white h-100">
-                            <img src="@(string.IsNullOrEmpty(brand.Logo) ? "/user/images/main-logo.png" : brand.Logo)"
-                                 alt="@brand.Name"
-                                 style="max-height: 70px; max-width: 120px; object-fit: contain; filter: grayscale(100%); transition: filter 0.4s;"
-                                 onmouseover="this.style.filter='grayscale(0%)'"
-                                 onmouseout="this.style.filter='grayscale(100%)'">
-                        </div>
+                        <a asp-controller="Search" asp-action="Index" asp-route-q="@cat.Name"
+                           class="ns-cat-card @sizeClass">
+                            @if (hasImage)
+                            {
+                                <div class="ns-cat-img" style="background-image: url('@cat.ImagePath');"></div>
+                                <div class="ns-cat-overlay"></div>
+                            }
+                            <div class="ns-cat-content">
+                                <div class="ns-cat-index">@(string.Format("{0:D2}", i + 1)) / Category</div>
+                                <h3 class="ns-cat-name">@cat.Name</h3>
+                                <div class="ns-cat-cta">
+                                    <span>Shop Collection</span>
+                                    <span class="ns-cat-cta-arrow">→</span>
+                                </div>
+                            </div>
+                        </a>
+                    }
+                </div>
+            </div>
+        </section>
+    }
+
+    @* ===================== TRENDING ===================== *@
+    @if (Model.FeaturedProducts.Any())
+    {
+        <section class="ns-section ns-trending">
+            <div class="container">
+                <div class="ns-section-header">
+                    <div>
+                        <div class="ns-section-tag mono">Hot Right Now</div>
+                        <h2 class="ns-section-title display-font">Trending <em>Drops.</em></h2>
+                    </div>
+                    <a asp-controller="Products" asp-action="Index" class="ns-section-link">
+                        View Catalog <span>→</span>
                     </a>
+                </div>
+
+                <div class="ns-product-grid">
+                    @foreach (var product in Model.FeaturedProducts)
+                    {
+                        <partial name="_ProductCard" model="product" />
+                    }
+                </div>
+            </div>
+        </section>
+    }
+
+    @* ===================== BRANDS ===================== *@
+    @if (Model.Brands.Any())
+    {
+        <section class="ns-brands">
+            <div class="container ns-brands-header">
+                <div class="ns-section-tag mono" style="justify-content: center;">Our Roster</div>
+                <h2 class="ns-section-title display-font">Trusted By The <em>Best.</em></h2>
+            </div>
+
+            <div class="ns-marquee">
+                @for (int loop = 0; loop < 2; loop++)
+                {
+                    @foreach (var brand in Model.Brands)
+                    {
+                        <a asp-controller="Search" asp-action="Index" asp-route-q="@brand.Name" class="ns-brand-pill">
+                            @if (!string.IsNullOrEmpty(brand.Logo))
+                            {
+                                <img src="@brand.Logo" alt="@brand.Name" />
+                            }
+                            <span class="name">@brand.Name</span>
+                        </a>
+                    }
+                }
+            </div>
+        </section>
+    }
+
+    @* ===================== TESTIMONIALS ===================== *@
+    <section class="ns-section ns-testimonials">
+        <div class="container">
+            <div class="ns-section-header">
+                <div>
+                    <div class="ns-section-tag mono">Verified Reviews</div>
+                    <h2 class="ns-section-title display-font">What Athletes <em>Say.</em></h2>
+                </div>
+            </div>
+
+            <div class="ns-testimonial-grid">
+                @if (Model.Testimonials.Any())
+                {
+                    @foreach (var t in Model.Testimonials)
+                    {
+                        <div class="ns-testimonial">
+                            <div class="ns-testimonial-stars">
+                                @for (int i = 1; i <= 5; i++)
+                                {
+                                    <i class="fa @(i <= t.Rating ? "fa-star" : "fa-star-o dim")"></i>
+                                }
+                            </div>
+                            <p class="ns-testimonial-text">"@t.Content"</p>
+                            <div class="ns-testimonial-user">
+                                <img src="@(t.User?.ProfileImage ?? "/admin/img/undraw_profile.svg")"
+                                     class="ns-testimonial-avatar" alt="User" />
+                                <div>
+                                    <p class="ns-testimonial-name">@(t.User?.FullName ?? "Verified Buyer")</p>
+                                    <span class="ns-testimonial-date">@t.CreatedAt.ToString("MMM dd, yyyy")</span>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="ns-testimonial">
+                        <div class="ns-testimonial-stars">
+                            <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>
+                        </div>
+                        <p class="ns-testimonial-text">"Quality is unmatched. The fit is perfect and the delivery was lightning fast. NextStep is now my go-to."</p>
+                        <div class="ns-testimonial-user">
+                            <img src="/admin/img/undraw_profile.svg" class="ns-testimonial-avatar" alt="User" />
+                            <div>
+                                <p class="ns-testimonial-name">Sara Al-Hassan</p>
+                                <span class="ns-testimonial-date">MAR 12, 2026</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ns-testimonial">
+                        <div class="ns-testimonial-stars">
+                            <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>
+                        </div>
+                        <p class="ns-testimonial-text">"Best running shoes I've ever owned. Took them on a half-marathon and felt zero fatigue. Highly recommend."</p>
+                        <div class="ns-testimonial-user">
+                            <img src="/admin/img/undraw_profile.svg" class="ns-testimonial-avatar" alt="User" />
+                            <div>
+                                <p class="ns-testimonial-name">Omar Khalil</p>
+                                <span class="ns-testimonial-date">APR 03, 2026</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ns-testimonial">
+                        <div class="ns-testimonial-stars">
+                            <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-o dim"></i>
+                        </div>
+                        <p class="ns-testimonial-text">"Premium feel, great packaging, and the customer service was on point. Will definitely shop here again."</p>
+                        <div class="ns-testimonial-user">
+                            <img src="/admin/img/undraw_profile.svg" class="ns-testimonial-avatar" alt="User" />
+                            <div>
+                                <p class="ns-testimonial-name">Layla Ibrahim</p>
+                                <span class="ns-testimonial-date">APR 28, 2026</span>
+                            </div>
+                        </div>
+                    </div>
                 }
             </div>
         </div>
-    </div>
-}
+    </section>
 
-<div class="bg-dark text-white py-5">
-    <div class="container py-5">
-        <h3 class="section-title mb-5 text-white border-white">What Athletes Say</h3>
-        <div class="row">
-
-            @if (Model.Testimonials.Any())
-            {
-                @foreach (var t in Model.Testimonials)
-                {
-                    <div class="col-md-6 col-lg-3 mb-4">
-                        <div class="card bg-transparent border-light h-100 transition-hover" style="border-radius: 15px;">
-                            <div class="card-body">
-                                <div class="text-warning mb-3 fs-5">
-                                    @for (int i = 1; i <= 5; i++)
-                                    {
-                                        <i class="fa @(i <= t.Rating ? "fa-star" : "fa-star-o")"></i>
-                                    }
-                                </div>
-                                <p class="card-text fst-italic lead" style="font-size: 1rem;">"@t.Content"</p>
-                            </div>
-                            <div class="card-footer bg-transparent border-0 pt-0">
-                                <div class="d-flex align-items-center mt-2">
-                                    <img src="@(t.User?.ProfileImage ?? "/admin/img/undraw_profile.svg")" class="rounded-circle me-3 border border-2 border-white bg-white" style="width: 50px; height: 50px; object-fit: cover;" alt="User">
-                                    <div>
-                                        <h6 class="mb-0 fw-bold">@(t.User?.FullName ?? "Verified Buyer")</h6>
-                                        <small class="text-muted opacity-75">@t.CreatedAt.ToString("MMM dd, yyyy")</small>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                }
-            }
-            else
-            {
-                <div class="col-md-6 col-lg-4 mb-4 mx-auto">
-                    <div class="card bg-transparent border-light h-100 transition-hover text-center p-4" style="border-radius: 15px;">
-                        <div class="card-body">
-                            <div class="text-warning mb-3 fs-5">
-                                <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>
-                            </div>
-                            <p class="card-text fst-italic lead" style="font-size: 1.1rem;">"The quality of the shoes here is unmatched. The customer service was incredible and delivery was super fast!"</p>
-                        </div>
-                        <div class="card-footer bg-transparent border-0 pt-0">
-                            <img src="/admin/img/undraw_profile.svg" class="rounded-circle mb-2 border border-2 border-white bg-white" style="width: 60px; height: 60px; object-fit: cover;" alt="User">
-                            <h6 class="mb-0 fw-bold mt-2">Demo User</h6>
-                        </div>
-                    </div>
-                </div>
-            }
-        </div>
-    </div>
 </div>

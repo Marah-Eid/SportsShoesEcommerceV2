@@ -30,243 +30,1310 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,900;1,900&family=Source+Sans+Pro:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,800;1,9..144,600;1,9..144,800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
     <style>
         :root {
-            /* NextStep Teal */
-            --brand-teal: #00C2CB;
+            --ns-cream: #faf6ef;
+            --ns-sand: #f3ead9;
+            --ns-peach: #f5d5b8;
+            --ns-terracotta: #c97b5e;
+            --ns-clay: #b86048;
+            --ns-coffee: #4a3729;
+            --ns-mocha: #6b4f3d;
+            --ns-sage: #8fa68a;
+            --ns-warm-gray: #a89684;
+            --ns-soft-shadow: rgba(74, 55, 41, 0.08);
         }
 
-        .text-hover-brand:hover {
-            color: var(--brand-teal) !important;
-            transition: color 0.2s ease-in-out;
+        body {
+            background: var(--ns-cream);
+            color: var(--ns-coffee);
+            font-family: 'Inter', -apple-system, sans-serif;
         }
 
-        .pfp-chevron {
-            font-size: 0.70rem;
-            margin-top: 2px;
-            transition: transform 0.2s;
+        /* ============================================
+                   ANNOUNCEMENT BAR
+                   ============================================ */
+        .ns-announce {
+            background: var(--ns-coffee);
+            color: var(--ns-cream);
+            padding: 10px 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
         }
 
-        .dropdown:hover .pfp-chevron {
+        .ns-announce-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .ns-announce-center {
+            flex: 1;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+            .ns-announce-center .dot {
+                width: 6px;
+                height: 6px;
+                border-radius: 50%;
+                background: var(--ns-peach);
+                animation: ns-pulse-dot 2.5s ease-in-out infinite;
+            }
+
+        @@keyframes ns-pulse-dot {
+            0%, 100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.5;
+                transform: scale(1.4);
+            }
+        }
+
+        .ns-announce-links {
+            display: flex;
+            gap: 24px;
+        }
+
+            .ns-announce-links a {
+                color: var(--ns-peach);
+                text-decoration: none;
+                transition: color 0.3s ease;
+            }
+
+                .ns-announce-links a:hover {
+                    color: var(--ns-cream);
+                }
+
+        /* ============================================
+                   MAIN NAVBAR
+                   ============================================ */
+        .ns-header {
+            background: var(--ns-cream);
+            border-bottom: 1px solid rgba(74, 55, 41, 0.08);
+            position: sticky;
+            top: 0;
+            z-index: 1030;
+            backdrop-filter: blur(20px);
+            background: rgba(250, 246, 239, 0.92);
+        }
+
+        .ns-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 0;
+            gap: 30px;
+        }
+
+        .ns-nav-brand {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            flex-shrink: 0;
+        }
+
+            .ns-nav-brand img {
+                max-height: 48px;
+                object-fit: contain;
+            }
+
+        .ns-nav-brand-text {
+            font-family: 'Fraunces', serif;
+            font-weight: 800;
+            font-size: 1.5rem;
+            color: var(--ns-coffee);
+            letter-spacing: -0.02em;
+        }
+
+            .ns-nav-brand-text .dot {
+                color: var(--ns-clay);
+            }
+
+        /* Center menu */
+        .ns-nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .ns-nav-item {
+            position: relative;
+        }
+
+        .ns-nav-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 18px;
+            font-size: 0.92rem;
+            font-weight: 500;
+            color: var(--ns-coffee);
+            text-decoration: none;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+            .ns-nav-link:hover {
+                color: var(--ns-clay);
+                background: var(--ns-sand);
+            }
+
+            .ns-nav-link.sale {
+                color: var(--ns-clay);
+                font-weight: 600;
+            }
+
+                .ns-nav-link.sale:hover {
+                    background: rgba(184, 96, 72, 0.1);
+                }
+
+            .ns-nav-link .chev {
+                font-size: 0.65rem;
+                transition: transform 0.3s ease;
+                margin-left: 2px;
+            }
+
+        .ns-nav-item:hover .ns-nav-link .chev {
             transform: rotate(180deg);
-            color: var(--brand-teal) !important;
+        }
+
+        /* Dropdown */
+        .ns-dropdown {
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 50%;
+            transform: translateX(-50%) translateY(-8px);
+            min-width: 240px;
+            background: var(--ns-cream);
+            border: 1px solid rgba(74, 55, 41, 0.08);
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(74, 55, 41, 0.15);
+            padding: 12px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            list-style: none;
+            margin: 0;
+        }
+
+        .ns-nav-item:hover > .ns-dropdown,
+        .ns-nav-item:focus-within > .ns-dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .ns-dropdown-header {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--ns-clay);
+            padding: 8px 14px 10px;
+            font-weight: 500;
+        }
+
+        .ns-dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--ns-coffee);
+            text-decoration: none;
+            border-radius: 12px;
+            transition: all 0.25s ease;
+        }
+
+            .ns-dropdown-item:hover {
+                background: var(--ns-sand);
+                color: var(--ns-clay);
+                padding-left: 18px;
+            }
+
+            .ns-dropdown-item i {
+                width: 16px;
+                color: var(--ns-warm-gray);
+                font-size: 0.85rem;
+            }
+
+            .ns-dropdown-item:hover i {
+                color: var(--ns-clay);
+            }
+
+        .ns-dropdown-divider {
+            height: 1px;
+            background: rgba(74, 55, 41, 0.08);
+            margin: 8px 4px;
+            border: none;
+        }
+
+        .ns-dropdown-user {
+            padding: 14px;
+            margin: -12px -12px 8px;
+            background: linear-gradient(135deg, var(--ns-sand) 0%, var(--ns-peach) 100%);
+            border-radius: 20px 20px 0 0;
+        }
+
+        .ns-dropdown-user-name {
+            font-family: 'Fraunces', serif;
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--ns-coffee);
+            margin: 0;
+        }
+
+        .ns-dropdown-user-email {
+            font-size: 0.78rem;
+            color: var(--ns-mocha);
+            margin: 2px 0 0;
+        }
+
+        .ns-dropdown-logout {
+            color: var(--ns-clay) !important;
+            font-weight: 600;
+        }
+
+            .ns-dropdown-logout:hover {
+                background: rgba(184, 96, 72, 0.1) !important;
+            }
+
+        /* User actions (right side) */
+        .ns-nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .ns-action-btn {
+            position: relative;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--ns-coffee);
+            background: transparent;
+            border: none;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+            .ns-action-btn:hover {
+                background: var(--ns-sand);
+                color: var(--ns-clay);
+                transform: translateY(-2px);
+            }
+
+            .ns-action-btn i {
+                font-size: 1.05rem;
+            }
+
+        .ns-action-badge {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            min-width: 18px;
+            height: 18px;
+            padding: 0 5px;
+            background: var(--ns-clay);
+            color: var(--ns-cream);
+            border-radius: 50px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'JetBrains Mono', monospace;
+            border: 2px solid var(--ns-cream);
+        }
+
+        .ns-action-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--ns-terracotta);
+            transition: all 0.3s ease;
+        }
+
+        .ns-action-btn:hover .ns-action-avatar {
+            transform: scale(1.05);
+            border-color: var(--ns-clay);
+        }
+
+        /* Mobile toggler */
+        .ns-mobile-toggle {
+            display: none;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--ns-sand);
+            border: none;
+            color: var(--ns-coffee);
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+            .ns-mobile-toggle:hover {
+                background: var(--ns-peach);
+            }
+
+            .ns-mobile-toggle i {
+                font-size: 1.15rem;
+            }
+
+        /* ============================================
+                   SEARCH OVERLAY
+                   ============================================ */
+        .ns-search-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(74, 55, 41, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 2000;
+            display: none;
+            align-items: flex-start;
+            justify-content: center;
+            padding-top: 18vh;
+        }
+
+            .ns-search-overlay.active {
+                display: flex;
+                animation: ns-search-in 0.4s ease;
+            }
+
+        @@keyframes ns-search-in {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .ns-search-close {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: rgba(250, 246, 239, 0.1);
+            border: 1px solid rgba(250, 246, 239, 0.2);
+            color: var(--ns-cream);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+            .ns-search-close:hover {
+                background: var(--ns-clay);
+                border-color: var(--ns-clay);
+                transform: rotate(90deg);
+            }
+
+        .ns-search-form {
+            width: 100%;
+            max-width: 720px;
+            padding: 0 30px;
+            text-align: center;
+        }
+
+        .ns-search-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--ns-peach);
+            margin-bottom: 18px;
+            display: block;
+        }
+
+        .ns-search-input-wrap {
+            position: relative;
+            display: flex;
+            align-items: center;
+            border-bottom: 2px solid rgba(250, 246, 239, 0.3);
+            padding-bottom: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+            .ns-search-input-wrap:focus-within {
+                border-color: var(--ns-peach);
+            }
+
+        .ns-search-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: var(--ns-cream);
+            font-family: 'Fraunces', serif;
+            font-weight: 600;
+            font-size: clamp(1.5rem, 4vw, 2.4rem);
+            letter-spacing: -0.02em;
+            padding: 0;
+        }
+
+            .ns-search-input::placeholder {
+                color: rgba(250, 246, 239, 0.4);
+                font-style: italic;
+            }
+
+        .ns-search-submit {
+            background: transparent;
+            border: none;
+            color: var(--ns-peach);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0 10px;
+            transition: all 0.3s ease;
+        }
+
+            .ns-search-submit:hover {
+                color: var(--ns-cream);
+                transform: translateX(4px);
+            }
+
+        .ns-search-hint {
+            margin-top: 24px;
+            font-size: 0.85rem;
+            color: rgba(250, 246, 239, 0.6);
+        }
+
+            .ns-search-hint kbd {
+                background: rgba(250, 246, 239, 0.15);
+                border: 1px solid rgba(250, 246, 239, 0.2);
+                border-radius: 6px;
+                padding: 2px 8px;
+                font-family: 'JetBrains Mono', monospace;
+                font-size: 0.75rem;
+                color: var(--ns-peach);
+                margin: 0 4px;
+            }
+
+        /* ============================================
+                   MOBILE OFFCANVAS
+                   ============================================ */
+        .offcanvas.ns-offcanvas {
+            background: var(--ns-cream);
+            color: var(--ns-coffee);
+            border-left: 1px solid rgba(74, 55, 41, 0.08);
+        }
+
+        .ns-offcanvas .offcanvas-header {
+            border-bottom: 1px solid rgba(74, 55, 41, 0.08);
+            padding: 22px 26px;
+        }
+
+        .ns-offcanvas .btn-close {
+            filter: invert(0.3) sepia(0.3) saturate(2) hue-rotate(345deg);
+        }
+
+        .ns-offcanvas-body {
+            padding: 26px;
+        }
+
+        .ns-mobile-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 30px;
+        }
+
+            .ns-mobile-menu li {
+                border-bottom: 1px solid rgba(74, 55, 41, 0.06);
+            }
+
+            .ns-mobile-menu .ns-nav-link {
+                display: block;
+                padding: 16px 4px;
+                border-radius: 0;
+                font-size: 1.05rem;
+                font-weight: 600;
+            }
+
+                .ns-mobile-menu .ns-nav-link:hover {
+                    background: transparent;
+                    padding-left: 12px;
+                }
+
+        .ns-mobile-submenu {
+            list-style: none;
+            padding: 0 0 12px 12px;
+            margin: 0;
+        }
+
+            .ns-mobile-submenu a {
+                display: block;
+                padding: 8px 4px;
+                font-size: 0.9rem;
+                color: var(--ns-mocha);
+                text-decoration: none;
+                font-weight: 500;
+                transition: all 0.25s ease;
+            }
+
+                .ns-mobile-submenu a:hover {
+                    color: var(--ns-clay);
+                    padding-left: 8px;
+                }
+
+        /* ============================================
+                   ALERTS (TempData)
+                   ============================================ */
+        .ns-alert {
+            background: var(--ns-cream);
+            border: 1px solid rgba(143, 166, 138, 0.4);
+            border-left: 4px solid var(--ns-sage);
+            border-radius: 14px;
+            padding: 14px 22px;
+            color: var(--ns-coffee);
+            font-weight: 500;
+            box-shadow: 0 4px 20px var(--ns-soft-shadow);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+            .ns-alert i.icon {
+                color: var(--ns-sage);
+                font-size: 1.1rem;
+                margin-right: 10px;
+            }
+
+            .ns-alert .btn-close {
+                filter: invert(0.3) sepia(0.3);
+                opacity: 0.6;
+            }
+
+        /* ============================================
+                   FOOTER
+                   ============================================ */
+        .ns-footer {
+            background: var(--ns-coffee);
+            color: var(--ns-cream);
+            padding: 90px 0 0;
+            margin-top: 100px;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .ns-footer::before {
+                content: '';
+                position: absolute;
+                top: -200px;
+                right: -100px;
+                width: 500px;
+                height: 500px;
+                border-radius: 50%;
+                background: radial-gradient(circle, rgba(201, 123, 94, 0.18) 0%, transparent 70%);
+                filter: blur(50px);
+                pointer-events: none;
+            }
+
+            .ns-footer::after {
+                content: '';
+                position: absolute;
+                bottom: -150px;
+                left: -100px;
+                width: 400px;
+                height: 400px;
+                border-radius: 50%;
+                background: radial-gradient(circle, rgba(143, 166, 138, 0.12) 0%, transparent 70%);
+                filter: blur(50px);
+                pointer-events: none;
+            }
+
+        .ns-footer-inner {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Big CTA strip */
+        .ns-footer-cta {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 40px;
+            align-items: center;
+            padding-bottom: 60px;
+            border-bottom: 1px solid rgba(250, 246, 239, 0.12);
+            margin-bottom: 60px;
+        }
+
+        .ns-footer-cta-title {
+            font-family: 'Fraunces', serif;
+            font-weight: 800;
+            font-size: clamp(2rem, 4.5vw, 3.6rem);
+            line-height: 0.95;
+            letter-spacing: -0.03em;
+            color: var(--ns-cream);
+            margin: 0;
+        }
+
+            .ns-footer-cta-title em {
+                color: var(--ns-peach);
+                font-style: italic;
+            }
+
+        .ns-footer-cta-sub {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--ns-peach);
+            margin-bottom: 18px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+            .ns-footer-cta-sub::before {
+                content: '';
+                width: 24px;
+                height: 2px;
+                background: currentColor;
+            }
+
+        .ns-newsletter {
+            display: flex;
+            align-items: center;
+            background: rgba(250, 246, 239, 0.08);
+            border: 1px solid rgba(250, 246, 239, 0.15);
+            border-radius: 50px;
+            padding: 6px 6px 6px 24px;
+            min-width: 380px;
+            transition: all 0.3s ease;
+        }
+
+            .ns-newsletter:focus-within {
+                border-color: var(--ns-peach);
+                background: rgba(250, 246, 239, 0.12);
+            }
+
+            .ns-newsletter input {
+                flex: 1;
+                background: transparent;
+                border: none;
+                outline: none;
+                color: var(--ns-cream);
+                font-family: 'Inter', sans-serif;
+                font-size: 0.92rem;
+                padding: 14px 12px 14px 0;
+            }
+
+                .ns-newsletter input::placeholder {
+                    color: rgba(250, 246, 239, 0.5);
+                }
+
+            .ns-newsletter button {
+                background: var(--ns-clay);
+                color: var(--ns-cream);
+                border: none;
+                border-radius: 50px;
+                padding: 12px 26px;
+                font-size: 0.85rem;
+                font-weight: 600;
+                cursor: pointer;
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                transition: all 0.3s ease;
+            }
+
+                .ns-newsletter button:hover {
+                    background: var(--ns-peach);
+                    color: var(--ns-coffee);
+                    transform: translateX(4px);
+                }
+
+        /* Footer columns */
+        .ns-footer-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1fr 1fr;
+            gap: 50px;
+            padding-bottom: 60px;
+        }
+
+        .ns-footer-brand-logo {
+            font-family: 'Fraunces', serif;
+            font-weight: 800;
+            font-size: 1.8rem;
+            color: var(--ns-cream);
+            letter-spacing: -0.02em;
+            margin-bottom: 18px;
+            display: inline-block;
+        }
+
+            .ns-footer-brand-logo .dot {
+                color: var(--ns-peach);
+            }
+
+        .ns-footer-brand-text {
+            font-size: 0.95rem;
+            line-height: 1.65;
+            color: rgba(250, 246, 239, 0.65);
+            max-width: 320px;
+            margin-bottom: 24px;
+        }
+
+        .ns-footer-socials {
+            display: flex;
+            gap: 10px;
+        }
+
+        .ns-footer-social {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(250, 246, 239, 0.08);
+            border: 1px solid rgba(250, 246, 239, 0.12);
+            color: var(--ns-cream);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+            .ns-footer-social:hover {
+                background: var(--ns-clay);
+                border-color: var(--ns-clay);
+                color: var(--ns-cream);
+                transform: translateY(-3px);
+            }
+
+        .ns-footer-heading {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--ns-peach);
+            margin-bottom: 22px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+            .ns-footer-heading::before {
+                content: '';
+                width: 18px;
+                height: 2px;
+                background: currentColor;
+            }
+
+        .ns-footer-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+            .ns-footer-list li {
+                margin-bottom: 12px;
+            }
+
+            .ns-footer-list a {
+                color: rgba(250, 246, 239, 0.7);
+                text-decoration: none;
+                font-size: 0.92rem;
+                font-weight: 400;
+                transition: all 0.3s ease;
+                position: relative;
+                display: inline-block;
+            }
+
+                .ns-footer-list a:hover {
+                    color: var(--ns-peach);
+                    transform: translateX(4px);
+                }
+
+        .ns-footer-contact-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 14px;
+            font-size: 0.9rem;
+            color: rgba(250, 246, 239, 0.7);
+            line-height: 1.55;
+        }
+
+            .ns-footer-contact-item i {
+                color: var(--ns-peach);
+                font-size: 0.9rem;
+                margin-top: 4px;
+                flex-shrink: 0;
+            }
+
+        /* Footer bottom bar */
+        .ns-footer-bottom {
+            border-top: 1px solid rgba(250, 246, 239, 0.12);
+            padding: 26px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .ns-footer-copy {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: rgba(250, 246, 239, 0.5);
+            margin: 0;
+        }
+
+        .ns-footer-legal {
+            display: flex;
+            gap: 24px;
+        }
+
+            .ns-footer-legal a {
+                font-family: 'JetBrains Mono', monospace;
+                font-size: 0.72rem;
+                letter-spacing: 0.12em;
+                text-transform: uppercase;
+                color: rgba(250, 246, 239, 0.5);
+                text-decoration: none;
+                transition: color 0.3s ease;
+            }
+
+                .ns-footer-legal a:hover {
+                    color: var(--ns-peach);
+                }
+
+        /* ============================================
+                   RESPONSIVE
+                   ============================================ */
+        @@media (max-width: 991px) {
+            .ns-nav-menu {
+                display: none;
+            }
+
+            .ns-mobile-toggle {
+                display: inline-flex;
+            }
+
+            .ns-announce-links {
+                display: none;
+            }
+
+            .ns-footer-cta {
+                grid-template-columns: 1fr;
+                gap: 26px;
+            }
+
+            .ns-newsletter {
+                min-width: 0;
+                width: 100%;
+            }
+
+            .ns-footer-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 40px;
+            }
+        }
+
+        @@media (max-width: 576px) {
+            .ns-nav {
+                padding: 14px 0;
+                gap: 14px;
+            }
+
+            .ns-nav-brand img {
+                max-height: 40px;
+            }
+
+            .ns-nav-actions {
+                gap: 2px;
+            }
+
+            .ns-action-btn {
+                width: 38px;
+                height: 38px;
+            }
+
+            .ns-footer {
+                padding: 70px 0 0;
+                margin-top: 70px;
+            }
+
+            .ns-footer-grid {
+                grid-template-columns: 1fr;
+                gap: 36px;
+            }
+
+            .ns-footer-bottom {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 14px;
+            }
+
+            .ns-newsletter {
+                flex-direction: column;
+                background: transparent;
+                border: none;
+                padding: 0;
+                gap: 10px;
+            }
+
+                .ns-newsletter input {
+                    background: rgba(250, 246, 239, 0.08);
+                    border: 1px solid rgba(250, 246, 239, 0.15);
+                    border-radius: 50px;
+                    padding: 14px 22px;
+                    width: 100%;
+                }
+
+                .ns-newsletter button {
+                    width: 100%;
+                    justify-content: center;
+                    padding: 14px 26px;
+                }
         }
     </style>
 </head>
 <body>
 
-    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
-        <symbol xmlns="http://www.w3.org/2000/svg" id="close" viewBox="0 0 16 16">
-            <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z" />
-        </symbol>
-        <symbol xmlns="http://www.w3.org/2000/svg" id="search" viewBox="0 0 24 24">
-            <path fill="currentColor" d="M10 18a7.952 7.952 0 0 0 4.897-1.688l4.396 4.396l1.414-1.414l-4.396-4.396A7.952 7.952 0 0 0 18 10c0-4.411-3.589-8-8-8s-8 3.589-8 8s3.589 8 8 8zm0-14c3.309 0 6 2.691 6 6s-2.691 6-6 6s-6-2.691-6-6s2.691-6 6-6z" />
-        </symbol>
-    </svg>
-
-    <div class="search-box bg-dark position-relative">
-        <div class="search-wrap">
-            <div class="close-button">
-                <svg class="close" style="fill: white; width: 24px; height: 24px; cursor: pointer;">
-                    <use xlink:href="#close"></use>
-                </svg>
-            </div>
-            <form id="active-search-form" class="text-center pt-3" asp-controller="Search" asp-action="Index" method="get">
-                <input type="text" name="q" class="search-input" style="color: #fff !important; background-color: transparent !important; border-bottom: 2px solid #fff;" placeholder="Search shoes, brands, or categories..." autocomplete="off" autofocus>
-                <button type="submit" class="border-0 bg-transparent" style="cursor: pointer;">
-                    <svg class="search" style="fill: white; width: 24px; height: 24px;">
-                        <use xlink:href="#search"></use>
-                    </svg>
-                </button>
-            </form>
-        </div>
-    </div>
-
-    <header id="header" class="site-header text-black">
-
-        <div class="header-top bg-dark text-white py-1">
-            <div class="container">
-                <div class="row align-items-center">
-                    <div class="col-md-4 d-none d-md-block">
-                    </div>
-                    <div class="col-md-4 col-sm-12 text-center">
-                        <p class="m-0 small fw-bold text-uppercase" style="letter-spacing: 1px; font-size: 0.8rem;">
-                            Free Shipping on orders over $100
-                        </p>
-                    </div>
-                    <div class="col-md-4 d-none d-md-block text-end">
-                        <div class="d-flex justify-content-end gap-3 fw-bold" style="font-size: 0.8rem;">
-                            <a asp-controller="Home" asp-action="About" class="text-white text-decoration-none opacity-75 text-hover-brand">About Us</a>
-                            <a href="#" class="text-white text-decoration-none opacity-75 text-hover-brand">Contact Us</a>
-                        </div>
-                    </div>
+    @* =================== ANNOUNCEMENT BAR =================== *@
+    <div class="ns-announce">
+        <div class="container">
+            <div class="ns-announce-row">
+                <span style="visibility: hidden;">spacer</span>
+                <div class="ns-announce-center">
+                    <span class="dot"></span>
+                    <span>Free Shipping on Orders Over $100</span>
+                </div>
+                <div class="ns-announce-links">
+                    <a asp-controller="Home" asp-action="About">About</a>
+                    <a asp-controller="Contact" asp-action="Index">Contact</a>
                 </div>
             </div>
         </div>
+    </div>
 
-        <nav id="header-nav" class="navbar navbar-expand-lg border-bottom py-2">
-            <div class="container align-items-center">
+    @* =================== MAIN HEADER =================== *@
+    <header class="ns-header">
+        <div class="container">
+            <nav class="ns-nav">
 
-                <a class="navbar-brand" asp-controller="Home" asp-action="Index">
-                    <img src="~/images/nextsteplogo.png" style="max-height: 55px; object-fit: contain;" alt="NextStep Logo">
+                @* Logo *@
+                <a class="ns-nav-brand" asp-controller="Home" asp-action="Index">
+                    <img src="~/images/nextsteplogo.png" alt="NextStep">
                 </a>
 
-                <button class="navbar-toggler d-flex d-lg-none order-3 border-0 p-1 ms-2" type="button" data-bs-toggle="offcanvas"
-                        data-bs-target="#bdNavbar" aria-controls="bdNavbar" aria-expanded="false" aria-label="Toggle navigation">
-                    <i class="fa fa-bars fs-3"></i>
-                </button>
-
-                <div class="offcanvas offcanvas-end" tabindex="-1" id="bdNavbar">
-                    <div class="offcanvas-header px-4 pb-0">
-                        <a class="navbar-brand ps-3" asp-controller="Home" asp-action="Index">
-                            <img src="~/images/nextsteplogo.png" style="max-height: 45px;" alt="logo">
+                @* Center Menu (Desktop) *@
+                <ul class="ns-nav-menu">
+                    <li class="ns-nav-item">
+                        <a class="ns-nav-link" asp-controller="Home" asp-action="Index">Home</a>
+                    </li>
+                    <li class="ns-nav-item">
+                        <a class="ns-nav-link" asp-controller="Products" asp-action="Index">Shop All</a>
+                    </li>
+                    <li class="ns-nav-item">
+                        <a class="ns-nav-link" href="#">
+                            Categories
+                            <i class="fa fa-chevron-down chev"></i>
                         </a>
-                        <button type="button" class="btn-close btn-close-black p-5" data-bs-dismiss="offcanvas" aria-label="Close" data-bs-target="#bdNavbar"></button>
-                    </div>
-                    <div class="offcanvas-body align-items-center">
-
-                        <ul id="navbar" class="navbar-nav fw-bold justify-content-center flex-grow-1">
-                            <li class="nav-item"><a class="nav-link me-4 text-hover-brand" asp-controller="Home" asp-action="Index">Home</a></li>
-                            <li class="nav-item"><a class="nav-link me-4 text-hover-brand" asp-controller="Products" asp-action="Index">Shop All</a></li>
-
-                            <li class="nav-item dropdown">
-                                <a class="nav-link me-4 dropdown-toggle border-0 text-hover-brand" href="#" id="categoriesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Categories</a>
-                                <ul class="dropdown-menu fw-bold shadow border-0 rounded-3 mt-2" aria-labelledby="categoriesDropdown">
-                                    @if (categories != null && categories.Any())
-                                    {
-                                        foreach (var cat in categories)
-                                        {
-                                            <li><a class="dropdown-item py-2 text-hover-brand" asp-controller="Search" asp-action="Index" asp-route-q="@cat.Name">@cat.Name</a></li>
-                                        }
-                                    }
-                                    else
-                                    {
-                                        <li><span class="dropdown-item text-muted">No categories</span></li>
-                                    }
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item py-2 text-hover-brand" asp-controller="Products" asp-action="Index">View All Shoes</a></li>
-                                </ul>
+                        <ul class="ns-dropdown">
+                            <li class="ns-dropdown-header">Browse Collections</li>
+                            @if (categories != null && categories.Any())
+                            {
+                                foreach (var cat in categories)
+                                {
+                                    <li>
+                                        <a class="ns-dropdown-item" asp-controller="Search" asp-action="Index" asp-route-q="@cat.Name">
+                                            <i class="fa fa-tag"></i>
+                                            <span>@cat.Name</span>
+                                        </a>
+                                    </li>
+                                }
+                            }
+                            else
+                            {
+                                <li><span class="ns-dropdown-item" style="color: var(--ns-warm-gray);">No categories yet</span></li>
+                            }
+                            <li><hr class="ns-dropdown-divider"></li>
+                            <li>
+                                <a class="ns-dropdown-item" asp-controller="Products" asp-action="Index">
+                                    <i class="fa fa-arrow-right"></i>
+                                    <span>View All Shoes</span>
+                                </a>
                             </li>
-                            <li class="nav-item"><a class="nav-link me-4 text-danger" asp-controller="Products" asp-action="Index" asp-route-onSale="true"><i class="fa fa-fire me-1"></i> Flash Sale</a></li>
                         </ul>
+                    </li>
+                    <li class="ns-nav-item">
+                        <a class="ns-nav-link sale" asp-controller="Products" asp-action="Index" asp-route-onSale="true">
+                            <i class="fa fa-fire"></i> Flash Sale
+                        </a>
+                    </li>
+                </ul>
 
-                        <div class="user-items ps-0 ps-md-5">
-                            <ul class="d-flex justify-content-end list-unstyled align-items-center m-0 gap-3">
+                @* Actions (Search, Account, Wishlist, Cart) *@
+                <ul class="ns-nav-actions">
+                    <li>
+                        <a href="#" class="ns-action-btn search-item" title="Search">
+                            <i class="fa fa-search"></i>
+                        </a>
+                    </li>
 
+                    <li class="ns-nav-item">
+                        <a href="#" class="ns-action-btn" title="Account">
+                            @if (SignInManager.IsSignedIn(User) && currentUser != null)
+                            {
+                                string pfp = string.IsNullOrEmpty(currentUser.ProfileImage) ? "/admin/img/undraw_profile.svg" : currentUser.ProfileImage;
+                                <img src="@pfp" class="ns-action-avatar" alt="Profile">
+                            }
+                            else
+                            {
+                                <i class="fa fa-user"></i>
+                            }
+                        </a>
+                        <ul class="ns-dropdown" style="left: auto; right: 0; transform: translateY(-8px);">
+                            @if (SignInManager.IsSignedIn(User))
+                            {
+                                <li class="ns-dropdown-user">
+                                    <p class="ns-dropdown-user-name">@(currentUser?.FullName ?? "Athlete")</p>
+                                    <p class="ns-dropdown-user-email">@currentUser?.Email</p>
+                                </li>
+                                <li><a class="ns-dropdown-item" asp-controller="Orders" asp-action="Index"><i class="fa fa-box"></i><span>My Orders</span></a></li>
+                                <li><a class="ns-dropdown-item" asp-controller="Testimonials" asp-action="Create"><i class="fa fa-star"></i><span>Rate Us</span></a></li>
+                                <li><a class="ns-dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index"><i class="fa fa-user-edit"></i><span>Edit Profile</span></a></li>
+                                <li><hr class="ns-dropdown-divider"></li>
                                 <li>
-                                    <a href="#" class="search-item border-0 text-dark text-hover-brand" title="Search">
-                                        <i class="fa fa-search fs-5"></i>
-                                    </a>
+                                    <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" method="post" style="margin: 0;">
+                                        <button type="submit" class="ns-dropdown-item ns-dropdown-logout" style="width: 100%; background: none; border: none; text-align: left; cursor: pointer;">
+                                            <i class="fa fa-sign-out-alt"></i><span>Logout</span>
+                                        </button>
+                                    </form>
                                 </li>
+                            }
+                            else
+                            {
+                                <li class="ns-dropdown-header">Account Access</li>
+                                <li><a class="ns-dropdown-item" asp-area="Identity" asp-page="/Account/Login"><i class="fa fa-sign-in-alt"></i><span>Sign In</span></a></li>
+                                <li><a class="ns-dropdown-item" asp-area="Identity" asp-page="/Account/Register"><i class="fa fa-user-plus"></i><span>Create Account</span></a></li>
+                            }
+                        </ul>
+                    </li>
 
-                                <li class="dropdown">
-                                    <a class="text-dark d-flex align-items-center text-decoration-none text-hover-brand dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                        @if (SignInManager.IsSignedIn(User) && currentUser != null)
-                                        {
-                                            string pfp = string.IsNullOrEmpty(currentUser.ProfileImage) ? "/admin/img/undraw_profile.svg" : currentUser.ProfileImage;
-                                            <img src="@pfp" class="rounded-circle border border-2 border-white shadow-sm" style="width: 32px; height: 32px; object-fit: cover;" alt="Profile Picture">
-                                        }
-                                        else
-                                        {
-                                            <i class="fa fa-user-circle fs-4"></i>
-                                        }
-                                    </a>
+                    <li>
+                        <a asp-controller="Wishlist" asp-action="Index" class="ns-action-btn" title="Wishlist">
+                            <i class="fa fa-heart"></i>
+                            <span class="ns-action-badge">0</span>
+                        </a>
+                    </li>
 
-                                    <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-3 mt-3" aria-labelledby="userDropdown">
-                                        @if (SignInManager.IsSignedIn(User))
-                                        {
-                                            <li class="px-3 py-2 border-bottom mb-2 bg-light rounded-top">
-                                                <span class="d-block fw-bold text-dark">@(currentUser?.FullName ?? "Athlete")</span>
-                                                <small class="text-muted" style="font-size: 0.8rem;">@currentUser?.Email</small>
-                                            </li>
-                                            <li><a class="dropdown-item py-2 fw-semibold text-hover-brand" asp-controller="Orders" asp-action="Index"><i class="fa fa-box me-2 text-muted"></i> My Orders</a></li>
-                                            <li><a class="dropdown-item py-2 fw-semibold text-hover-brand" asp-controller="Testimonials" asp-action="Create"><i class="fa fa-star text-warning me-2"></i> Rate Us</a></li>
-                                            <li><a class="dropdown-item py-2 fw-semibold text-hover-brand" asp-area="Identity" asp-page="/Account/Manage/Index"><i class="fa fa-user-edit me-2 text-muted"></i> Edit Profile</a></li>
-                                            <li><hr class="dropdown-divider"></li>
-                                            <li>
-                                                <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                                                    <button type="submit" class="dropdown-item py-2 text-danger fw-bold"><i class="fa fa-sign-out-alt me-2"></i> Logout</button>
-                                                </form>
-                                            </li>
-                                        }
-                                        else
-                                        {
-                                            <li><a class="dropdown-item py-2 fw-semibold text-hover-brand" asp-area="Identity" asp-page="/Account/Login"><i class="fa fa-sign-in-alt me-2 text-muted"></i> Login</a></li>
-                                            <li><a class="dropdown-item py-2 fw-semibold text-hover-brand" asp-area="Identity" asp-page="/Account/Register"><i class="fa fa-user-plus me-2 text-muted"></i> Create Account</a></li>
-                                        }
-                                    </ul>
-                                </li>
+                    <li>
+                        <a asp-controller="Cart" asp-action="Index" class="ns-action-btn" title="Cart">
+                            <i class="fa fa-shopping-bag"></i>
+                            <span class="ns-action-badge">0</span>
+                        </a>
+                    </li>
 
-                                <li>
-                                    <a asp-controller="Wishlist" asp-action="Index" class="text-dark position-relative text-hover-brand" title="Wishlist">
-                                        <i class="fa fa-heart fs-5"></i>
-                                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.60rem;">0</span>
-                                    </a>
-                                </li>
+                    <li>
+                        <button class="ns-mobile-toggle" type="button" data-bs-toggle="offcanvas" data-bs-target="#bdNavbar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                    </li>
+                </ul>
 
-                                <li>
-                                    <a asp-controller="Cart" asp-action="Index" class="text-dark position-relative text-hover-brand" title="Shopping Cart">
-                                        <i class="fa fa-shopping-cart fs-5"></i>
-                                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.60rem;">0</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+            </nav>
+        </div>
+
+        @* Mobile Offcanvas *@
+        <div class="offcanvas offcanvas-end ns-offcanvas" tabindex="-1" id="bdNavbar">
+            <div class="offcanvas-header">
+                <a class="ns-nav-brand" asp-controller="Home" asp-action="Index">
+                    <img src="~/images/nextsteplogo.png" style="max-height: 40px;" alt="NextStep">
+                </a>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
-        </nav>
+            <div class="offcanvas-body ns-offcanvas-body">
+                <ul class="ns-mobile-menu">
+                    <li><a class="ns-nav-link" asp-controller="Home" asp-action="Index">Home</a></li>
+                    <li><a class="ns-nav-link" asp-controller="Products" asp-action="Index">Shop All</a></li>
+                    <li>
+                        <a class="ns-nav-link" data-bs-toggle="collapse" href="#mobileCats" role="button">
+                            Categories <i class="fa fa-chevron-down" style="font-size: 0.7rem; margin-left: 6px;"></i>
+                        </a>
+                        <ul class="collapse ns-mobile-submenu" id="mobileCats">
+                            @if (categories != null && categories.Any())
+                            {
+                                foreach (var cat in categories)
+                                {
+                                    <li><a asp-controller="Search" asp-action="Index" asp-route-q="@cat.Name">@cat.Name</a></li>
+                                }
+                            }
+                            <li><a asp-controller="Products" asp-action="Index">View All →</a></li>
+                        </ul>
+                    </li>
+                    <li><a class="ns-nav-link sale" asp-controller="Products" asp-action="Index" asp-route-onSale="true"><i class="fa fa-fire"></i> Flash Sale</a></li>
+                    <li><a class="ns-nav-link" asp-controller="Home" asp-action="About">About</a></li>
+                    <li><a class="ns-nav-link" asp-controller="Contact" asp-action="Index">Contact</a></li>
+                </ul>
+            </div>
+        </div>
     </header>
 
-    <div class="container-fluid px-0">
-        <main role="main" class="pb-3">
-            <div class="container-fluid px-0">
-                <main role="main" class="pb-3">
-
-                    @if (TempData["SuccessMessage"] != null)
-                    {
-                        <div class="container mt-4 position-relative" style="z-index: 1000;">
-                            <div class="alert alert-success alert-dismissible fade show shadow-sm text-center fw-bold rounded-pill" role="alert">
-                                <i class="fa fa-check-circle me-2"></i> @TempData["SuccessMessage"]
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div>
-                        </div>
-                    }
-
-                    @RenderBody()
-                </main>
+    @* =================== SEARCH OVERLAY =================== *@
+    <div class="ns-search-overlay" id="nsSearchOverlay">
+        <button class="ns-search-close" id="nsSearchClose" type="button">
+            <i class="fa fa-times" style="font-size: 1.1rem;"></i>
+        </button>
+        <form class="ns-search-form" asp-controller="Search" asp-action="Index" method="get">
+            <span class="ns-search-label">What are you stepping into?</span>
+            <div class="ns-search-input-wrap">
+                <input type="text" name="q" class="ns-search-input" placeholder="Search shoes, brands..." autocomplete="off" id="nsSearchInput">
+                <button type="submit" class="ns-search-submit">
+                    <i class="fa fa-arrow-right"></i>
+                </button>
             </div>
-            @RenderBody()
-        </main>
+            <p class="ns-search-hint">
+                Press <kbd>Enter</kbd> to search, <kbd>Esc</kbd> to close
+            </p>
+        </form>
     </div>
 
-    <footer id="footer" class="bg-dark text-white py-5 mt-5">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-4 mb-4">
-                    <img src="~/images/nextsteplogo.png" style="max-height: 50px; filter: brightness(0) invert(1);" alt="NextStep Logo" class="mb-3">
-                    <p class="text-muted">Step into greatness with premium sports gear designed for performance.</p>
+    @* =================== MAIN CONTENT =================== *@
+    <main role="main" class="pb-3">
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="container">
+                <div class="ns-alert alert-dismissible fade show" role="alert">
+                    <div>
+                        <i class="fa fa-check-circle icon"></i>
+                        <span>@TempData["SuccessMessage"]</span>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
-                <div class="col-md-4 mb-4 text-center">
-                    <h5 class="fw-bold mb-3">Quick Links</h5>
-                    <ul class="list-unstyled">
-                        <li class="mb-2"><a asp-controller="Products" asp-action="Index" class="text-muted text-decoration-none text-hover-brand">Shop All</a></li>
-                        <li class="mb-2"><a asp-controller="Products" asp-action="Index" asp-route-onSale="true" class="text-muted text-decoration-none text-hover-brand">Flash Sales</a></li>
-                        <li class="mb-2"><a href="#" class="text-muted text-decoration-none text-hover-brand">Contact Support</a></li>
+            </div>
+        }
+
+        @RenderBody()
+    </main>
+
+    @* =================== FOOTER =================== *@
+    @* =================== FOOTER =================== *@
+    <footer class="ns-footer">
+        <div class="container ns-footer-inner">
+
+            <div class="ns-footer-grid">
+
+                <div>
+                    <span class="ns-footer-brand-logo">NextStep<span class="dot">.</span></span>
+                    <p class="ns-footer-brand-text">
+                        Performance-engineered footwear for athletes who refuse to settle.
+                    </p>
+                    <div class="ns-footer-socials">
+                        <a href="#" class="ns-footer-social" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="ns-footer-social" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="ns-footer-social" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    </div>
+                </div>
+
+                <div>
+                    <h5 class="ns-footer-heading">Shop</h5>
+                    <ul class="ns-footer-list">
+                        <li><a asp-controller="Products" asp-action="Index">All Products</a></li>
+                        <li><a asp-controller="Products" asp-action="Index" asp-route-onSale="true">Flash Sales</a></li>
+                        <li><a asp-controller="Home" asp-action="About">About Us</a></li>
+                        <li><a asp-controller="Contact" asp-action="Index">Contact</a></li>
                     </ul>
                 </div>
+
+                <div>
+                    <h5 class="ns-footer-heading">Get In Touch</h5>
+                    <div class="ns-footer-contact-item">
+                        <i class="fa fa-envelope"></i>
+                        <span>hello@nextstep.com</span>
+                    </div>
+                    <div class="ns-footer-contact-item">
+                        <i class="fa fa-location-dot"></i>
+                        <span>Irbid, Jordan</span>
+                    </div>
+                </div>
+
             </div>
-            <div class="border-top border-secondary pt-3 mt-3 text-center text-muted small">
-                <p class="mb-0">&copy; 2026 NextStep E-Commerce. All rights reserved.</p>
+
+            <div class="ns-footer-bottom">
+                <p class="ns-footer-copy">© 2026 NextStep — All Rights Reserved</p>
+                <div class="ns-footer-legal">
+                    <a href="#">Privacy</a>
+                    <a href="#">Terms</a>
+                </div>
             </div>
+
         </div>
     </footer>
 
-    <script src="~/user/js/jquery-1.11.0.min.js"></script>
-    <script src="~/user/js/plugins.js"></script>
-    <script src="~/user/js/script.js"></script>
+    @* =================== SEARCH OVERLAY SCRIPT =================== *@
+    <script>
+        (function () {
+            const overlay = document.getElementById('nsSearchOverlay');
+            const input = document.getElementById('nsSearchInput');
+            const closeBtn = document.getElementById('nsSearchClose');
+            const triggers = document.querySelectorAll('.search-item');
+
+            function openSearch(e) {
+                if (e) e.preventDefault();
+                overlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+                setTimeout(() => input && input.focus(), 100);
+            }
+
+            function closeSearch() {
+                overlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+
+            triggers.forEach(t => t.addEventListener('click', openSearch));
+            if (closeBtn) closeBtn.addEventListener('click', closeSearch);
+
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape' && overlay.classList.contains('active')) {
+                    closeSearch();
+                }
+            });
+
+            overlay.addEventListener('click', function (e) {
+                if (e.target === overlay) closeSearch();
+            });
+        })();
+    </script>
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>

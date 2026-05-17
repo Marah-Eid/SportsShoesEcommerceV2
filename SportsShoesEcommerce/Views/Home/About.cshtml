@@ -4,140 +4,828 @@
     ViewData["Title"] = "About Us";
 }
 
-<section class="py-5 bg-light">
-    <div class="container">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,800;1,9..144,600;1,9..144,800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-        <div class="text-center mb-5">
-            <h1 class="fw-bold">About Us</h1>
+<style>
+    :root {
+        --ns-cream: #faf6ef;
+        --ns-sand: #f3ead9;
+        --ns-peach: #f5d5b8;
+        --ns-terracotta: #c97b5e;
+        --ns-clay: #b86048;
+        --ns-coffee: #4a3729;
+        --ns-mocha: #6b4f3d;
+        --ns-sage: #8fa68a;
+        --ns-warm-gray: #a89684;
+        --ns-soft-shadow: rgba(74, 55, 41, 0.08);
+    }
 
-            <p class="text-muted mx-auto" style="max-width:700px;">
-                Welcome to Sports Shoes Ecommerce — your trusted destination for premium
-                sports shoes and athletic fashion. We aim to provide high-quality products,
-                modern styles, and a smooth shopping experience for every customer.
-            </p>
-        </div>
+    .ns-about {
+        background: var(--ns-cream);
+        color: var(--ns-coffee);
+        font-family: 'Inter', -apple-system, sans-serif;
+        overflow-x: hidden;
+    }
 
-        <div class="row text-center mb-5">
-
-            <div class="col-md-4 mb-4">
-                <div class="bg-white shadow-sm rounded p-4 h-100">
-                    <i class="fa-solid fa-shoe-prints fa-2x mb-3 text-dark"></i>
-
-                    <h4>Premium Products</h4>
-
-                    <p class="text-muted">
-                        We carefully select sports shoes that combine comfort,
-                        performance, and modern design.
-                    </p>
-                </div>
-            </div>
-
-            <div class="col-md-4 mb-4">
-                <div class="bg-white shadow-sm rounded p-4 h-100">
-                    <i class="fa-solid fa-truck-fast fa-2x mb-3 text-dark"></i>
-
-                    <h4>Fast Delivery</h4>
-
-                    <p class="text-muted">
-                        Quick and reliable delivery service to make sure your
-                        products arrive safely and on time.
-                    </p>
-                </div>
-            </div>
-
-            <div class="col-md-4 mb-4">
-                <div class="bg-white shadow-sm rounded p-4 h-100">
-                    <i class="fa-solid fa-shield-heart fa-2x mb-3 text-dark"></i>
-
-                    <h4>Trusted Experience</h4>
-
-                    <p class="text-muted">
-                        Secure payments, easy shopping, and customer satisfaction
-                        are our top priorities.
-                    </p>
-                </div>
-            </div>
-
-        </div>
-
-        <div class="row align-items-center mb-5">
-
-            <div class="col-md-6 mb-4">
-                <img src="~/images/about-us.jpg"
-                     class="img-fluid rounded shadow"
-                     alt="About Us" />
-            </div>
-
-            <div class="col-md-6">
-                <h2 class="fw-bold mb-3">Our Mission</h2>
-
-                <p class="text-muted">
-                    Our mission is to help athletes, fitness enthusiasts, and sneaker lovers
-                    find the perfect shoes that fit their lifestyle and performance needs.
-                </p>
-
-                <p class="text-muted">
-                    We believe shopping should be simple, secure, and enjoyable.
-                    That’s why we focus on high-quality products, responsive design,
-                    and excellent customer support.
-                </p>
-
-                <a asp-controller="Products"
-                   asp-action="Index"
-                   class="btn btn-dark mt-3">
-                    Shop Now
-                </a>
-            </div>
-
-        </div>
-
-        <hr class="my-5" />
-
-        <div class="text-center mb-4">
-            <h2 class="fw-bold">Customer Testimonials</h2>
-
-            <p class="text-muted">
-                What our customers say about us
-            </p>
-        </div>
-
-        @if (!Model.Any())
-        {
-            <div class="alert alert-info text-center">
-                No testimonials available yet.
-            </div>
+        .ns-about .display-font {
+            font-family: 'Fraunces', Georgia, serif;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 0.95;
         }
-        else
-        {
-            <div class="row">
 
-                @foreach (var item in Model)
+        .ns-about .mono {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+
+    /* ===== HERO ===== */
+    .ns-about-hero {
+        position: relative;
+        background: linear-gradient(160deg, var(--ns-sand) 0%, var(--ns-peach) 100%);
+        padding: 130px 0 110px;
+        overflow: hidden;
+        text-align: center;
+    }
+
+        .ns-about-hero::before {
+            content: '';
+            position: absolute;
+            top: -150px;
+            right: -100px;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(201, 123, 94, 0.25) 0%, transparent 70%);
+            filter: blur(40px);
+        }
+
+        .ns-about-hero::after {
+            content: '';
+            position: absolute;
+            bottom: -100px;
+            left: -150px;
+            width: 450px;
+            height: 450px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(143, 166, 138, 0.18) 0%, transparent 70%);
+            filter: blur(40px);
+        }
+
+    .ns-about-hero-inner {
+        position: relative;
+        z-index: 2;
+    }
+
+    .ns-about-hero-marker {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.7rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--ns-clay);
+        margin-bottom: 24px;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        justify-content: center;
+    }
+
+        .ns-about-hero-marker::before,
+        .ns-about-hero-marker::after {
+            content: '';
+            width: 28px;
+            height: 2px;
+            background: currentColor;
+        }
+
+    .ns-about-hero-title {
+        font-size: clamp(3rem, 8vw, 6.5rem);
+        color: var(--ns-coffee);
+        margin: 0 0 28px;
+        line-height: 0.95;
+    }
+
+        .ns-about-hero-title em {
+            color: var(--ns-clay);
+            font-style: italic;
+        }
+
+    .ns-about-hero-sub {
+        font-size: 1.15rem;
+        line-height: 1.65;
+        color: var(--ns-mocha);
+        max-width: 640px;
+        margin: 0 auto;
+    }
+
+    /* ===== SECTIONS ===== */
+    .ns-about-section {
+        padding: 110px 0;
+    }
+
+    .ns-section-header {
+        margin-bottom: 60px;
+        text-align: center;
+    }
+
+    .ns-section-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 18px;
+        color: var(--ns-clay);
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.7rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        font-weight: 500;
+    }
+
+        .ns-section-tag::before,
+        .ns-section-tag::after {
+            content: '';
+            width: 28px;
+            height: 2px;
+            background: currentColor;
+        }
+
+    .ns-section-title {
+        font-size: clamp(2.2rem, 5vw, 4rem);
+        color: var(--ns-coffee);
+        margin: 0;
+    }
+
+        .ns-section-title em {
+            color: var(--ns-clay);
+            font-style: italic;
+        }
+
+    /* ===== VALUES CARDS ===== */
+    .ns-values {
+        background: var(--ns-cream);
+    }
+
+    .ns-values-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+    }
+
+    .ns-value-card {
+        background: var(--ns-sand);
+        border-radius: 28px;
+        padding: 44px 36px;
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        border: 1px solid rgba(74, 55, 41, 0.06);
+        position: relative;
+        overflow: hidden;
+    }
+
+        .ns-value-card::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            right: -50px;
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(201, 123, 94, 0.12) 0%, transparent 70%);
+            transition: all 0.5s ease;
+        }
+
+        .ns-value-card:hover {
+            transform: translateY(-8px);
+            background: var(--ns-peach);
+            box-shadow: 0 20px 40px rgba(184, 96, 72, 0.15);
+        }
+
+            .ns-value-card:hover::before {
+                transform: scale(1.5);
+            }
+
+    .ns-value-num {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.7rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--ns-clay);
+        margin-bottom: 28px;
+        font-weight: 500;
+    }
+
+    .ns-value-icon {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        background: var(--ns-cream);
+        color: var(--ns-clay);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        margin-bottom: 24px;
+        transition: all 0.4s ease;
+        position: relative;
+        z-index: 2;
+    }
+
+    .ns-value-card:hover .ns-value-icon {
+        background: var(--ns-coffee);
+        color: var(--ns-peach);
+        transform: rotate(-8deg) scale(1.05);
+    }
+
+    .ns-value-title {
+        font-family: 'Fraunces', serif;
+        font-weight: 800;
+        font-size: 1.6rem;
+        color: var(--ns-coffee);
+        margin: 0 0 14px;
+        letter-spacing: -0.02em;
+        position: relative;
+        z-index: 2;
+    }
+
+    .ns-value-text {
+        font-size: 0.95rem;
+        line-height: 1.65;
+        color: var(--ns-mocha);
+        margin: 0;
+        position: relative;
+        z-index: 2;
+    }
+
+    /* ===== MISSION ===== */
+    .ns-mission {
+        background: var(--ns-sand);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .ns-mission-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 80px;
+        align-items: center;
+    }
+
+    .ns-mission-image-wrap {
+        position: relative;
+    }
+
+    .ns-mission-image {
+        width: 100%;
+        height: 520px;
+        object-fit: cover;
+        border-radius: 28px;
+        box-shadow: 0 30px 60px rgba(74, 55, 41, 0.2);
+    }
+
+    .ns-mission-image-frame {
+        position: absolute;
+        inset: -16px;
+        border: 1.5px solid var(--ns-terracotta);
+        border-radius: 32px;
+        z-index: -1;
+        opacity: 0.5;
+    }
+
+    .ns-mission-badge {
+        position: absolute;
+        bottom: -28px;
+        right: -28px;
+        background: var(--ns-coffee);
+        color: var(--ns-cream);
+        padding: 22px 28px;
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(74, 55, 41, 0.25);
+        min-width: 200px;
+    }
+
+    .ns-mission-badge-num {
+        font-family: 'Fraunces', serif;
+        font-style: italic;
+        font-weight: 800;
+        font-size: 2.4rem;
+        color: var(--ns-peach);
+        line-height: 1;
+        margin-bottom: 6px;
+    }
+
+    .ns-mission-badge-label {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.65rem;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: rgba(250, 246, 239, 0.7);
+    }
+
+    .ns-mission-content .ns-section-tag {
+        margin-bottom: 18px;
+    }
+
+        .ns-mission-content .ns-section-tag::after {
+            display: none;
+        }
+
+    .ns-mission-title {
+        font-family: 'Fraunces', serif;
+        font-weight: 800;
+        font-size: clamp(2rem, 4.5vw, 3.4rem);
+        color: var(--ns-coffee);
+        line-height: 0.95;
+        letter-spacing: -0.03em;
+        margin: 0 0 24px;
+    }
+
+        .ns-mission-title em {
+            color: var(--ns-clay);
+            font-style: italic;
+        }
+
+    .ns-mission-text {
+        font-size: 1.05rem;
+        line-height: 1.7;
+        color: var(--ns-mocha);
+        margin-bottom: 18px;
+    }
+
+    .ns-mission-features {
+        list-style: none;
+        padding: 0;
+        margin: 28px 0;
+    }
+
+        .ns-mission-features li {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 0;
+            font-size: 0.95rem;
+            color: var(--ns-coffee);
+            font-weight: 500;
+            border-bottom: 1px solid rgba(74, 55, 41, 0.08);
+        }
+
+            .ns-mission-features li:last-child {
+                border-bottom: none;
+            }
+
+    .ns-mission-features-icon {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: var(--ns-terracotta);
+        color: var(--ns-cream);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.7rem;
+        flex-shrink: 0;
+    }
+
+    .ns-btn-primary {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        background: var(--ns-coffee);
+        color: var(--ns-cream);
+        padding: 17px 36px;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        letter-spacing: 0.02em;
+        text-decoration: none;
+        transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        border: none;
+        margin-top: 12px;
+    }
+
+        .ns-btn-primary:hover {
+            background: var(--ns-clay);
+            color: var(--ns-cream);
+            transform: translateY(-3px);
+            box-shadow: 0 14px 30px rgba(184, 96, 72, 0.3);
+        }
+
+        .ns-btn-primary .arrow {
+            transition: transform 0.3s ease;
+        }
+
+        .ns-btn-primary:hover .arrow {
+            transform: translateX(6px);
+        }
+
+    /* ===== STATS STRIP ===== */
+    .ns-stats {
+        background: var(--ns-coffee);
+        color: var(--ns-cream);
+        padding: 80px 0;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .ns-stats::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            right: -50px;
+            width: 350px;
+            height: 350px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(201, 123, 94, 0.2) 0%, transparent 70%);
+            filter: blur(40px);
+        }
+
+    .ns-stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 40px;
+        position: relative;
+        z-index: 2;
+    }
+
+    .ns-stat {
+        text-align: center;
+        border-right: 1px solid rgba(250, 246, 239, 0.15);
+        padding: 0 20px;
+    }
+
+        .ns-stat:last-child {
+            border-right: none;
+        }
+
+    .ns-stat-num {
+        font-family: 'Fraunces', serif;
+        font-style: italic;
+        font-weight: 800;
+        font-size: clamp(2.5rem, 5vw, 4rem);
+        color: var(--ns-peach);
+        line-height: 1;
+        margin-bottom: 12px;
+    }
+
+    .ns-stat-label {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.72rem;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: rgba(250, 246, 239, 0.7);
+        font-weight: 500;
+    }
+
+    /* ===== TESTIMONIALS ===== */
+    .ns-testimonials {
+        background: linear-gradient(180deg, var(--ns-peach) 0%, var(--ns-sand) 100%);
+        position: relative;
+        overflow: hidden;
+    }
+
+        .ns-testimonials::before {
+            content: '"';
+            position: absolute;
+            top: -100px;
+            right: 4%;
+            font-family: 'Fraunces', serif;
+            font-style: italic;
+            font-size: 30rem;
+            line-height: 1;
+            color: var(--ns-clay);
+            opacity: 0.08;
+            pointer-events: none;
+            font-weight: 800;
+        }
+
+    .ns-testimonial-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 24px;
+        position: relative;
+        z-index: 2;
+    }
+
+    .ns-testimonial {
+        background: var(--ns-cream);
+        border: 1px solid rgba(74, 55, 41, 0.08);
+        border-radius: 28px;
+        padding: 36px 32px;
+        transition: all 0.4s ease;
+        box-shadow: 0 4px 20px var(--ns-soft-shadow);
+    }
+
+        .ns-testimonial:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 40px rgba(184, 96, 72, 0.15);
+            border-color: var(--ns-terracotta);
+        }
+
+    .ns-testimonial-stars {
+        display: flex;
+        gap: 5px;
+        margin-bottom: 22px;
+    }
+
+        .ns-testimonial-stars i {
+            color: var(--ns-clay);
+            font-size: 0.95rem;
+        }
+
+    .ns-testimonial-text {
+        font-family: 'Fraunces', serif;
+        font-size: 1.1rem;
+        line-height: 1.55;
+        margin-bottom: 24px;
+        color: var(--ns-coffee);
+        font-weight: 400;
+        font-style: italic;
+    }
+
+    .ns-testimonial-meta {
+        padding-top: 22px;
+        border-top: 1px solid rgba(74, 55, 41, 0.1);
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.7rem;
+        color: var(--ns-mocha);
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+
+    .ns-empty-state {
+        text-align: center;
+        padding: 60px 30px;
+        background: var(--ns-cream);
+        border-radius: 28px;
+        border: 1.5px dashed rgba(74, 55, 41, 0.15);
+        grid-column: 1 / -1;
+    }
+
+        .ns-empty-state i {
+            font-size: 2.5rem;
+            color: var(--ns-warm-gray);
+            margin-bottom: 18px;
+        }
+
+        .ns-empty-state p {
+            font-family: 'Fraunces', serif;
+            font-size: 1.2rem;
+            color: var(--ns-mocha);
+            margin: 0;
+            font-style: italic;
+        }
+
+    /* ===== RESPONSIVE ===== */
+    @@media (max-width: 992px) {
+        .ns-values-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .ns-mission-grid {
+            grid-template-columns: 1fr;
+            gap: 60px;
+        }
+
+        .ns-mission-image {
+            height: 380px;
+        }
+
+        .ns-stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px 20px;
+        }
+
+        .ns-stat:nth-child(2) {
+            border-right: none;
+        }
+    }
+
+    @@media (max-width: 576px) {
+        .ns-about-hero {
+            padding: 100px 0 80px;
+        }
+
+        .ns-about-section {
+            padding: 80px 0;
+        }
+
+        .ns-stats {
+            padding: 60px 0;
+        }
+
+        .ns-stats-grid {
+            grid-template-columns: 1fr;
+            gap: 36px;
+        }
+
+        .ns-stat {
+            border-right: none;
+            border-bottom: 1px solid rgba(250, 246, 239, 0.15);
+            padding-bottom: 36px;
+        }
+
+            .ns-stat:last-child {
+                border-bottom: none;
+                padding-bottom: 0;
+            }
+
+        .ns-mission-badge {
+            right: 16px;
+            bottom: -20px;
+            padding: 16px 22px;
+        }
+    }
+</style>
+
+<div class="ns-about">
+
+    @* ===== HERO ===== *@
+    <section class="ns-about-hero">
+        <div class="container ns-about-hero-inner">
+            <span class="ns-about-hero-marker">Our Story</span>
+            <h1 class="ns-about-hero-title display-font">
+                Built for the <em>next step.</em>
+            </h1>
+            <p class="ns-about-hero-sub">
+                NextStep is your trusted destination for premium athletic footwear. We curate
+                high-quality products, modern styles, and a shopping experience that meets you
+                wherever you're going next.
+            </p>
+        </div>
+    </section>
+
+    @* ===== VALUES ===== *@
+    <section class="ns-about-section ns-values">
+        <div class="container">
+            <div class="ns-section-header">
+                <div class="ns-section-tag">What We Stand For</div>
+                <h2 class="ns-section-title display-font">Three things, <em>done right.</em></h2>
+            </div>
+
+            <div class="ns-values-grid">
+
+                <div class="ns-value-card">
+                    <div class="ns-value-num">01 / Quality</div>
+                    <div class="ns-value-icon">
+                        <i class="fa-solid fa-shoe-prints"></i>
+                    </div>
+                    <h3 class="ns-value-title">Premium Products</h3>
+                    <p class="ns-value-text">
+                        Every shoe is hand-picked for performance, comfort, and design.
+                        We only stock what we'd wear ourselves.
+                    </p>
+                </div>
+
+                <div class="ns-value-card">
+                    <div class="ns-value-num">02 / Speed</div>
+                    <div class="ns-value-icon">
+                        <i class="fa-solid fa-truck-fast"></i>
+                    </div>
+                    <h3 class="ns-value-title">Fast Delivery</h3>
+                    <p class="ns-value-text">
+                        Your order ships within 24 hours. Track every step from warehouse
+                        to your front door — no surprises.
+                    </p>
+                </div>
+
+                <div class="ns-value-card">
+                    <div class="ns-value-num">03 / Trust</div>
+                    <div class="ns-value-icon">
+                        <i class="fa-solid fa-shield-heart"></i>
+                    </div>
+                    <h3 class="ns-value-title">Trusted Experience</h3>
+                    <p class="ns-value-text">
+                        Secure checkout, easy returns, and a support team that actually
+                        answers. Shopping should feel this good.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    @* ===== MISSION ===== *@
+    <section class="ns-about-section ns-mission">
+        <div class="container">
+            <div class="ns-mission-grid">
+
+                <div class="ns-mission-image-wrap">
+                    <div class="ns-mission-image-frame"></div>
+                    <img src="~/images/about-us.jpg" class="ns-mission-image" alt="Our Mission" />
+                    <div class="ns-mission-badge">
+                        <div class="ns-mission-badge-num">2025</div>
+                        <div class="ns-mission-badge-label">Est. — Athletic Footwear</div>
+                    </div>
+                </div>
+
+                <div class="ns-mission-content">
+                    <div class="ns-section-tag" style="justify-content: flex-start;">Our Mission</div>
+                    <h2 class="ns-mission-title">
+                        Helping athletes step into <em>greatness.</em>
+                    </h2>
+                    <p class="ns-mission-text">
+                        We exist to help athletes, fitness enthusiasts, and sneaker lovers find
+                        footwear that fits their lifestyle and pushes their performance.
+                    </p>
+                    <p class="ns-mission-text">
+                        Shopping should be simple, secure, and enjoyable. That's why we focus on
+                        premium curation, thoughtful design, and customer support that puts
+                        people first.
+                    </p>
+
+                    <ul class="ns-mission-features">
+                        <li>
+                            <span class="ns-mission-features-icon"><i class="fa fa-check"></i></span>
+                            Curated selection from 50+ premium brands
+                        </li>
+                        <li>
+                            <span class="ns-mission-features-icon"><i class="fa fa-check"></i></span>
+                            24-hour shipping with full order tracking
+                        </li>
+                        <li>
+                            <span class="ns-mission-features-icon"><i class="fa fa-check"></i></span>
+                            30-day hassle-free returns
+                        </li>
+                    </ul>
+
+                    <a asp-controller="Products" asp-action="Index" class="ns-btn-primary">
+                        Explore Catalog
+                        <span class="arrow">→</span>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    @* ===== STATS ===== *@
+    <section class="ns-stats">
+        <div class="container">
+            <div class="ns-stats-grid">
+                <div class="ns-stat">
+                    <div class="ns-stat-num">50+</div>
+                    <div class="ns-stat-label">Premium Brands</div>
+                </div>
+                <div class="ns-stat">
+                    <div class="ns-stat-num">10K+</div>
+                    <div class="ns-stat-label">Happy Athletes</div>
+                </div>
+                <div class="ns-stat">
+                    <div class="ns-stat-num">24H</div>
+                    <div class="ns-stat-label">Fast Delivery</div>
+                </div>
+                <div class="ns-stat">
+                    <div class="ns-stat-num">★ 4.9</div>
+                    <div class="ns-stat-label">Customer Rating</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    @* ===== TESTIMONIALS ===== *@
+    <section class="ns-about-section ns-testimonials">
+        <div class="container">
+            <div class="ns-section-header">
+                <div class="ns-section-tag">Verified Reviews</div>
+                <h2 class="ns-section-title display-font">What athletes <em>say.</em></h2>
+            </div>
+
+            <div class="ns-testimonial-grid">
+                @if (Model == null || !Model.Any())
                 {
-                    <div class="col-md-4 mb-4">
-                        <div class="bg-white shadow-sm rounded p-4 h-100">
-
-                            <div class="mb-3 text-warning">
-                                @for (int i = 0; i < item.Rating; i++)
-                                {
-                                    <i class="fa-solid fa-star"></i>
-                                }
-                            </div>
-
-                            <p class="text-muted">
-                                "@item.Content"
-                            </p>
-
-                            <hr />
-
-                            <small class="text-muted">
-                                @item.CreatedAt.ToString("dd MMM yyyy")
-                            </small>
-                        </div>
+                    <div class="ns-empty-state">
+                        <i class="fa-solid fa-comment-dots"></i>
+                        <p>No testimonials yet — be the first to share your experience.</p>
                     </div>
                 }
-
+                else
+                {
+                    @foreach (var item in Model)
+                    {
+                        <div class="ns-testimonial">
+                            <div class="ns-testimonial-stars">
+                                @for (int i = 1; i <= 5; i++)
+                                {
+                                    if (i <= item.Rating)
+                                    {
+                                        <i class="fa-solid fa-star"></i>
+                                    }
+                                    else
+                                    {
+                                        <i class="fa-regular fa-star" style="opacity: 0.25;"></i>
+                                    }
+                                }
+                            </div>
+                            <p class="ns-testimonial-text">"@item.Content"</p>
+                            <div class="ns-testimonial-meta">
+                                @item.CreatedAt.ToString("MMM dd, yyyy")
+                            </div>
+                        </div>
+                    }
+                }
             </div>
-        }
+        </div>
+    </section>
 
-    </div>
-</section>
+</div>

@@ -15,7 +15,10 @@ namespace SportsShoesEcommerce.Controllers
         {
             _context = context;
         }
-
+        public IActionResult Index()
+        {
+            return RedirectToAction(nameof(MyOrders));
+        }
         public async Task<IActionResult> MyOrders()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);

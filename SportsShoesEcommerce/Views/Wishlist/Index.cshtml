@@ -1,65 +1,531 @@
 ﻿@model IEnumerable<SportsShoesEcommerce.Models.Wishlist>
-
 @{
     ViewData["Title"] = "My Wishlist";
 }
 
-<h2 class="mb-4">My Wishlist</h2>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,800;1,9..144,600;1,9..144,800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-@if (!Model.Any())
-{
-    <div class="alert alert-info">
-        Your wishlist is empty.
-    </div>
+<style>
+    :root {
+        --ns-cream: #faf6ef;
+        --ns-sand: #f3ead9;
+        --ns-peach: #f5d5b8;
+        --ns-terracotta: #c97b5e;
+        --ns-clay: #b86048;
+        --ns-coffee: #4a3729;
+        --ns-mocha: #6b4f3d;
+        --ns-sage: #8fa68a;
+        --ns-warm-gray: #a89684;
+        --ns-soft-shadow: rgba(74, 55, 41, 0.08);
+    }
 
-    <a asp-controller="Products" asp-action="Index" class="btn btn-dark">
-        Continue Shopping
-    </a>
-}
-else
-{
-    <div class="row">
-        @foreach (var item in Model)
+    .ns-wishlist {
+        background: var(--ns-cream);
+        color: var(--ns-coffee);
+        font-family: 'Inter', -apple-system, sans-serif;
+        min-height: 80vh;
+        padding-bottom: 80px;
+    }
+
+        .ns-wishlist .display-font {
+            font-family: 'Fraunces', Georgia, serif;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 0.95;
+        }
+
+        .ns-wishlist .mono {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+
+    /* ===== HEADER ===== */
+    .ns-wl-header {
+        position: relative;
+        background: linear-gradient(160deg, var(--ns-sand) 0%, var(--ns-peach) 100%);
+        padding: 90px 0 70px;
+        overflow: hidden;
+        margin-bottom: 50px;
+    }
+
+        .ns-wl-header::before {
+            content: '';
+            position: absolute;
+            top: -120px;
+            right: -80px;
+            width: 380px;
+            height: 380px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(201, 123, 94, 0.25) 0%, transparent 70%);
+            filter: blur(40px);
+        }
+
+        .ns-wl-header::after {
+            content: '';
+            position: absolute;
+            bottom: -100px;
+            left: -100px;
+            width: 320px;
+            height: 320px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(143, 166, 138, 0.18) 0%, transparent 70%);
+            filter: blur(40px);
+        }
+
+    .ns-wl-header-inner {
+        position: relative;
+        z-index: 2;
+    }
+
+    .ns-wl-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 18px;
+        color: var(--ns-clay);
+    }
+
+        .ns-wl-tag::before {
+            content: '';
+            width: 28px;
+            height: 2px;
+            background: currentColor;
+        }
+
+    .ns-wl-title {
+        font-size: clamp(2.6rem, 6vw, 5rem);
+        color: var(--ns-coffee);
+        margin: 0 0 18px;
+    }
+
+        .ns-wl-title em {
+            color: var(--ns-clay);
+            font-style: italic;
+        }
+
+    .ns-wl-sub {
+        font-size: 1.05rem;
+        color: var(--ns-mocha);
+        max-width: 580px;
+        margin: 0;
+        line-height: 1.6;
+    }
+
+    /* Toolbar */
+    .ns-toolbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 32px;
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+
+    .ns-count {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.78rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--ns-mocha);
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+        .ns-count i {
+            color: var(--ns-clay);
+            font-size: 0.9rem;
+        }
+
+        .ns-count strong {
+            color: var(--ns-clay);
+            font-weight: 700;
+        }
+
+    /* ===== WISHLIST GRID ===== */
+    .ns-wl-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 26px;
+    }
+
+    .ns-wl-card {
+        background: var(--ns-cream);
+        border: 1px solid rgba(74, 55, 41, 0.08);
+        border-radius: 24px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        box-shadow: 0 4px 16px var(--ns-soft-shadow);
+    }
+
+        .ns-wl-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--ns-terracotta);
+            box-shadow: 0 20px 40px rgba(184, 96, 72, 0.15);
+        }
+
+    .ns-wl-media {
+        position: relative;
+        background: var(--ns-sand);
+        aspect-ratio: 1 / 1;
+        overflow: hidden;
+    }
+
+        .ns-wl-media img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.7s ease;
+        }
+
+    .ns-wl-card:hover .ns-wl-media img {
+        transform: scale(1.06);
+    }
+
+    .ns-wl-heart {
+        position: absolute;
+        top: 14px;
+        left: 14px;
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: rgba(250, 246, 239, 0.92);
+        backdrop-filter: blur(8px);
+        color: var(--ns-clay);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.95rem;
+        z-index: 2;
+    }
+
+    .ns-wl-remove {
+        position: absolute;
+        top: 14px;
+        right: 14px;
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: rgba(250, 246, 239, 0.92);
+        backdrop-filter: blur(8px);
+        color: var(--ns-coffee);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.85rem;
+        z-index: 2;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        opacity: 0;
+        transform: translateY(-6px);
+    }
+
+    .ns-wl-card:hover .ns-wl-remove {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .ns-wl-remove:hover {
+        background: var(--ns-clay);
+        color: var(--ns-cream);
+        transform: rotate(90deg);
+    }
+
+    .ns-wl-body {
+        padding: 22px;
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+    }
+
+    .ns-wl-name {
+        font-family: 'Fraunces', serif;
+        font-weight: 700;
+        font-size: 1.1rem;
+        color: var(--ns-coffee);
+        margin: 0 0 12px;
+        letter-spacing: -0.01em;
+        line-height: 1.3;
+    }
+
+    .ns-wl-meta {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 16px;
+        flex-wrap: wrap;
+    }
+
+    .ns-wl-meta-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        background: var(--ns-sand);
+        padding: 5px 12px;
+        border-radius: 50px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.62rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--ns-mocha);
+        font-weight: 600;
+    }
+
+        .ns-wl-meta-chip .lbl {
+            color: var(--ns-warm-gray);
+        }
+
+    .ns-wl-foot {
+        margin-top: auto;
+        padding-top: 16px;
+        border-top: 1px solid rgba(74, 55, 41, 0.08);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+    }
+
+    .ns-wl-price {
+        font-family: 'Fraunces', serif;
+        font-weight: 800;
+        font-style: italic;
+        font-size: 1.4rem;
+        color: var(--ns-clay);
+        line-height: 1;
+    }
+
+    .ns-wl-view {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--ns-coffee);
+        color: var(--ns-cream);
+        padding: 10px 18px;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 0.72rem;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        white-space: nowrap;
+    }
+
+        .ns-wl-view:hover {
+            background: var(--ns-clay);
+            color: var(--ns-cream);
+            transform: translateX(2px);
+        }
+
+        .ns-wl-view .arrow {
+            transition: transform 0.3s ease;
+        }
+
+        .ns-wl-view:hover .arrow {
+            transform: translateX(4px);
+        }
+
+    /* ===== EMPTY STATE ===== */
+    .ns-empty {
+        text-align: center;
+        padding: 90px 30px;
+        background: var(--ns-sand);
+        border-radius: 28px;
+        border: 1.5px dashed rgba(74, 55, 41, 0.15);
+    }
+
+    .ns-empty-icon {
+        width: 96px;
+        height: 96px;
+        border-radius: 50%;
+        background: var(--ns-cream);
+        color: var(--ns-clay);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        margin-bottom: 26px;
+        box-shadow: 0 10px 30px rgba(74, 55, 41, 0.08);
+    }
+
+    .ns-empty-title {
+        font-family: 'Fraunces', serif;
+        font-weight: 800;
+        font-style: italic;
+        font-size: 2.2rem;
+        color: var(--ns-coffee);
+        margin: 0 0 14px;
+        letter-spacing: -0.02em;
+    }
+
+    .ns-empty-text {
+        font-size: 1rem;
+        color: var(--ns-mocha);
+        margin: 0 auto 30px;
+        max-width: 460px;
+        line-height: 1.6;
+    }
+
+    .ns-empty-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        background: var(--ns-coffee);
+        color: var(--ns-cream);
+        padding: 14px 30px;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        letter-spacing: 0.02em;
+        text-decoration: none;
+        transition: all 0.35s ease;
+    }
+
+        .ns-empty-btn:hover {
+            background: var(--ns-clay);
+            color: var(--ns-cream);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 24px rgba(184, 96, 72, 0.3);
+        }
+
+        .ns-empty-btn .arrow {
+            transition: transform 0.3s ease;
+        }
+
+        .ns-empty-btn:hover .arrow {
+            transform: translateX(4px);
+        }
+
+    /* Responsive */
+    @@media (max-width: 1100px) {
+        .ns-wl-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+
+    @@media (max-width: 800px) {
+        .ns-wl-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+        }
+
+        .ns-wl-header {
+            padding: 70px 0 60px;
+            margin-bottom: 36px;
+        }
+    }
+
+    @@media (max-width: 576px) {
+        .ns-wl-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .ns-empty {
+            padding: 60px 22px;
+        }
+
+        .ns-empty-title {
+            font-size: 1.7rem;
+        }
+    }
+</style>
+
+<div class="ns-wishlist">
+
+    @* ===== HEADER ===== *@
+    <section class="ns-wl-header">
+        <div class="container ns-wl-header-inner">
+            <div class="ns-wl-tag mono">Saved For Later</div>
+            <h1 class="ns-wl-title display-font">My <em>wishlist.</em></h1>
+            <p class="ns-wl-sub">
+                The shoes you're keeping an eye on. Move them to your cart when you're ready
+                to take the next step.
+            </p>
+        </div>
+    </section>
+
+    <div class="container">
+
+        @if (!Model.Any())
         {
-            var product = item.ProductVariant?.Product;
-
-            var image = product?.ProductImages?.FirstOrDefault(x => x.IsMain)?.ImagePath
-            ?? product?.ProductImages?.FirstOrDefault()?.ImagePath
-            ?? "/images/no-image.png";
-
-            <div class="col-md-3 mb-4">
-                <div class="card h-100">
-                    <img src="@image" class="card-img-top" style="height:220px; object-fit:cover;" />
-
-                    <div class="card-body">
-                        <h5>@product?.Name</h5>
-
-                        <p class="text-muted mb-1">
-                            Size: @item.ProductVariant?.Size
-                            <br />
-                            Color: @item.ProductVariant?.Color
-                        </p>
-
-                        <p class="fw-bold">
-                            $@item.ProductVariant?.VariantPrice
-                        </p>
-
-                        <a asp-controller="Products"
-                           asp-action="Details"
-                           asp-route-id="@product?.Id"
-                           class="btn btn-outline-dark w-100 mb-2">
-                            View Product
-                        </a>
-
-                        <a asp-controller="Wishlist"
-                           asp-action="Remove"
-                           asp-route-id="@item.Id"
-                           class="btn btn-danger w-100">
-                            Remove
-                        </a>
-                    </div>
+            <div class="ns-empty">
+                <div class="ns-empty-icon">
+                    <i class="fa fa-heart"></i>
                 </div>
+                <h2 class="ns-empty-title">Your wishlist is empty.</h2>
+                <p class="ns-empty-text">
+                    Browse the catalog and tap the heart icon on anything you love.
+                    We'll keep them right here for you.
+                </p>
+                <a asp-controller="Products" asp-action="Index" class="ns-empty-btn">
+                    Start Browsing
+                    <span class="arrow">→</span>
+                </a>
             </div>
         }
+        else
+        {
+            <div class="ns-toolbar">
+                <div class="ns-count">
+                    <i class="fa fa-heart"></i>
+                    <span><strong>@Model.Count()</strong> @(Model.Count() == 1 ? "Item" : "Items") Saved</span>
+                </div>
+            </div>
+
+            <div class="ns-wl-grid">
+                @foreach (var item in Model)
+                {
+                    var product = item.ProductVariant?.Product;
+                    var image = product?.ProductImages?.FirstOrDefault(x => x.IsMain)?.ImagePath
+                    ?? product?.ProductImages?.FirstOrDefault()?.ImagePath
+                    ?? "/images/no-image.png";
+
+                    <div class="ns-wl-card">
+                        <div class="ns-wl-media">
+                            <span class="ns-wl-heart"><i class="fa fa-heart"></i></span>
+                            <a asp-controller="Wishlist" asp-action="Remove" asp-route-id="@item.Id" class="ns-wl-remove" title="Remove from wishlist">
+                                <i class="fa fa-times"></i>
+                            </a>
+                            <img src="@image" alt="@product?.Name" />
+                        </div>
+
+                        <div class="ns-wl-body">
+                            <h3 class="ns-wl-name">@product?.Name</h3>
+
+                            <div class="ns-wl-meta">
+                                @if (!string.IsNullOrEmpty(item.ProductVariant?.Size))
+                                {
+                                    <span class="ns-wl-meta-chip">
+                                        <span class="lbl">Size</span>
+                                        <span>@item.ProductVariant.Size</span>
+                                    </span>
+                                }
+                                @if (!string.IsNullOrEmpty(item.ProductVariant?.Color))
+                                {
+                                    <span class="ns-wl-meta-chip">
+                                        <span class="lbl">Color</span>
+                                        <span>@item.ProductVariant.Color</span>
+                                    </span>
+                                }
+                            </div>
+
+                            <div class="ns-wl-foot">
+                                <span class="ns-wl-price">$@item.ProductVariant?.VariantPrice.ToString("0.00")</span>
+                                <a asp-controller="Products" asp-action="Details" asp-route-id="@product?.Id" class="ns-wl-view">
+                                    View
+                                    <span class="arrow">→</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+
     </div>
-}
+</div>

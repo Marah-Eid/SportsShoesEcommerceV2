@@ -1,27 +1,565 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Profile";
+    ViewData["Title"] = "My Profile";
     ViewData["ActivePage"] = ManageNavPages.Index;
 }
 
-<h3>@ViewData["Title"]</h3>
-<partial name="_StatusMessage" model="Model.StatusMessage" />
-<div class="row">
-    <div class="col-md-6">
-        <form id="profile-form" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Username"></label>
-                <input asp-for="Username" class="form-control" disabled />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,800;1,9..144,600;1,9..144,800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+    :root {
+        --ns-cream: #faf6ef;
+        --ns-sand: #f3ead9;
+        --ns-peach: #f5d5b8;
+        --ns-terracotta: #c97b5e;
+        --ns-clay: #b86048;
+        --ns-coffee: #4a3729;
+        --ns-mocha: #6b4f3d;
+        --ns-sage: #8fa68a;
+        --ns-warm-gray: #a89684;
+        --ns-soft-shadow: rgba(74, 55, 41, 0.08);
+    }
+
+    .ns-profile {
+        background: var(--ns-cream);
+        color: var(--ns-coffee);
+        font-family: 'Inter', -apple-system, sans-serif;
+        min-height: 80vh;
+        padding-bottom: 80px;
+    }
+
+        .ns-profile .display-font {
+            font-family: 'Fraunces', Georgia, serif;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 0.95;
+        }
+
+        .ns-profile .mono {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+
+    /* ===== HEADER ===== */
+    .ns-profile-header {
+        position: relative;
+        background: linear-gradient(160deg, var(--ns-sand) 0%, var(--ns-peach) 100%);
+        padding: 90px 0 70px;
+        overflow: hidden;
+        margin-bottom: 50px;
+    }
+
+        .ns-profile-header::before {
+            content: '';
+            position: absolute;
+            top: -120px;
+            right: -80px;
+            width: 380px;
+            height: 380px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(201, 123, 94, 0.25) 0%, transparent 70%);
+            filter: blur(40px);
+        }
+
+        .ns-profile-header::after {
+            content: '';
+            position: absolute;
+            bottom: -100px;
+            left: -100px;
+            width: 320px;
+            height: 320px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(143, 166, 138, 0.18) 0%, transparent 70%);
+            filter: blur(40px);
+        }
+
+    .ns-profile-header-inner {
+        position: relative;
+        z-index: 2;
+    }
+
+    .ns-profile-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 18px;
+        color: var(--ns-clay);
+    }
+
+        .ns-profile-tag::before {
+            content: '';
+            width: 28px;
+            height: 2px;
+            background: currentColor;
+        }
+
+    .ns-profile-title {
+        font-size: clamp(2.6rem, 6vw, 5rem);
+        color: var(--ns-coffee);
+        margin: 0 0 18px;
+    }
+
+        .ns-profile-title em {
+            color: var(--ns-clay);
+            font-style: italic;
+        }
+
+    .ns-profile-sub {
+        font-size: 1.05rem;
+        color: var(--ns-mocha);
+        max-width: 580px;
+        margin: 0;
+        line-height: 1.6;
+    }
+
+    /* ===== LAYOUT ===== */
+    .ns-profile-wrap {
+        max-width: 640px;
+        margin: 0 auto;
+    }
+
+    .ns-profile-card {
+        background: var(--ns-cream);
+        border: 1px solid rgba(74, 55, 41, 0.08);
+        border-radius: 28px;
+        padding: 44px 40px;
+        box-shadow: 0 30px 80px rgba(74, 55, 41, 0.1);
+    }
+
+    .ns-card-head {
+        margin-bottom: 32px;
+        padding-bottom: 24px;
+        border-bottom: 1px solid rgba(74, 55, 41, 0.08);
+    }
+
+    .ns-card-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 12px;
+        color: var(--ns-clay);
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.7rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        font-weight: 500;
+    }
+
+        .ns-card-tag::before {
+            content: '';
+            width: 24px;
+            height: 2px;
+            background: currentColor;
+        }
+
+    .ns-card-title {
+        font-family: 'Fraunces', serif;
+        font-weight: 800;
+        font-size: 1.8rem;
+        color: var(--ns-coffee);
+        letter-spacing: -0.02em;
+        margin: 0 0 6px;
+    }
+
+        .ns-card-title em {
+            color: var(--ns-clay);
+            font-style: italic;
+        }
+
+    .ns-card-sub {
+        font-size: 0.92rem;
+        color: var(--ns-mocha);
+        margin: 0;
+    }
+
+    /* Status message */
+    .ns-status-msg {
+        background: rgba(143, 166, 138, 0.12);
+        border-left: 3px solid var(--ns-sage);
+        border-radius: 12px;
+        padding: 14px 20px;
+        color: var(--ns-coffee);
+        font-size: 0.9rem;
+        font-weight: 500;
+        margin-bottom: 26px;
+    }
+
+    /* Form fields */
+    .ns-field {
+        margin-bottom: 20px;
+    }
+
+    .ns-field-label {
+        display: block;
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+        color: var(--ns-mocha);
+        font-weight: 600;
+        margin-bottom: 8px;
+    }
+
+    .ns-field-wrap {
+        position: relative;
+    }
+
+    .ns-field-icon {
+        position: absolute;
+        left: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--ns-warm-gray);
+        font-size: 0.95rem;
+        pointer-events: none;
+        transition: color 0.3s ease;
+    }
+
+    .ns-profile-card .form-control {
+        background: var(--ns-sand);
+        border: 1.5px solid transparent;
+        border-radius: 14px;
+        padding: 16px 20px 16px 50px;
+        font-size: 0.95rem;
+        color: var(--ns-coffee);
+        font-family: 'Inter', sans-serif;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        width: 100%;
+        height: auto;
+    }
+
+        .ns-profile-card .form-control::placeholder {
+            color: var(--ns-warm-gray);
+            font-weight: 400;
+        }
+
+        .ns-profile-card .form-control:focus {
+            background: var(--ns-cream);
+            border-color: var(--ns-terracotta);
+            box-shadow: 0 0 0 4px rgba(201, 123, 94, 0.12);
+            outline: none;
+        }
+
+        .ns-profile-card .form-control:disabled,
+        .ns-profile-card .form-control[disabled] {
+            background: rgba(74, 55, 41, 0.04);
+            color: var(--ns-warm-gray);
+            cursor: not-allowed;
+            opacity: 1;
+        }
+
+    .ns-field-wrap:focus-within .ns-field-icon {
+        color: var(--ns-clay);
+    }
+
+    .ns-profile-card .text-danger {
+        font-size: 0.78rem;
+        color: var(--ns-clay) !important;
+        margin-top: 6px;
+        display: block;
+        font-weight: 500;
+    }
+
+    .ns-field-helper {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.76rem;
+        color: var(--ns-warm-gray);
+        margin-top: 8px;
+        font-weight: 400;
+    }
+
+        .ns-field-helper i {
+            color: var(--ns-warm-gray);
+            font-size: 0.78rem;
+        }
+
+    /* Locked field hint */
+    .ns-locked-hint {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.62rem;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--ns-warm-gray);
+        background: var(--ns-sand);
+        padding: 4px 12px;
+        border-radius: 50px;
+        margin-left: 10px;
+        font-weight: 600;
+        vertical-align: middle;
+    }
+
+        .ns-locked-hint i {
+            font-size: 0.65rem;
+        }
+
+    /* ===== UPLOAD ZONE ===== */
+    .ns-upload-zone {
+        position: relative;
+        background: var(--ns-sand);
+        border: 2px dashed rgba(74, 55, 41, 0.15);
+        border-radius: 18px;
+        padding: 28px 24px;
+        margin-bottom: 28px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+        .ns-upload-zone:hover {
+            border-color: var(--ns-terracotta);
+            background: var(--ns-peach);
+        }
+
+    .ns-upload-head {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 18px;
+    }
+
+    .ns-upload-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: var(--ns-cream);
+        color: var(--ns-clay);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.95rem;
+        flex-shrink: 0;
+    }
+
+    .ns-upload-text {
+        flex: 1;
+    }
+
+    .ns-upload-label {
+        font-family: 'Fraunces', serif;
+        font-weight: 700;
+        font-size: 1.05rem;
+        color: var(--ns-coffee);
+        margin: 0 0 2px;
+    }
+
+    .ns-upload-sub {
+        font-size: 0.8rem;
+        color: var(--ns-mocha);
+        margin: 0;
+    }
+
+    .ns-file-input {
+        width: 100%;
+        background: var(--ns-cream);
+        border: 1.5px solid transparent;
+        border-radius: 12px;
+        padding: 10px 14px;
+        font-size: 0.88rem;
+        color: var(--ns-coffee);
+        font-family: 'Inter', sans-serif;
+        transition: all 0.3s ease;
+    }
+
+        .ns-file-input::file-selector-button {
+            background: var(--ns-coffee);
+            color: var(--ns-cream);
+            border: none;
+            border-radius: 50px;
+            padding: 8px 18px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            cursor: pointer;
+            margin-right: 14px;
+            transition: all 0.3s ease;
+        }
+
+            .ns-file-input::file-selector-button:hover {
+                background: var(--ns-clay);
+            }
+
+        .ns-file-input:focus {
+            outline: none;
+            border-color: var(--ns-terracotta);
+            box-shadow: 0 0 0 4px rgba(201, 123, 94, 0.12);
+        }
+
+    /* Save button */
+    .ns-save-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        background: var(--ns-coffee);
+        color: var(--ns-cream);
+        padding: 18px 36px;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        letter-spacing: 0.02em;
+        font-family: 'Inter', sans-serif;
+        border: none;
+        cursor: pointer;
+        width: 100%;
+        transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+        .ns-save-btn:hover {
+            background: var(--ns-clay);
+            transform: translateY(-3px);
+            box-shadow: 0 14px 30px rgba(184, 96, 72, 0.3);
+        }
+
+        .ns-save-btn .arrow {
+            transition: transform 0.3s ease;
+        }
+
+        .ns-save-btn:hover .arrow {
+            transform: translateX(6px);
+        }
+
+    /* Validation summary */
+    .ns-profile-card .validation-summary-errors ul {
+        background: rgba(184, 96, 72, 0.08);
+        border-left: 3px solid var(--ns-clay);
+        border-radius: 10px;
+        padding: 14px 18px 14px 36px;
+        margin-bottom: 20px;
+        list-style: none;
+    }
+
+    .ns-profile-card .validation-summary-errors li {
+        color: var(--ns-clay);
+        font-size: 0.85rem;
+        font-weight: 500;
+    }
+
+    /* Responsive */
+    @@media (max-width: 768px) {
+        .ns-profile-header {
+            padding: 70px 0 60px;
+            margin-bottom: 36px;
+        }
+
+        .ns-profile-card {
+            padding: 32px 26px;
+            border-radius: 22px;
+        }
+
+        .ns-card-title {
+            font-size: 1.5rem;
+        }
+
+        .ns-upload-head {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+    }
+
+    @@media (max-width: 480px) {
+        .ns-upload-zone {
+            padding: 22px 18px;
+        }
+    }
+</style>
+
+<div class="ns-profile">
+
+    @* ===== HEADER ===== *@
+    <section class="ns-profile-header">
+        <div class="container ns-profile-header-inner">
+            <div class="ns-profile-tag mono">Account Settings</div>
+            <h1 class="ns-profile-title display-font">My <em>profile.</em></h1>
+            <p class="ns-profile-sub">
+                Update your personal information and profile picture. Keep your details current so we can serve you better.
+            </p>
+        </div>
+    </section>
+
+    <div class="container">
+        <div class="ns-profile-wrap">
+
+            <div class="ns-profile-card">
+
+                <div class="ns-card-head">
+                    <div class="ns-card-tag">Edit Profile</div>
+                    <h2 class="ns-card-title">Your <em>details.</em></h2>
+                    <p class="ns-card-sub">Make changes below and save when you're done.</p>
+                </div>
+
+                <partial name="_StatusMessage" for="StatusMessage" />
+
+                <form id="profile-form" method="post" enctype="multipart/form-data">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    @* Email (locked) *@
+                    <div class="ns-field">
+                        <label asp-for="Username" class="ns-field-label">
+                            Email Address
+                            <span class="ns-locked-hint">
+                                <i class="fa fa-lock"></i> Locked
+                            </span>
+                        </label>
+                        <div class="ns-field-wrap">
+                            <i class="fa fa-envelope ns-field-icon"></i>
+                            <input asp-for="Username" class="form-control" disabled />
+                        </div>
+                        <div class="ns-field-helper">
+                            <i class="fa fa-info-circle"></i>
+                            Your email is your username and cannot be changed.
+                        </div>
+                    </div>
+
+                    @* Full Name *@
+                    <div class="ns-field">
+                        <label asp-for="Input.FullName" class="ns-field-label">Full Name</label>
+                        <div class="ns-field-wrap">
+                            <i class="fa fa-user ns-field-icon"></i>
+                            <input asp-for="Input.FullName" class="form-control" placeholder="Your full name" />
+                        </div>
+                        <span asp-validation-for="Input.FullName" class="text-danger"></span>
+                    </div>
+
+                    @* Profile Picture Upload *@
+                    <div class="ns-upload-zone">
+                        <div class="ns-upload-head">
+                            <div class="ns-upload-icon">
+                                <i class="fa fa-camera"></i>
+                            </div>
+                            <div class="ns-upload-text">
+                                <h4 class="ns-upload-label">Profile Picture</h4>
+                                <p class="ns-upload-sub">Upload a new photo to personalize your account.</p>
+                            </div>
+                        </div>
+
+                        <input asp-for="Input.ProfileImage" type="file" class="ns-file-input" accept="image/*" />
+
+                        <div class="ns-field-helper" style="margin-top: 12px;">
+                            <i class="fa fa-info-circle"></i>
+                            Max size 2MB · JPG, PNG, or WEBP
+                        </div>
+                        <span asp-validation-for="Input.ProfileImage" class="text-danger"></span>
+                    </div>
+
+                    <button id="update-profile-button" type="submit" class="ns-save-btn">
+                        Save Changes
+                        <span class="arrow">→</span>
+                    </button>
+                </form>
+
             </div>
-            <div class="form-group">
-                <label asp-for="Input.PhoneNumber"></label>
-                <input asp-for="Input.PhoneNumber" class="form-control" />
-                <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
-            </div>
-            <button id="update-profile-button" type="submit" class="btn btn-primary">Save</button>
-        </form>
+
+        </div>
     </div>
 </div>
 

@@ -17,311 +17,1081 @@
     }
 }
 
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,800;1,9..144,600;1,9..144,800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
 <style>
-    /* 1. ULTRA-PREMIUM GALLERY */
-    .premium-gallery {
-        background: #fcfcfc;
-        border-radius: 24px;
-        padding: 2rem;
-        position: relative;
-        overflow: hidden;
+    :root {
+        --ns-cream: #faf6ef;
+        --ns-sand: #f3ead9;
+        --ns-peach: #f5d5b8;
+        --ns-terracotta: #c97b5e;
+        --ns-clay: #b86048;
+        --ns-coffee: #4a3729;
+        --ns-mocha: #6b4f3d;
+        --ns-sage: #8fa68a;
+        --ns-warm-gray: #a89684;
+        --ns-soft-shadow: rgba(74, 55, 41, 0.08);
     }
 
-    .main-img-wrapper {
-        height: 450px;
+    .ns-detail {
+        background: var(--ns-cream);
+        color: var(--ns-coffee);
+        font-family: 'Inter', -apple-system, sans-serif;
+        padding: 60px 0 80px;
+    }
+
+        .ns-detail .display-font {
+            font-family: 'Fraunces', Georgia, serif;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 0.95;
+        }
+
+        .ns-detail .mono {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+
+    /* Breadcrumb */
+    .ns-breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.72rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--ns-mocha);
+        margin-bottom: 36px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid rgba(74, 55, 41, 0.08);
+    }
+
+        .ns-breadcrumb a {
+            color: var(--ns-mocha);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+            .ns-breadcrumb a:hover {
+                color: var(--ns-clay);
+            }
+
+        .ns-breadcrumb .sep {
+            color: var(--ns-warm-gray);
+            opacity: 0.6;
+        }
+
+        .ns-breadcrumb .current {
+            color: var(--ns-coffee);
+            font-weight: 600;
+        }
+
+    /* Layout */
+    .ns-detail-grid {
+        display: grid;
+        grid-template-columns: 1.3fr 1fr;
+        gap: 60px;
+        align-items: start;
+    }
+
+    /* ===== GALLERY ===== */
+    .ns-gallery {
+        position: relative;
+    }
+
+    .ns-gallery-main {
+        position: relative;
+        background: linear-gradient(160deg, var(--ns-sand) 0%, var(--ns-peach) 100%);
+        border-radius: 28px;
+        overflow: hidden;
+        aspect-ratio: 4 / 5;
+        margin-bottom: 18px;
+    }
+
+        .ns-gallery-main::before {
+            content: '';
+            position: absolute;
+            top: -80px;
+            right: -60px;
+            width: 240px;
+            height: 240px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(201, 123, 94, 0.2) 0%, transparent 70%);
+            filter: blur(30px);
+            pointer-events: none;
+        }
+
+    .ns-gallery-img-wrap {
+        position: absolute;
+        inset: 0;
         display: flex;
         align-items: center;
         justify-content: center;
-        border-radius: 16px;
-        overflow: hidden;
+        padding: 40px;
+        z-index: 2;
     }
 
-        .main-img-wrapper img {
+        .ns-gallery-img-wrap img {
+            max-width: 100%;
             max-height: 100%;
             object-fit: contain;
-            transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        }
-        /* The Zoom Effect */
-        .main-img-wrapper:hover img {
-            transform: scale(1.15);
+            transition: opacity 0.25s ease, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-    /* 2. CUSTOM THUMBNAILS */
-    .thumbnail-card {
-        border-radius: 14px;
+    .ns-gallery-main:hover .ns-gallery-img-wrap img {
+        transform: scale(1.06);
+    }
+
+    .ns-gallery-discount {
+        position: absolute;
+        top: 22px;
+        left: 22px;
+        background: var(--ns-clay);
+        color: var(--ns-cream);
+        padding: 10px 18px;
+        border-radius: 50px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.7rem;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        font-weight: 700;
+        z-index: 3;
+        box-shadow: 0 10px 24px rgba(184, 96, 72, 0.3);
+    }
+
+    .ns-gallery-marker {
+        position: absolute;
+        top: 22px;
+        right: 22px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.65rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--ns-clay);
+        z-index: 3;
+        background: rgba(250, 246, 239, 0.92);
+        backdrop-filter: blur(8px);
+        padding: 8px 14px;
+        border-radius: 50px;
+        font-weight: 600;
+    }
+
+    .ns-thumbs {
+        display: flex;
+        gap: 12px;
+        overflow-x: auto;
+        padding-bottom: 6px;
+    }
+
+        .ns-thumbs::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .ns-thumbs::-webkit-scrollbar-track {
+            background: var(--ns-sand);
+            border-radius: 10px;
+        }
+
+        .ns-thumbs::-webkit-scrollbar-thumb {
+            background: var(--ns-warm-gray);
+            border-radius: 10px;
+        }
+
+    .ns-thumb {
+        flex-shrink: 0;
+        width: 90px;
+        height: 90px;
+        background: var(--ns-sand);
+        border-radius: 16px;
+        padding: 10px;
         cursor: pointer;
-        opacity: 0.5;
-        background: #fff;
         border: 2px solid transparent;
+        opacity: 0.55;
         transition: all 0.3s ease;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
-        .thumbnail-card:hover, .thumbnail-card.active {
+        .ns-thumb:hover,
+        .ns-thumb.active {
             opacity: 1;
-            border-color: #111;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 15px rgba(0,0,0,0.08);
+            border-color: var(--ns-terracotta);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(184, 96, 72, 0.12);
         }
 
-    /* 3. STICKY SIDEBAR */
-    .sticky-details {
+        .ns-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+    /* ===== INFO PANEL ===== */
+    .ns-info {
         position: sticky;
-        top: 30px; /* Keeps it on screen as you scroll */
+        top: 100px;
     }
 
-    /* 4. FLOATING REVIEW TILES */
-    .review-tile {
-        background: #fff;
-        border-radius: 20px;
-        border: 1px solid #f0f0f0;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.03);
-        transition: transform 0.3s ease;
+    .ns-info-brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 18px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.7rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--ns-clay);
+        font-weight: 600;
     }
 
-        .review-tile:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.06);
+        .ns-info-brand::before {
+            content: '';
+            width: 24px;
+            height: 2px;
+            background: currentColor;
         }
 
-    /* 5. MINIMALIST STAR SYSTEM */
-    .star-rating-form {
+    .ns-info-name {
+        font-size: clamp(2rem, 4vw, 3rem);
+        color: var(--ns-coffee);
+        margin: 0 0 22px;
+        line-height: 1.05;
+    }
+
+    .ns-info-rating-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 24px;
+        padding-bottom: 24px;
+        border-bottom: 1px solid rgba(74, 55, 41, 0.1);
+    }
+
+    .ns-info-stars {
+        display: flex;
+        gap: 3px;
+        color: var(--ns-clay);
+        font-size: 0.95rem;
+    }
+
+        .ns-info-stars .dim {
+            opacity: 0.25;
+        }
+
+    .ns-info-rating-num {
+        font-family: 'Fraunces', serif;
+        font-style: italic;
+        font-weight: 700;
+        font-size: 1.1rem;
+        color: var(--ns-coffee);
+    }
+
+    .ns-info-rating-count {
+        color: var(--ns-mocha);
+        text-decoration: none;
+        font-size: 0.85rem;
+        margin-left: 6px;
+        transition: color 0.3s ease;
+    }
+
+        .ns-info-rating-count:hover {
+            color: var(--ns-clay);
+        }
+
+    /* Price */
+    .ns-info-price {
+        margin-bottom: 28px;
+        display: flex;
+        align-items: baseline;
+        gap: 14px;
+        flex-wrap: wrap;
+    }
+
+    .ns-info-price-current {
+        font-family: 'Fraunces', serif;
+        font-weight: 800;
+        font-style: italic;
+        font-size: 3rem;
+        color: var(--ns-clay);
+        line-height: 1;
+    }
+
+    .ns-info-price-old {
+        font-family: 'Fraunces', serif;
+        font-size: 1.5rem;
+        color: var(--ns-warm-gray);
+        text-decoration: line-through;
+        text-decoration-color: var(--ns-clay);
+        font-weight: 600;
+    }
+
+    .ns-info-desc {
+        font-size: 0.98rem;
+        color: var(--ns-mocha);
+        line-height: 1.7;
+        margin-bottom: 32px;
+    }
+
+    /* Form / Add to cart panel */
+    .ns-add-panel {
+        background: var(--ns-sand);
+        border: 1px solid rgba(74, 55, 41, 0.06);
+        border-radius: 22px;
+        padding: 26px;
+        margin-bottom: 24px;
+    }
+
+    .ns-field-label {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.7rem;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--ns-mocha);
+        margin-bottom: 10px;
+        font-weight: 600;
+    }
+
+        .ns-field-label a {
+            color: var(--ns-clay);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+            .ns-field-label a:hover {
+                color: var(--ns-coffee);
+            }
+
+    .ns-select {
+        width: 100%;
+        background: var(--ns-cream);
+        border: 1.5px solid transparent;
+        border-radius: 14px;
+        padding: 16px 22px;
+        font-size: 0.95rem;
+        font-family: 'Inter', sans-serif;
+        font-weight: 500;
+        color: var(--ns-coffee);
+        cursor: pointer;
+        appearance: none;
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%234a3729'><path d='M8 11.5L2 5.5l1.4-1.4L8 8.7l4.6-4.6L14 5.5z'/></svg>");
+        background-repeat: no-repeat;
+        background-position: right 20px center;
+        background-size: 14px;
+        padding-right: 50px;
+        transition: all 0.3s ease;
+    }
+
+        .ns-select:focus {
+            outline: none;
+            border-color: var(--ns-terracotta);
+            box-shadow: 0 0 0 4px rgba(201, 123, 94, 0.12);
+        }
+
+    .ns-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+    .ns-add-cart {
+        flex: 1;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        background: var(--ns-coffee);
+        color: var(--ns-cream);
+        padding: 17px 28px;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        letter-spacing: 0.02em;
+        border: none;
+        cursor: pointer;
+        transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+        .ns-add-cart:hover {
+            background: var(--ns-clay);
+            color: var(--ns-cream);
+            transform: translateY(-3px);
+            box-shadow: 0 14px 30px rgba(184, 96, 72, 0.3);
+        }
+
+        .ns-add-cart .arrow {
+            transition: transform 0.3s ease;
+        }
+
+        .ns-add-cart:hover .arrow {
+            transform: translateX(6px);
+        }
+
+    .ns-wishlist-btn {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: var(--ns-cream);
+        color: var(--ns-coffee);
+        border: 1.5px solid rgba(74, 55, 41, 0.1);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 1rem;
+    }
+
+        .ns-wishlist-btn:hover {
+            background: var(--ns-clay);
+            color: var(--ns-cream);
+            border-color: var(--ns-clay);
+            transform: translateY(-3px);
+        }
+
+    /* Perks */
+    .ns-perks {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+    }
+
+        .ns-perks li {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-size: 0.9rem;
+            color: var(--ns-mocha);
+            font-weight: 500;
+        }
+
+    .ns-perks-icon {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: var(--ns-sand);
+        color: var(--ns-clay);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.9rem;
+        flex-shrink: 0;
+    }
+
+    /* ===== REVIEWS ===== */
+    .ns-reviews-section {
+        margin-top: 90px;
+        padding-top: 60px;
+        border-top: 1px solid rgba(74, 55, 41, 0.08);
+    }
+
+    .ns-reviews-header {
+        margin-bottom: 40px;
+    }
+
+    .ns-reviews-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 14px;
+        color: var(--ns-clay);
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.7rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        font-weight: 500;
+    }
+
+        .ns-reviews-tag::before {
+            content: '';
+            width: 28px;
+            height: 2px;
+            background: currentColor;
+        }
+
+    .ns-reviews-title {
+        font-family: 'Fraunces', serif;
+        font-weight: 800;
+        font-size: clamp(2rem, 4vw, 3rem);
+        color: var(--ns-coffee);
+        letter-spacing: -0.03em;
+        margin: 0;
+    }
+
+        .ns-reviews-title em {
+            color: var(--ns-clay);
+            font-style: italic;
+        }
+
+    .ns-reviews-grid {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        gap: 40px;
+        align-items: start;
+    }
+
+    .ns-review-form-card {
+        background: var(--ns-cream);
+        border: 1px solid rgba(74, 55, 41, 0.08);
+        border-radius: 24px;
+        padding: 32px 28px;
+        box-shadow: 0 4px 20px var(--ns-soft-shadow);
+        position: sticky;
+        top: 100px;
+    }
+
+    .ns-review-form-title {
+        font-family: 'Fraunces', serif;
+        font-weight: 800;
+        font-size: 1.5rem;
+        color: var(--ns-coffee);
+        letter-spacing: -0.02em;
+        margin: 0 0 4px;
+    }
+
+    .ns-review-form-sub {
+        font-size: 0.85rem;
+        color: var(--ns-mocha);
+        margin: 0 0 24px;
+    }
+
+    .ns-stars-input {
         display: flex;
         flex-direction: row-reverse;
-        justify-content: flex-end;
+        justify-content: center;
         gap: 8px;
+        margin-bottom: 22px;
     }
 
-        .star-rating-form input {
+        .ns-stars-input input {
             display: none;
         }
 
-        .star-rating-form label {
-            font-size: 2.2rem;
-            color: #e2e8f0;
+        .ns-stars-input label {
+            font-size: 2rem;
+            color: rgba(74, 55, 41, 0.15);
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.2s ease;
+            margin: 0;
         }
 
-            .star-rating-form input:checked ~ label,
-            .star-rating-form label:hover,
-            .star-rating-form label:hover ~ label {
-                color: #fbbf24;
-                transform: scale(1.1);
+            .ns-stars-input input:checked ~ label,
+            .ns-stars-input label:hover,
+            .ns-stars-input label:hover ~ label {
+                color: var(--ns-clay);
+                transform: scale(1.08);
             }
+
+    .ns-textarea {
+        width: 100%;
+        background: var(--ns-sand);
+        border: 1.5px solid transparent;
+        border-radius: 14px;
+        padding: 16px 20px;
+        font-size: 0.92rem;
+        color: var(--ns-coffee);
+        font-family: 'Inter', sans-serif;
+        font-weight: 500;
+        resize: vertical;
+        min-height: 110px;
+        transition: all 0.3s ease;
+        margin-bottom: 16px;
+    }
+
+        .ns-textarea:focus {
+            outline: none;
+            border-color: var(--ns-terracotta);
+            background: var(--ns-cream);
+            box-shadow: 0 0 0 4px rgba(201, 123, 94, 0.12);
+        }
+
+        .ns-textarea::placeholder {
+            color: var(--ns-warm-gray);
+            font-weight: 400;
+        }
+
+    .ns-submit-review {
+        width: 100%;
+        background: var(--ns-coffee);
+        color: var(--ns-cream);
+        border: none;
+        border-radius: 50px;
+        padding: 15px 28px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: all 0.35s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+    }
+
+        .ns-submit-review:hover {
+            background: var(--ns-clay);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(184, 96, 72, 0.25);
+        }
+
+    .ns-signin-prompt {
+        text-align: center;
+        padding: 30px 10px;
+    }
+
+    .ns-signin-icon {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        background: var(--ns-sand);
+        color: var(--ns-clay);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.4rem;
+        margin-bottom: 16px;
+    }
+
+    .ns-signin-prompt h6 {
+        font-family: 'Fraunces', serif;
+        font-weight: 800;
+        font-size: 1.2rem;
+        color: var(--ns-coffee);
+        margin: 0 0 6px;
+    }
+
+    .ns-signin-prompt p {
+        font-size: 0.85rem;
+        color: var(--ns-mocha);
+        margin: 0 0 20px;
+    }
+
+    .ns-signin-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        background: var(--ns-coffee);
+        color: var(--ns-cream);
+        padding: 12px 26px;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 0.82rem;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+
+        .ns-signin-btn:hover {
+            background: var(--ns-clay);
+            color: var(--ns-cream);
+            transform: translateY(-2px);
+        }
+
+    /* Review tiles */
+    .ns-review-list {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+    }
+
+    .ns-review-tile {
+        background: var(--ns-cream);
+        border: 1px solid rgba(74, 55, 41, 0.08);
+        border-radius: 22px;
+        padding: 26px 28px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 16px var(--ns-soft-shadow);
+    }
+
+        .ns-review-tile:hover {
+            border-color: var(--ns-terracotta);
+            transform: translateY(-3px);
+            box-shadow: 0 14px 28px rgba(184, 96, 72, 0.1);
+        }
+
+    .ns-review-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 16px;
+        margin-bottom: 16px;
+    }
+
+    .ns-review-user {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+
+    .ns-review-avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid var(--ns-terracotta);
+    }
+
+    .ns-review-name {
+        font-family: 'Fraunces', serif;
+        font-weight: 700;
+        font-size: 1rem;
+        color: var(--ns-coffee);
+        margin: 0 0 2px;
+    }
+
+    .ns-review-date {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.7rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--ns-mocha);
+    }
+
+    .ns-review-stars {
+        color: var(--ns-clay);
+        font-size: 0.9rem;
+        display: flex;
+        gap: 3px;
+        flex-shrink: 0;
+    }
+
+        .ns-review-stars .dim {
+            opacity: 0.25;
+        }
+
+    .ns-review-body {
+        font-family: 'Fraunces', serif;
+        font-style: italic;
+        font-size: 1rem;
+        line-height: 1.55;
+        color: var(--ns-coffee);
+        margin: 0;
+    }
+
+    .ns-empty-reviews {
+        text-align: center;
+        padding: 60px 30px;
+        background: var(--ns-sand);
+        border-radius: 22px;
+        border: 1.5px dashed rgba(74, 55, 41, 0.15);
+    }
+
+        .ns-empty-reviews i {
+            font-size: 2.2rem;
+            color: var(--ns-warm-gray);
+            margin-bottom: 18px;
+        }
+
+        .ns-empty-reviews h5 {
+            font-family: 'Fraunces', serif;
+            font-weight: 800;
+            font-style: italic;
+            font-size: 1.4rem;
+            color: var(--ns-coffee);
+            margin: 0 0 8px;
+        }
+
+        .ns-empty-reviews p {
+            font-size: 0.92rem;
+            color: var(--ns-mocha);
+            margin: 0;
+        }
+
+    /* Responsive */
+    @@media (max-width: 992px) {
+        .ns-detail-grid {
+            grid-template-columns: 1fr;
+            gap: 36px;
+        }
+
+        .ns-info {
+            position: static;
+        }
+
+        .ns-reviews-grid {
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+
+        .ns-review-form-card {
+            position: static;
+        }
+    }
+
+    @@media (max-width: 576px) {
+        .ns-detail {
+            padding: 40px 0 60px;
+        }
+
+        .ns-info-price-current {
+            font-size: 2.4rem;
+        }
+
+        .ns-add-panel {
+            padding: 20px;
+        }
+
+        .ns-review-tile {
+            padding: 22px 20px;
+        }
+    }
 </style>
 
-<div class="container py-5 mt-3 mb-5">
+<div class="ns-detail">
+    <div class="container">
 
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb bg-transparent p-0 mb-4 pb-2 border-bottom">
-            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index" class="text-muted text-decoration-none text-hover-brand"><i class="fa fa-home me-1"></i>Home</a></li>
-            <li class="breadcrumb-item"><a asp-controller="Search" asp-action="Index" asp-route-q="@Model.Product.Category?.Name" class="text-muted text-decoration-none text-hover-brand">@(Model.Product.Category?.Name ?? "Shoes")</a></li>
-            <li class="breadcrumb-item active fw-bold text-dark" aria-current="page">@Model.Product.Name</li>
-        </ol>
-    </nav>
+        @* ===== BREADCRUMB ===== *@
+        <nav class="ns-breadcrumb">
+            <a asp-controller="Home" asp-action="Index"><i class="fa fa-home me-1"></i> Home</a>
+            <span class="sep">/</span>
+            <a asp-controller="Search" asp-action="Index" asp-route-q="@Model.Product.Category?.Name">@(Model.Product.Category?.Name ?? "Shoes")</a>
+            <span class="sep">/</span>
+            <span class="current">@Model.Product.Name</span>
+        </nav>
 
-    <div class="row g-5">
+        <div class="ns-detail-grid">
 
-        <div class="col-lg-7">
-            <div class="premium-gallery mb-4 border shadow-sm">
-                @if (activeDiscount != null)
-                {
-                    <div class="position-absolute top-0 start-0 m-4" style="z-index: 10;">
-                        <span class="badge bg-danger fs-6 rounded-pill px-3 py-2 shadow-sm" style="letter-spacing: 1px;">SAVE @activeDiscount.DiscountPercentage.ToString("0")%</span>
-                    </div>
-                }
-
-                <div class="main-img-wrapper">
-                    <img id="mainProductImage" src="@mainImage" alt="@Model.Product.Name" class="w-100">
-                </div>
-            </div>
-
-            @if (Model.Product.ProductImages != null && Model.Product.ProductImages.Count > 1)
-            {
-                <div class="d-flex gap-3 overflow-auto pb-3 px-1">
-                    @foreach (var img in Model.Product.ProductImages)
-                    {
-                        <div class="thumbnail-card p-2" onclick="changeMainImage('@img.ImagePath', this)" style="width: 90px; height: 90px; flex-shrink: 0;">
-                            <img src="@img.ImagePath" class="w-100 h-100" style="object-fit: contain;">
-                        </div>
-                    }
-                </div>
-            }
-        </div>
-
-        <div class="col-lg-5">
-            <div class="sticky-details">
-                <span class="badge bg-dark text-white rounded-pill px-3 py-2 mb-3 shadow-sm" style="letter-spacing: 1.5px;">@(Model.Product.Brand?.Name ?? "NextStep")</span>
-
-                <h1 class="display-5 fw-bolder mb-3 text-dark" style="line-height: 1.1;">@Model.Product.Name</h1>
-
-                <div class="d-flex align-items-center mb-4 pb-3 border-bottom">
-                    <div class="text-warning me-2 fs-5">
-                        @for (int i = 1; i <= 5; i++)
-                        {
-                            <i class="fa @(i <= Math.Round(Model.AverageRating) ? "fa-star" : "fa-star-o")"></i>
-                        }
-                    </div>
-                    <span class="text-dark fw-bold me-1">@Model.AverageRating.ToString("0.0")</span>
-                    <a href="#reviewsSection" class="text-muted small text-decoration-none text-hover-brand">(See all @Model.TotalReviews reviews)</a>
-                </div>
-
-                <div class="mb-4">
+            @* ===== GALLERY ===== *@
+            <div class="ns-gallery">
+                <div class="ns-gallery-main">
                     @if (activeDiscount != null)
                     {
-                        <span class="fs-4 text-muted text-decoration-line-through me-3">$@Model.Product.Price.ToString("0.00")</span>
-                        <span class="display-5 fw-bolder text-danger">$@salePrice.ToString("0.00")</span>
+                        <span class="ns-gallery-discount">Save @activeDiscount.DiscountPercentage.ToString("0")%</span>
+                    }
+                    <span class="ns-gallery-marker">@(Model.Product.Brand?.Name ?? "NextStep")</span>
+
+                    <div class="ns-gallery-img-wrap">
+                        <img id="mainProductImage" src="@mainImage" alt="@Model.Product.Name">
+                    </div>
+                </div>
+
+                @if (Model.Product.ProductImages != null && Model.Product.ProductImages.Count > 1)
+                {
+                    <div class="ns-thumbs">
+                        @{
+                            int thumbIndex = 0;
+                        }
+                        @foreach (var img in Model.Product.ProductImages)
+                        {
+                            <div class="ns-thumb @(thumbIndex == 0 ? "active" : "")" onclick="changeMainImage('@img.ImagePath', this)">
+                                <img src="@img.ImagePath" alt="thumbnail">
+                            </div>
+                            thumbIndex++;
+                        }
+                    </div>
+                }
+            </div>
+
+            @* ===== INFO PANEL ===== *@
+            <div class="ns-info">
+                <div class="ns-info-brand">@(Model.Product.Brand?.Name ?? "NextStep")</div>
+
+                <h1 class="ns-info-name display-font">@Model.Product.Name</h1>
+
+                <div class="ns-info-rating-row">
+                    <div class="ns-info-stars">
+                        @for (int i = 1; i <= 5; i++)
+                        {
+                            <i class="fa fa-star @(i <= Math.Round(Model.AverageRating) ? "" : "dim")"></i>
+                        }
+                    </div>
+                    <span class="ns-info-rating-num">@Model.AverageRating.ToString("0.0")</span>
+                    <a href="#reviewsSection" class="ns-info-rating-count">(@Model.TotalReviews reviews)</a>
+                </div>
+
+                <div class="ns-info-price">
+                    @if (activeDiscount != null)
+                    {
+                        <span class="ns-info-price-current">$@salePrice.ToString("0.00")</span>
+                        <span class="ns-info-price-old">$@Model.Product.Price.ToString("0.00")</span>
                     }
                     else
                     {
-                        <span class="display-5 fw-bolder text-dark">$@Model.Product.Price.ToString("0.00")</span>
+                        <span class="ns-info-price-current">$@Model.Product.Price.ToString("0.00")</span>
                     }
                 </div>
 
-                <p class="text-muted mb-4 fs-6" style="line-height: 1.7;">@Model.Product.Description</p>
+                <p class="ns-info-desc">@Model.Product.Description</p>
 
-                <form asp-controller="Cart" asp-action="AddToCart" method="post" class="bg-light p-4 rounded-4 border shadow-sm">
-                    <input type="hidden" name="productId" value="@Model.Product.Id" />
+                <form asp-controller="Cart" asp-action="AddToCart" method="post" class="ns-add-panel">
 
-                    <div class="mb-4">
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <label class="fw-bold text-dark mb-0">Select Size</label>
-                            <a href="#" class="text-muted small text-decoration-underline text-hover-brand">Size Guide</a>
-                        </div>
-                        <select class="form-select form-select-lg border-2 shadow-sm" style="border-radius: 12px; cursor: pointer;" required>
-                            <option value="" disabled selected>Choose your size...</option>
-                            <option value="8">US 8</option>
-                            <option value="9">US 9</option>
-                            <option value="10">US 10</option>
-                            <option value="11">US 11</option>
-                        </select>
+                    <div class="ns-field-label">
+                        <span>Select Size</span>
+                        <a href="#">Size Guide ↗</a>
                     </div>
 
-                    <div class="d-flex gap-2">
-                        <button type="submit" class="btn btn-dark btn-lg flex-grow-1 rounded-pill fw-bold shadow-lg transition-hover py-3">
+                    <select name="productVariantId" class="ns-select" required>
+                        <option value="" disabled selected>Choose your size...</option>
+
+                        @if (Model.Product.ProductVariants != null && Model.Product.ProductVariants.Any())
+                        {
+                            foreach (var variant in Model.Product.ProductVariants.Where(v => v.StockQuantity > 0))
+                            {
+                                <option value="@variant.Id">Size @variant.Size @(!string.IsNullOrEmpty(variant.Color) && variant.Color != "Default" ? $" - {variant.Color}" : "")</option>
+                            }
+
+                            if (!Model.Product.ProductVariants.Any(v => v.StockQuantity > 0))
+                            {
+                                <option value="" disabled>Out of Stock</option>
+                            }
+                        }
+                        else
+                        {
+                            <option value="" disabled>Currently Unavailable</option>
+                        }
+                    </select>
+
+                    <div class="ns-actions">
+                        <button type="submit" class="ns-add-cart" @(Model.Product.ProductVariants == null || !Model.Product.ProductVariants.Any(v => v.StockQuantity > 0) ? "disabled style='opacity:0.5;'" : "")>
                             Add to Cart
+                            <span class="arrow">→</span>
                         </button>
-                        <button type="submit" asp-controller="Wishlist" asp-action="Add" class="btn btn-outline-dark btn-lg rounded-pill px-4 shadow-sm transition-hover" title="Add to Wishlist">
+
+                        <a asp-controller="Wishlist" asp-action="Add" asp-route-productId="@Model.Product.Id" class="ns-wishlist-btn" title="Add to Wishlist" style="text-decoration: none;">
                             <i class="fa fa-heart"></i>
-                        </button>
+                        </a>
                     </div>
                 </form>
 
-                <div class="mt-4 px-2">
-                    <div class="d-flex align-items-center text-muted mb-3">
-                        <div class="bg-light rounded-circle p-2 me-3"><i class="fa fa-truck text-dark"></i></div>
-                        <small class="fw-bold">Free shipping on orders over $100</small>
-                    </div>
-                    <div class="d-flex align-items-center text-muted">
-                        <div class="bg-light rounded-circle p-2 me-3"><i class="fa fa-undo text-dark"></i></div>
-                        <small class="fw-bold">Free 30-day returns</small>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="reviewsSection" class="row border-top pt-5 mt-5">
-
-        <div class="col-lg-4 mb-5">
-            <h3 class="fw-bolder mb-4 text-dark">Reviews</h3>
-
-            <div class="review-tile p-4 p-md-5">
-                @if (SignInManager.IsSignedIn(User))
-                {
-                    <h5 class="fw-bold mb-1">Write a Review</h5>
-                    <p class="text-muted small mb-4">Share your thoughts with other athletes.</p>
-
-                    <form asp-controller="Products" asp-action="AddReview" method="post">
-                        <input type="hidden" name="ProductId" value="@Model.Product.Id" />
-
-                        <div class="star-rating-form mb-4">
-                            <input type="radio" id="star5" name="NewRating" value="5" required />
-                            <label for="star5" class="fa fa-star"></label>
-                            <input type="radio" id="star4" name="NewRating" value="4" />
-                            <label for="star4" class="fa fa-star"></label>
-                            <input type="radio" id="star3" name="NewRating" value="3" />
-                            <label for="star3" class="fa fa-star"></label>
-                            <input type="radio" id="star2" name="NewRating" value="2" />
-                            <label for="star2" class="fa fa-star"></label>
-                            <input type="radio" id="star1" name="NewRating" value="1" />
-                            <label for="star1" class="fa fa-star"></label>
-                        </div>
-
-                        <div class="mb-4">
-                            <textarea class="form-control bg-light p-3" name="NewReviewComment" rows="4" placeholder="How did the shoe feel?" required style="border-radius: 12px; resize: none; border: 2px solid #f0f0f0;"></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-dark w-100 rounded-pill fw-bold py-2 shadow-sm transition-hover">Submit Review</button>
-                    </form>
-                }
-                else
-                {
-                    <div class="text-center py-4">
-                        <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
-                            <i class="fa fa-lock fs-4 text-muted"></i>
-                        </div>
-                        <h6 class="fw-bold text-dark">Members Only</h6>
-                        <p class="text-muted small mb-4">Please sign in to share your experience.</p>
-                        <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-outline-dark rounded-pill fw-bold px-5">Sign In</a>
-                    </div>
-                }
+                <ul class="ns-perks">
+                    <li>
+                        <span class="ns-perks-icon"><i class="fa fa-truck"></i></span>
+                        <span>Free shipping on orders over $100</span>
+                    </li>
+                    <li>
+                        <span class="ns-perks-icon"><i class="fa fa-undo"></i></span>
+                        <span>Free 30-day returns</span>
+                    </li>
+                    <li>
+                        <span class="ns-perks-icon"><i class="fa fa-shield-halved"></i></span>
+                        <span>Authenticity guaranteed</span>
+                    </li>
+                </ul>
             </div>
         </div>
 
-        <div class="col-lg-8 ps-lg-5">
-            @if (Model.Reviews.Any())
-            {
-                <div class="d-flex flex-column gap-4">
-                    @foreach (var review in Model.Reviews)
+        @* ===== REVIEWS ===== *@
+        <section id="reviewsSection" class="ns-reviews-section">
+
+            <div class="ns-reviews-header">
+                <div class="ns-reviews-tag">Customer Reviews</div>
+                <h2 class="ns-reviews-title">What athletes <em>say.</em></h2>
+            </div>
+
+            <div class="ns-reviews-grid">
+
+                <div class="ns-review-form-card">
+                    @if (SignInManager.IsSignedIn(User))
                     {
-                        <div class="review-tile p-4">
-                            <div class="d-flex justify-content-between align-items-start mb-3">
-                                <div class="d-flex align-items-center">
-                                    <img src="@(review.User?.ProfileImage ?? "/admin/img/undraw_profile.svg")" class="rounded-circle border border-2 me-3" style="width: 55px; height: 55px; object-fit: cover;" alt="User">
-                                    <div>
-                                        <h6 class="fw-bold mb-1 text-dark">@(review.User?.FullName ?? "Verified Buyer")</h6>
-                                        <span class="text-muted small">@review.CreatedAt.ToString("MMMM dd, yyyy")</span>
-                                    </div>
-                                </div>
-                                <div class="text-warning">
-                                    @for (int i = 1; i <= 5; i++)
-                                    {
-                                        <i class="fa @(i <= review.Rating ? "fa-star" : "fa-star-o")"></i>
-                                    }
-                                </div>
+                        <h3 class="ns-review-form-title">Write a Review</h3>
+                        <p class="ns-review-form-sub">Share your thoughts with other athletes.</p>
+
+                        <form asp-controller="Products" asp-action="AddReview" method="post">
+                            <input type="hidden" name="ProductId" value="@Model.Product.Id" />
+
+                            <div class="ns-stars-input">
+                                <input type="radio" id="star5" name="NewRating" value="5" required />
+                                <label for="star5" class="fa fa-star"></label>
+                                <input type="radio" id="star4" name="NewRating" value="4" />
+                                <label for="star4" class="fa fa-star"></label>
+                                <input type="radio" id="star3" name="NewRating" value="3" />
+                                <label for="star3" class="fa fa-star"></label>
+                                <input type="radio" id="star2" name="NewRating" value="2" />
+                                <label for="star2" class="fa fa-star"></label>
+                                <input type="radio" id="star1" name="NewRating" value="1" />
+                                <label for="star1" class="fa fa-star"></label>
                             </div>
-                            <p class="mb-0 text-muted" style="line-height: 1.6;">@review.Comment</p>
+
+                            <textarea class="ns-textarea" name="NewReviewComment" rows="4" placeholder="How did the shoe feel?" required></textarea>
+
+                            <button type="submit" class="ns-submit-review">
+                                Submit Review
+                                <span>→</span>
+                            </button>
+                        </form>
+                    }
+                    else
+                    {
+                        <div class="ns-signin-prompt">
+                            <div class="ns-signin-icon">
+                                <i class="fa fa-lock"></i>
+                            </div>
+                            <h6>Members Only</h6>
+                            <p>Please sign in to share your experience.</p>
+                            <a asp-area="Identity" asp-page="/Account/Login" class="ns-signin-btn">
+                                Sign In
+                                <span>→</span>
+                            </a>
                         </div>
                     }
                 </div>
-            }
-            else
-            {
-                <div class="text-center py-5 bg-light rounded-4 border border-dashed h-100 d-flex flex-column align-items-center justify-content-center">
-                    <i class="fa fa-star-half-alt fa-3x text-muted opacity-50 mb-3"></i>
-                    <h5 class="fw-bold text-dark">No reviews yet</h5>
-                    <p class="text-muted mb-0">Be the first to review the @Model.Product.Name!</p>
+
+                <div>
+                    @if (Model.Reviews.Any())
+                    {
+                        <div class="ns-review-list">
+                            @foreach (var review in Model.Reviews)
+                            {
+                                <div class="ns-review-tile">
+                                    <div class="ns-review-head">
+                                        <div class="ns-review-user">
+                                            <img src="@(review.User?.ProfileImage ?? "/admin/img/undraw_profile.svg")" class="ns-review-avatar" alt="User">
+                                            <div>
+                                                <p class="ns-review-name">@(review.User?.FullName ?? "Verified Buyer")</p>
+                                                <span class="ns-review-date">@review.CreatedAt.ToString("MMM dd, yyyy")</span>
+                                            </div>
+                                        </div>
+                                        <div class="ns-review-stars">
+                                            @for (int i = 1; i <= 5; i++)
+                                            {
+                                                <i class="fa fa-star @(i <= review.Rating ? "" : "dim")"></i>
+                                            }
+                                        </div>
+                                    </div>
+                                    <p class="ns-review-body">"@review.Comment"</p>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="ns-empty-reviews">
+                            <i class="fa fa-comment-dots"></i>
+                            <h5>No reviews yet.</h5>
+                            <p>Be the first to review the @Model.Product.Name.</p>
+                        </div>
+                    }
                 </div>
-            }
-        </div>
+
+            </div>
+        </section>
+
     </div>
 </div>
 
 @section Scripts {
     <script>
-        // Smoothly swaps the main image when you click a thumbnail
         function changeMainImage(src, element) {
             let mainImage = document.getElementById('mainProductImage');
-            mainImage.style.opacity = '0'; // Fade out slightly
+            mainImage.style.opacity = '0';
 
             setTimeout(() => {
                 mainImage.src = src;
-                mainImage.style.opacity = '1'; // Fade back in
-            }, 150);
+                mainImage.style.opacity = '1';
+            }, 180);
 
-            let thumbnails = document.querySelectorAll('.thumbnail-card');
-            thumbnails.forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.ns-thumb').forEach(t => t.classList.remove('active'));
             element.classList.add('active');
         }
     </script>

@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SportsShoesEcommerce.Data;
 using SportsShoesEcommerce.Models;
-using System.Security.Claims;
+using System;
+using System.Threading.Tasks;
 
 namespace SportsShoesEcommerce.Controllers
 {
@@ -14,34 +15,30 @@ namespace SportsShoesEcommerce.Controllers
             _context = context;
         }
 
+        // GET: /Contact
+        [HttpGet]
         public IActionResult Index()
         {
             return View();
         }
 
+        // POST: /Contact/Submit
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Send(ContactMessage message)
+        public async Task<IActionResult> Submit(ContactMessage message)
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                return View("Index", message);
+                message.CreatedAt = DateTime.Now;
+                _context.ContactMessages.Add(message);
+                await _context.SaveChangesAsync();
+
+                // Send a success popup back to the user
+                TempData["SuccessMessage"] = "Thank you for reaching out! Our team will get back to you shortly.";
+                return RedirectToAction(nameof(Index));
             }
 
-            if (User.Identity != null && User.Identity.IsAuthenticated)
-            {
-                message.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            }
-
-            message.CreatedAt = DateTime.Now;
-            message.IsRead = false;
-
-            _context.ContactMessages.Add(message);
-            await _context.SaveChangesAsync();
-
-            TempData["Success"] = "Your message has been sent successfully.";
-
-            return RedirectToAction("Index");
+            return View("Index", message);
         }
     }
 }

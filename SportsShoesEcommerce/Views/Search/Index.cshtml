@@ -3,70 +3,357 @@
     ViewData["Title"] = string.IsNullOrWhiteSpace(Model.Query) ? "Search" : $"Search Results for '{Model.Query}'";
 }
 
-<section class="position-relative py-5 bg-dark text-white overflow-hidden shadow-sm">
-    <div class="container py-4 text-center position-relative" style="z-index: 2;">
-
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb justify-content-center bg-transparent p-0 mb-3">
-                <li class="breadcrumb-item">
-                    <a asp-controller="Home" asp-action="Index" class="text-white opacity-75 text-decoration-none text-hover-brand">Home</a>
-                </li>
-                <li class="breadcrumb-item active text-white" aria-current="page">Search</li>
-            </ol>
-        </nav>
-
-        @if (string.IsNullOrWhiteSpace(Model.Query))
-        {
-            <h1 class="display-4 fw-bolder mb-2">Search <span style="color: var(--brand-teal);">Our Store</span></h1>
-            <p class="lead opacity-75 mb-0">Discover premium sports gear designed for performance.</p>
-        }
-        else
-        {
-            <h1 class="display-4 fw-bolder mb-2">Results for "<span style="color: var(--brand-teal);">@Model.Query</span>"</h1>
-            <p class="lead opacity-75 mb-0">We found @Model.Products.Count matching items for your search.</p>
-        }
-    </div>
-</section>
-
-<div class="container mb-5 pb-5 mt-5" style="min-height: 40vh; animation: fadeIn 0.6s ease-out;">
-
-    @if (!string.IsNullOrWhiteSpace(Model.Query))
-    {
-        if (Model.Products.Any())
-        {
-            <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom border-2">
-                <span class="text-muted fw-bold text-uppercase" style="letter-spacing: 1px; font-size: 0.85rem;">
-                    Showing @Model.Products.Count Results
-                </span>
-            </div>
-
-            <div class="row">
-                @foreach (var product in Model.Products)
-                {
-                    <partial name="_ProductCard" model="product" />
-                }
-            </div>
-        }
-        else
-        {
-            <div class="text-center py-5 my-4">
-                <div class="d-inline-flex align-items-center justify-content-center bg-light rounded-circle mb-4 shadow-sm border" style="width: 120px; height: 120px;">
-                    <i class="fa fa-search fa-3x text-muted opacity-50"></i>
-                </div>
-                <h2 class="fw-bold text-dark mb-3">No matches found</h2>
-                <p class="text-muted fs-5 mb-4 px-md-5 mx-md-5">
-                    We couldn't find any shoes or brands matching "<span class="fw-bold text-dark">@Model.Query</span>". Try checking your spelling or using more general terms.
-                </p>
-                <a asp-controller="Products" asp-action="Index" class="btn btn-dark btn-lg rounded-pill px-5 fw-bold shadow-sm text-hover-brand mt-2">
-                    Browse All Collections
-                </a>
-            </div>
-        }
-    }
-</div>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,800;1,9..144,600;1,9..144,800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
 <style>
-    @@keyframes fadeIn {
+    :root {
+        --ns-cream: #faf6ef;
+        --ns-sand: #f3ead9;
+        --ns-peach: #f5d5b8;
+        --ns-terracotta: #c97b5e;
+        --ns-clay: #b86048;
+        --ns-coffee: #4a3729;
+        --ns-mocha: #6b4f3d;
+        --ns-sage: #8fa68a;
+        --ns-warm-gray: #a89684;
+        --ns-soft-shadow: rgba(74, 55, 41, 0.08);
+    }
+
+    .ns-search {
+        background: var(--ns-cream);
+        color: var(--ns-coffee);
+        font-family: 'Inter', -apple-system, sans-serif;
+        min-height: 80vh;
+        padding-bottom: 80px;
+    }
+
+        .ns-search .display-font {
+            font-family: 'Fraunces', Georgia, serif;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 0.95;
+        }
+
+        .ns-search .mono {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+
+    /* ===== HEADER ===== */
+    .ns-search-header {
+        position: relative;
+        background: linear-gradient(160deg, var(--ns-sand) 0%, var(--ns-peach) 100%);
+        padding: 90px 0 80px;
+        overflow: hidden;
+        margin-bottom: 50px;
+    }
+
+        .ns-search-header::before {
+            content: '';
+            position: absolute;
+            top: -120px;
+            right: -80px;
+            width: 380px;
+            height: 380px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(201, 123, 94, 0.25) 0%, transparent 70%);
+            filter: blur(40px);
+        }
+
+        .ns-search-header::after {
+            content: '';
+            position: absolute;
+            bottom: -100px;
+            left: -100px;
+            width: 320px;
+            height: 320px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(143, 166, 138, 0.18) 0%, transparent 70%);
+            filter: blur(40px);
+        }
+
+    .ns-search-header-inner {
+        position: relative;
+        z-index: 2;
+    }
+
+    /* Breadcrumb */
+    .ns-breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.7rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--ns-mocha);
+        margin-bottom: 26px;
+    }
+
+        .ns-breadcrumb a {
+            color: var(--ns-mocha);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+            .ns-breadcrumb a:hover {
+                color: var(--ns-clay);
+            }
+
+        .ns-breadcrumb .sep {
+            color: var(--ns-warm-gray);
+            opacity: 0.6;
+        }
+
+        .ns-breadcrumb .current {
+            color: var(--ns-coffee);
+            font-weight: 600;
+        }
+
+    .ns-search-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 18px;
+        color: var(--ns-clay);
+    }
+
+        .ns-search-tag::before {
+            content: '';
+            width: 28px;
+            height: 2px;
+            background: currentColor;
+        }
+
+    .ns-search-title {
+        font-size: clamp(2.6rem, 6vw, 5rem);
+        color: var(--ns-coffee);
+        margin: 0 0 18px;
+        max-width: 900px;
+    }
+
+        .ns-search-title em {
+            color: var(--ns-clay);
+            font-style: italic;
+        }
+
+        .ns-search-title .quoted {
+            color: var(--ns-clay);
+            font-style: italic;
+        }
+
+    .ns-search-sub {
+        font-size: 1.05rem;
+        color: var(--ns-mocha);
+        max-width: 580px;
+        margin: 0 0 30px;
+        line-height: 1.6;
+    }
+
+    /* Search bar */
+    .ns-search-bar {
+        display: flex;
+        align-items: center;
+        background: var(--ns-cream);
+        border: 1.5px solid transparent;
+        border-radius: 60px;
+        padding: 6px 6px 6px 28px;
+        max-width: 620px;
+        box-shadow: 0 10px 30px rgba(74, 55, 41, 0.08);
+        transition: all 0.3s ease;
+    }
+
+        .ns-search-bar:focus-within {
+            border-color: var(--ns-terracotta);
+            box-shadow: 0 12px 36px rgba(201, 123, 94, 0.18);
+        }
+
+        .ns-search-bar i.search-icon {
+            color: var(--ns-warm-gray);
+            font-size: 0.95rem;
+            margin-right: 12px;
+            transition: color 0.3s ease;
+        }
+
+        .ns-search-bar:focus-within i.search-icon {
+            color: var(--ns-clay);
+        }
+
+        .ns-search-bar input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: var(--ns-coffee);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 500;
+            padding: 14px 0;
+        }
+
+            .ns-search-bar input::placeholder {
+                color: var(--ns-warm-gray);
+                font-weight: 400;
+            }
+
+        .ns-search-bar button {
+            background: var(--ns-coffee);
+            color: var(--ns-cream);
+            border: none;
+            border-radius: 50px;
+            padding: 13px 28px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+            .ns-search-bar button:hover {
+                background: var(--ns-clay);
+                transform: translateX(2px);
+                box-shadow: 0 8px 20px rgba(184, 96, 72, 0.3);
+            }
+
+            .ns-search-bar button .arrow {
+                transition: transform 0.3s ease;
+            }
+
+            .ns-search-bar button:hover .arrow {
+                transform: translateX(4px);
+            }
+
+    /* Toolbar */
+    .ns-toolbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 36px;
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+
+    .ns-results-count {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.78rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--ns-mocha);
+        font-weight: 500;
+    }
+
+        .ns-results-count strong {
+            color: var(--ns-clay);
+            font-weight: 700;
+        }
+
+    .ns-active-filter {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--ns-sand);
+        color: var(--ns-coffee);
+        padding: 8px 16px 8px 18px;
+        border-radius: 50px;
+        font-size: 0.82rem;
+        font-weight: 500;
+        border: 1px solid rgba(74, 55, 41, 0.08);
+    }
+
+        .ns-active-filter .label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--ns-mocha);
+            margin-right: 4px;
+        }
+
+        .ns-active-filter a {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: var(--ns-coffee);
+            color: var(--ns-cream);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-size: 0.65rem;
+            transition: all 0.25s ease;
+        }
+
+            .ns-active-filter a:hover {
+                background: var(--ns-clay);
+                transform: rotate(90deg);
+            }
+
+    /* Product grid (reuses _ProductCard partial) */
+    .ns-product-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 26px;
+        animation: ns-fade-in 0.5s ease-out;
+    }
+
+        .ns-product-grid > [class*="col-"],
+        .ns-product-grid > div {
+            padding: 0 !important;
+            margin: 0 !important;
+            max-width: 100% !important;
+            width: 100% !important;
+            flex: unset !important;
+        }
+
+        .ns-product-grid .card {
+            background: var(--ns-cream) !important;
+            border: 1px solid rgba(74, 55, 41, 0.08) !important;
+            border-radius: 24px !important;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            color: var(--ns-coffee) !important;
+            box-shadow: 0 4px 16px var(--ns-soft-shadow);
+            height: 100%;
+            width: 100%;
+        }
+
+            .ns-product-grid .card:hover {
+                transform: translateY(-8px);
+                border-color: var(--ns-terracotta) !important;
+                box-shadow: 0 20px 40px rgba(184, 96, 72, 0.15);
+            }
+
+            .ns-product-grid .card img,
+            .ns-product-grid .card-img-top {
+                width: 100%;
+                height: 220px;
+                object-fit: cover;
+            }
+
+        .ns-product-grid .card-body {
+            padding: 20px !important;
+        }
+
+        .ns-product-grid .card-title,
+        .ns-product-grid h5,
+        .ns-product-grid h6 {
+            color: var(--ns-coffee) !important;
+            font-weight: 600;
+            font-size: 1rem !important;
+        }
+
+        .ns-product-grid .text-muted {
+            color: var(--ns-mocha) !important;
+        }
+
+    @@keyframes ns-fade-in {
         from {
             opacity: 0;
             transform: translateY(20px);
@@ -77,4 +364,267 @@
             transform: translateY(0);
         }
     }
+
+    /* Empty state */
+    .ns-empty {
+        text-align: center;
+        padding: 80px 30px;
+        background: var(--ns-sand);
+        border-radius: 28px;
+        border: 1.5px dashed rgba(74, 55, 41, 0.15);
+    }
+
+    .ns-empty-icon {
+        width: 96px;
+        height: 96px;
+        border-radius: 50%;
+        background: var(--ns-cream);
+        color: var(--ns-clay);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        margin-bottom: 26px;
+        box-shadow: 0 10px 30px rgba(74, 55, 41, 0.08);
+    }
+
+    .ns-empty-title {
+        font-family: 'Fraunces', serif;
+        font-weight: 800;
+        font-style: italic;
+        font-size: 2.2rem;
+        color: var(--ns-coffee);
+        margin: 0 0 14px;
+        letter-spacing: -0.02em;
+    }
+
+    .ns-empty-text {
+        font-size: 1rem;
+        color: var(--ns-mocha);
+        margin: 0 auto 30px;
+        max-width: 480px;
+        line-height: 1.6;
+    }
+
+        .ns-empty-text .term {
+            color: var(--ns-coffee);
+            font-weight: 600;
+        }
+
+    .ns-empty-actions {
+        display: inline-flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .ns-btn-primary {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        background: var(--ns-coffee);
+        color: var(--ns-cream);
+        padding: 14px 28px;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        letter-spacing: 0.02em;
+        text-decoration: none;
+        transition: all 0.35s ease;
+    }
+
+        .ns-btn-primary:hover {
+            background: var(--ns-clay);
+            color: var(--ns-cream);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 24px rgba(184, 96, 72, 0.3);
+        }
+
+    .ns-btn-ghost {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        background: var(--ns-cream);
+        color: var(--ns-coffee);
+        padding: 14px 28px;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        text-decoration: none;
+        border: 1.5px solid rgba(74, 55, 41, 0.15);
+        transition: all 0.35s ease;
+    }
+
+        .ns-btn-ghost:hover {
+            background: var(--ns-sand);
+            color: var(--ns-coffee);
+            transform: translateY(-2px);
+        }
+
+    /* Idle state (no query yet) */
+    .ns-idle {
+        text-align: center;
+        padding: 70px 30px;
+    }
+
+        .ns-idle h3 {
+            font-family: 'Fraunces', serif;
+            font-weight: 800;
+            font-style: italic;
+            font-size: 1.8rem;
+            color: var(--ns-coffee);
+            margin: 0 0 10px;
+        }
+
+        .ns-idle p {
+            font-size: 0.95rem;
+            color: var(--ns-mocha);
+            margin: 0;
+        }
+
+    /* Responsive */
+    @@media (max-width: 1100px) {
+        .ns-product-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+
+    @@media (max-width: 800px) {
+        .ns-product-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+        }
+
+        .ns-search-header {
+            padding: 70px 0 60px;
+            margin-bottom: 36px;
+        }
+    }
+
+    @@media (max-width: 576px) {
+        .ns-product-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .ns-search-bar {
+            flex-wrap: wrap;
+            padding: 14px;
+            border-radius: 22px;
+        }
+
+            .ns-search-bar input {
+                width: 100%;
+                padding: 8px 0;
+            }
+
+            .ns-search-bar button {
+                width: 100%;
+                justify-content: center;
+            }
+    }
 </style>
+
+<div class="ns-search">
+
+    @* ===== HEADER ===== *@
+    <section class="ns-search-header">
+        <div class="container ns-search-header-inner">
+
+            <nav class="ns-breadcrumb">
+                <a asp-controller="Home" asp-action="Index"><i class="fa fa-home me-1"></i> Home</a>
+                <span class="sep">/</span>
+                <span class="current">Search</span>
+            </nav>
+
+            <div class="ns-search-tag mono">Search</div>
+
+            @if (string.IsNullOrWhiteSpace(Model.Query))
+            {
+                <h1 class="ns-search-title display-font">
+                    What are you <em>looking for?</em>
+                </h1>
+                <p class="ns-search-sub">
+                    Discover premium athletic footwear designed for performance. Search by name,
+                    brand, or category.
+                </p>
+            }
+            else
+            {
+                <h1 class="ns-search-title display-font">
+                    Results for <span class="quoted">"@Model.Query"</span>
+                </h1>
+                <p class="ns-search-sub">
+                    @Model.Products.Count matching @(Model.Products.Count == 1 ? "item" : "items")
+                    found across our catalog.
+                </p>
+            }
+
+            <form asp-controller="Search" asp-action="Index" method="get" class="ns-search-bar">
+                <i class="fa fa-search search-icon"></i>
+                <input type="text" name="q" value="@Model.Query"
+                       placeholder="Search shoes, brands, or categories..." autocomplete="off" />
+                <button type="submit">
+                    Search
+                    <span class="arrow">→</span>
+                </button>
+            </form>
+
+        </div>
+    </section>
+
+    <div class="container">
+
+        @if (string.IsNullOrWhiteSpace(Model.Query))
+        {
+            <div class="ns-idle">
+                <h3>Start by searching above.</h3>
+                <p>Type a keyword to see what matches in our catalog.</p>
+            </div>
+        }
+        else if (Model.Products.Any())
+        {
+            <div class="ns-toolbar">
+                <div class="ns-results-count">
+                    <strong>@Model.Products.Count</strong> @(Model.Products.Count == 1 ? "Result" : "Results") Found
+                </div>
+                <div class="ns-active-filter">
+                    <span class="label">Searching</span>
+                    <span>"@Model.Query"</span>
+                    <a asp-controller="Products" asp-action="Index" title="Clear search">
+                        <i class="fa fa-times"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="ns-product-grid">
+                @foreach (var product in Model.Products)
+                {
+                    <partial name="_ProductCard" model="product" />
+                }
+            </div>
+        }
+        else
+        {
+            <div class="ns-empty">
+                <div class="ns-empty-icon">
+                    <i class="fa fa-search"></i>
+                </div>
+                <h2 class="ns-empty-title">No matches found.</h2>
+                <p class="ns-empty-text">
+                    We couldn't find anything matching <span class="term">"@Model.Query"</span>.
+                    Try checking your spelling, using fewer keywords, or browsing the full catalog.
+                </p>
+                <div class="ns-empty-actions">
+                    <a asp-controller="Products" asp-action="Index" class="ns-btn-primary">
+                        <i class="fa fa-arrow-left"></i>
+                        Browse All Products
+                    </a>
+                    <a asp-controller="Home" asp-action="Index" class="ns-btn-ghost">
+                        Back Home
+                    </a>
+                </div>
+            </div>
+        }
+
+    </div>
+</div>

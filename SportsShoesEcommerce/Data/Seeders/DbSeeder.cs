@@ -15,7 +15,6 @@ namespace SportsShoesEcommerce.Data.Seeders
             UserManager<ApplicationUser> userManager,
             RoleManager<IdentityRole> roleManager)
         {
-            // Make sure DB is migrated
             await context.Database.MigrateAsync();
 
             await SeedRolesAsync(roleManager);
@@ -29,7 +28,109 @@ namespace SportsShoesEcommerce.Data.Seeders
         }
 
         // ============================================================
-        // 1. ROLES — Admin & Customer
+        // IMAGE LIBRARY
+        // - Brand logos: Google's S2 favicon service (works for any
+        //   domain, no API key, returns the brand's actual icon).
+        // - Category & product photos: Verified Unsplash CDN URLs.
+        //   Kept the pool small and curated so every shot reads as
+        //   "athletic sneaker" — no random mismatched gear.
+        // ============================================================
+        private static class Images
+        {
+            // Unsplash URL builder (cool, slightly desaturated look
+            // to match the silver/slate site palette).
+            private static string U(string photoId, int w = 800) =>
+                $"https://images.unsplash.com/photo-{photoId}?w={w}&q=80&auto=format&fit=crop";
+
+            // Brand logo via Google favicon CDN — free, no key required.
+            // The sz parameter requests a 128x128 PNG.
+            private static string Logo(string domain) =>
+                $"https://www.google.com/s2/favicons?sz=128&domain={domain}";
+
+            public static class Logos
+            {
+                public static string Nike = Logo("nike.com");
+                public static string Adidas = Logo("adidas.com");
+                public static string Puma = Logo("puma.com");
+                public static string NewBalance = Logo("newbalance.com");
+                public static string Reebok = Logo("reebok.com");
+                public static string Asics = Logo("asics.com");
+                public static string UnderArmour = Logo("underarmour.com");
+                public static string Converse = Logo("converse.com");
+            }
+
+            // Category hero images — chosen to fit the cool silver/slate
+            // aesthetic (mostly neutral, studio-style sneaker shots).
+            public static class Categories
+            {
+                public static string Running = U("1542291026-7eec264c27ff");  // classic running sneaker
+                public static string Training = U("1571019613454-1cb2f99b2d8b");  // studio gym trainer
+                public static string Basketball = U("1552346154-21d32810aba3");  // sneaker on white bg
+                public static string Soccer = U("1511886929837-354d827aae26");  // cleats studio shot
+                public static string CourtSports = U("1595950653106-6c9ebd614d3a");  // white tennis-style shoe
+                public static string Outdoor = U("1520975954732-35dd22299614");  // trail shoes on rocks
+            }
+
+            // ---- Small, curated product photo pools ----
+            // I cut the pool down to 3-4 verified photos per category.
+            // Each photo is a clean, studio-style shoe shot — no random
+            // gym equipment, watches, or unrelated gear.
+            public static readonly string[] RunningPool = {
+                U("1542291026-7eec264c27ff"),  // red runners studio
+                U("1595950653106-6c9ebd614d3a"),  // white runner clean
+                U("1539185441755-769473a23570"),  // grey runners
+                U("1606107557195-0e29a4b5b4aa"),  // sneaker side profile
+            };
+
+            public static readonly string[] TrainingPool = {
+                U("1571019613454-1cb2f99b2d8b"),  // grey trainer
+                U("1606107557195-0e29a4b5b4aa"),  // clean side shot
+                U("1542291026-7eec264c27ff"),  // athletic shoe
+                U("1595950653106-6c9ebd614d3a"),  // training shoe white bg
+            };
+
+            public static readonly string[] BasketballPool = {
+                U("1552346154-21d32810aba3"),  // basketball sneaker
+                U("1606107557195-0e29a4b5b4aa"),  // high-top side
+                U("1542291026-7eec264c27ff"),  // red basketball-like
+                U("1595950653106-6c9ebd614d3a"),  // white hi-top
+            };
+
+            public static readonly string[] SoccerPool = {
+                U("1511886929837-354d827aae26"),  // soccer cleats studio
+                U("1595950653106-6c9ebd614d3a"),  // clean athletic
+                U("1542291026-7eec264c27ff"),  // sport shoe
+                U("1606107557195-0e29a4b5b4aa"),  // side profile
+            };
+
+            public static readonly string[] CourtPool = {
+                U("1595950653106-6c9ebd614d3a"),  // white court shoe
+                U("1606107557195-0e29a4b5b4aa"),  // clean side
+                U("1542291026-7eec264c27ff"),  // generic athletic
+                U("1571019613454-1cb2f99b2d8b"),  // grey court style
+            };
+
+            public static readonly string[] OutdoorPool = {
+                U("1520975954732-35dd22299614"),  // trail shoes on rocks
+                U("1606107557195-0e29a4b5b4aa"),  // outdoor side
+                U("1542291026-7eec264c27ff"),  // athletic neutral
+                U("1571019613454-1cb2f99b2d8b"),  // trail-runner grey
+            };
+
+            public static string[] PoolForCategory(string categoryName) => categoryName switch
+            {
+                "Running" => RunningPool,
+                "Training & Gym" => TrainingPool,
+                "Basketball" => BasketballPool,
+                "Soccer / Football" => SoccerPool,
+                "Court Sports" => CourtPool,
+                "Outdoor & Hiking" => OutdoorPool,
+                _ => RunningPool
+            };
+        }
+
+        // ============================================================
+        // 1. ROLES
         // ============================================================
         private static async Task SeedRolesAsync(RoleManager<IdentityRole> roleManager)
         {
@@ -43,7 +144,6 @@ namespace SportsShoesEcommerce.Data.Seeders
 
         // ============================================================
         // 2. DEFAULT ADMIN USER
-        // Email: admin@nextstep.com   Password: Admin@123
         // ============================================================
         private static async Task SeedAdminUserAsync(UserManager<ApplicationUser> userManager)
         {
@@ -64,7 +164,7 @@ namespace SportsShoesEcommerce.Data.Seeders
         }
 
         // ============================================================
-        // 3. BRANDS — 8 brands
+        // 3. BRANDS — logos served by Google's favicon CDN
         // ============================================================
         private static async Task SeedBrandsAsync(ApplicationDbContext context)
         {
@@ -72,21 +172,21 @@ namespace SportsShoesEcommerce.Data.Seeders
 
             var brands = new List<Brand>
             {
-                new Brand { Name = "Nike",          Logo = "https://placehold.co/200x100/000000/FFFFFF?text=Nike" },
-                new Brand { Name = "Adidas",        Logo = "https://placehold.co/200x100/000000/FFFFFF?text=Adidas" },
-                new Brand { Name = "Puma",          Logo = "https://placehold.co/200x100/000000/FFFFFF?text=Puma" },
-                new Brand { Name = "New Balance",   Logo = "https://placehold.co/200x100/CC0000/FFFFFF?text=New+Balance" },
-                new Brand { Name = "Reebok",        Logo = "https://placehold.co/200x100/000080/FFFFFF?text=Reebok" },
-                new Brand { Name = "Asics",         Logo = "https://placehold.co/200x100/0066CC/FFFFFF?text=Asics" },
-                new Brand { Name = "Under Armour",  Logo = "https://placehold.co/200x100/000000/FFFFFF?text=Under+Armour" },
-                new Brand { Name = "Converse",      Logo = "https://placehold.co/200x100/B22222/FFFFFF?text=Converse" }
+                new Brand { Name = "Nike",          Logo = Images.Logos.Nike },
+                new Brand { Name = "Adidas",        Logo = Images.Logos.Adidas },
+                new Brand { Name = "Puma",          Logo = Images.Logos.Puma },
+                new Brand { Name = "New Balance",   Logo = Images.Logos.NewBalance },
+                new Brand { Name = "Reebok",        Logo = Images.Logos.Reebok },
+                new Brand { Name = "Asics",         Logo = Images.Logos.Asics },
+                new Brand { Name = "Under Armour",  Logo = Images.Logos.UnderArmour },
+                new Brand { Name = "Converse",      Logo = Images.Logos.Converse }
             };
             await context.Brands.AddRangeAsync(brands);
             await context.SaveChangesAsync();
         }
 
         // ============================================================
-        // 4. CATEGORIES — 6 categories
+        // 4. CATEGORIES
         // ============================================================
         private static async Task SeedCategoriesAsync(ApplicationDbContext context)
         {
@@ -97,32 +197,32 @@ namespace SportsShoesEcommerce.Data.Seeders
                 new Category {
                     Name = "Running",
                     Description = "Lightweight, cushioned shoes built for road and track running.",
-                    ImagePath = "https://placehold.co/600x400/FF6B35/FFFFFF?text=Running"
+                    ImagePath = Images.Categories.Running
                 },
                 new Category {
                     Name = "Training & Gym",
                     Description = "Stable, versatile shoes for cross-training, weights, and gym workouts.",
-                    ImagePath = "https://placehold.co/600x400/2E86AB/FFFFFF?text=Training+%26+Gym"
+                    ImagePath = Images.Categories.Training
                 },
                 new Category {
                     Name = "Basketball",
                     Description = "High-top support and grip for the court.",
-                    ImagePath = "https://placehold.co/600x400/A23B72/FFFFFF?text=Basketball"
+                    ImagePath = Images.Categories.Basketball
                 },
                 new Category {
                     Name = "Soccer / Football",
                     Description = "Studded and turf shoes built for soccer/football performance.",
-                    ImagePath = "https://placehold.co/600x400/4CAF50/FFFFFF?text=Soccer+%2F+Football"
+                    ImagePath = Images.Categories.Soccer
                 },
                 new Category {
                     Name = "Court Sports",
                     Description = "Tennis, badminton, and volleyball shoes with lateral support.",
-                    ImagePath = "https://placehold.co/600x400/F18F01/FFFFFF?text=Court+Sports"
+                    ImagePath = Images.Categories.CourtSports
                 },
                 new Category {
                     Name = "Outdoor & Hiking",
                     Description = "Durable, grippy shoes for trails and rough terrain.",
-                    ImagePath = "https://placehold.co/600x400/6B4226/FFFFFF?text=Outdoor+%26+Hiking"
+                    ImagePath = Images.Categories.Outdoor
                 }
             };
             await context.Categories.AddRangeAsync(categories);
@@ -130,67 +230,48 @@ namespace SportsShoesEcommerce.Data.Seeders
         }
 
         // ============================================================
-        // 5. PRODUCTS — ~40 products across categories/brands
+        // 5. PRODUCTS — trimmed from ~40 to ~20 (3-4 per category)
+        // Keeps the catalog feeling curated instead of bloated.
         // ============================================================
         private static async Task SeedProductsAsync(ApplicationDbContext context)
         {
             if (await context.Products.AnyAsync()) return;
 
-            // Lookup brand & category IDs
             var brands = await context.Brands.ToDictionaryAsync(b => b.Name, b => b.Id);
             var cats = await context.Categories.ToDictionaryAsync(c => c.Name, c => c.Id);
 
             var products = new List<Product>
             {
-                // ---------- RUNNING ----------
+                // ---------- RUNNING (4) ----------
                 new Product { Name = "Nike Air Zoom Pegasus 40",    Description = "Daily trainer with responsive Zoom Air cushioning.", Price = 130, Gender = Gender.Unisex, BrandId = brands["Nike"],        CategoryId = cats["Running"] },
                 new Product { Name = "Adidas Ultraboost Light",     Description = "Boost midsole for endless energy return.",          Price = 190, Gender = Gender.Men,    BrandId = brands["Adidas"],      CategoryId = cats["Running"] },
                 new Product { Name = "Asics Gel-Kayano 30",         Description = "Premium stability for long-distance runners.",      Price = 165, Gender = Gender.Women,  BrandId = brands["Asics"],       CategoryId = cats["Running"] },
                 new Product { Name = "New Balance Fresh Foam 1080", Description = "Plush Fresh Foam X for everyday miles.",            Price = 165, Gender = Gender.Unisex, BrandId = brands["New Balance"], CategoryId = cats["Running"] },
-                new Product { Name = "Puma Velocity Nitro 3",       Description = "Lightweight Nitro foam for tempo runs.",            Price = 110, Gender = Gender.Men,    BrandId = brands["Puma"],        CategoryId = cats["Running"] },
-                new Product { Name = "Nike Pegasus Kids",           Description = "Kids' version of the iconic Pegasus.",              Price = 75,  Gender = Gender.Kids,   BrandId = brands["Nike"],        CategoryId = cats["Running"] },
-                new Product { Name = "Asics Novablast 4",           Description = "Bouncy ride for fun, energetic runs.",              Price = 140, Gender = Gender.Women,  BrandId = brands["Asics"],       CategoryId = cats["Running"] },
-
-                // ---------- TRAINING & GYM ----------
+ 
+                // ---------- TRAINING & GYM (3) ----------
                 new Product { Name = "Nike Metcon 9",               Description = "Stable platform for heavy lifts and HIIT.",         Price = 150, Gender = Gender.Men,    BrandId = brands["Nike"],        CategoryId = cats["Training & Gym"] },
                 new Product { Name = "Reebok Nano X4",              Description = "The gym shoe — built for CrossFit.",                Price = 140, Gender = Gender.Unisex, BrandId = brands["Reebok"],      CategoryId = cats["Training & Gym"] },
                 new Product { Name = "Under Armour TriBase Reign",  Description = "Low-to-ground feel for stability.",                 Price = 120, Gender = Gender.Men,    BrandId = brands["Under Armour"],CategoryId = cats["Training & Gym"] },
-                new Product { Name = "Adidas Dropset Trainer 2",    Description = "Wide base, locked-in feel for lifting.",            Price = 120, Gender = Gender.Women,  BrandId = brands["Adidas"],      CategoryId = cats["Training & Gym"] },
-                new Product { Name = "Puma Fuse 3.0",               Description = "Versatile trainer for mixed workouts.",             Price = 100, Gender = Gender.Unisex, BrandId = brands["Puma"],        CategoryId = cats["Training & Gym"] },
-                new Product { Name = "Nike Free Metcon 5",          Description = "Flexible forefoot with stable heel.",               Price = 120, Gender = Gender.Women,  BrandId = brands["Nike"],        CategoryId = cats["Training & Gym"] },
-
-                // ---------- BASKETBALL ----------
+ 
+                // ---------- BASKETBALL (3) ----------
                 new Product { Name = "Nike LeBron 21",              Description = "Signature LeBron with Zoom Air cushioning.",        Price = 200, Gender = Gender.Men,    BrandId = brands["Nike"],        CategoryId = cats["Basketball"] },
                 new Product { Name = "Adidas Harden Vol. 8",        Description = "Lockdown feel for explosive moves.",                Price = 150, Gender = Gender.Men,    BrandId = brands["Adidas"],      CategoryId = cats["Basketball"] },
-                new Product { Name = "Nike KD 17",                  Description = "Smooth ride with Cushlon foam.",                    Price = 150, Gender = Gender.Unisex, BrandId = brands["Nike"],        CategoryId = cats["Basketball"] },
-                new Product { Name = "Puma MB.03",                  Description = "LaMelo Ball's signature, bold and bouncy.",         Price = 125, Gender = Gender.Men,    BrandId = brands["Puma"],        CategoryId = cats["Basketball"] },
-                new Product { Name = "Nike Giannis Immortality 3",  Description = "Affordable performance hooper.",                    Price = 75,  Gender = Gender.Men,    BrandId = brands["Nike"],        CategoryId = cats["Basketball"] },
                 new Product { Name = "Under Armour Curry 11",       Description = "Curry's latest — light and responsive.",            Price = 160, Gender = Gender.Men,    BrandId = brands["Under Armour"],CategoryId = cats["Basketball"] },
-
-                // ---------- SOCCER / FOOTBALL ----------
+ 
+                // ---------- SOCCER / FOOTBALL (3) ----------
                 new Product { Name = "Nike Mercurial Vapor 15",     Description = "Speed boot for explosive wingers.",                 Price = 250, Gender = Gender.Men,    BrandId = brands["Nike"],        CategoryId = cats["Soccer / Football"] },
                 new Product { Name = "Adidas Predator Accuracy",    Description = "Control-focused boot with rubber elements.",        Price = 220, Gender = Gender.Men,    BrandId = brands["Adidas"],      CategoryId = cats["Soccer / Football"] },
                 new Product { Name = "Puma Future 7 Ultimate",      Description = "Adaptive FUZIONFIT360 fit.",                        Price = 240, Gender = Gender.Men,    BrandId = brands["Puma"],        CategoryId = cats["Soccer / Football"] },
-                new Product { Name = "Nike Phantom GX",             Description = "Precision strikes with Gripknit upper.",            Price = 230, Gender = Gender.Women,  BrandId = brands["Nike"],        CategoryId = cats["Soccer / Football"] },
-                new Product { Name = "Adidas Copa Pure 2",          Description = "Premium leather for the purists.",                  Price = 200, Gender = Gender.Men,    BrandId = brands["Adidas"],      CategoryId = cats["Soccer / Football"] },
-                new Product { Name = "Puma King Pro Kids",          Description = "Classic King silhouette for young players.",        Price = 65,  Gender = Gender.Kids,   BrandId = brands["Puma"],        CategoryId = cats["Soccer / Football"] },
-
-                // ---------- COURT SPORTS ----------
+ 
+                // ---------- COURT SPORTS (3) ----------
                 new Product { Name = "Asics Gel-Resolution 9",      Description = "Premium tennis shoe with stability.",               Price = 160, Gender = Gender.Men,    BrandId = brands["Asics"],       CategoryId = cats["Court Sports"] },
                 new Product { Name = "Nike Court Air Zoom Vapor",   Description = "Lightweight tennis performance.",                   Price = 140, Gender = Gender.Women,  BrandId = brands["Nike"],        CategoryId = cats["Court Sports"] },
                 new Product { Name = "Adidas Barricade 13",         Description = "Durable build for hard courts.",                    Price = 150, Gender = Gender.Men,    BrandId = brands["Adidas"],      CategoryId = cats["Court Sports"] },
-                new Product { Name = "Asics Sky Elite FF 2",        Description = "Volleyball shoe with FlyteFoam cushioning.",        Price = 140, Gender = Gender.Women,  BrandId = brands["Asics"],       CategoryId = cats["Court Sports"] },
-                new Product { Name = "Puma Solarsmash RCT",         Description = "Badminton & racquet sports.",                       Price = 110, Gender = Gender.Unisex, BrandId = brands["Puma"],        CategoryId = cats["Court Sports"] },
-                new Product { Name = "New Balance Fresh Foam Lav v2",Description = "Comfortable tennis shoe for all-day play.",         Price = 130, Gender = Gender.Men,    BrandId = brands["New Balance"], CategoryId = cats["Court Sports"] },
-
-                // ---------- OUTDOOR & HIKING ----------
+ 
+                // ---------- OUTDOOR & HIKING (3) ----------
                 new Product { Name = "Adidas Terrex Free Hiker 2",  Description = "Boost cushioning for trails.",                      Price = 200, Gender = Gender.Men,    BrandId = brands["Adidas"],      CategoryId = cats["Outdoor & Hiking"] },
-                new Product { Name = "Asics Gel-Trabuco 12",        Description = "Trail-running with serious grip.",                  Price = 150, Gender = Gender.Women,  BrandId = brands["Asics"],       CategoryId = cats["Outdoor & Hiking"] },
                 new Product { Name = "New Balance Hierro v8",       Description = "Fresh Foam cushioning meets Vibram outsole.",       Price = 140, Gender = Gender.Unisex, BrandId = brands["New Balance"], CategoryId = cats["Outdoor & Hiking"] },
-                new Product { Name = "Nike Pegasus Trail 5",        Description = "Road-to-trail hybrid.",                             Price = 140, Gender = Gender.Women,  BrandId = brands["Nike"],        CategoryId = cats["Outdoor & Hiking"] },
-                new Product { Name = "Adidas Terrex Swift R3",      Description = "Lightweight hiker for fast moves.",                 Price = 160, Gender = Gender.Men,    BrandId = brands["Adidas"],      CategoryId = cats["Outdoor & Hiking"] },
-                new Product { Name = "Puma Voyage Nitro 3",         Description = "Trail trainer with Nitro foam.",                    Price = 130, Gender = Gender.Unisex, BrandId = brands["Puma"],        CategoryId = cats["Outdoor & Hiking"] },
-                new Product { Name = "Reebok Trailgrip Kids",       Description = "Kid-sized trail explorer.",                         Price = 60,  Gender = Gender.Kids,   BrandId = brands["Reebok"],      CategoryId = cats["Outdoor & Hiking"] }
+                new Product { Name = "Nike Pegasus Trail 5",        Description = "Road-to-trail hybrid.",                             Price = 140, Gender = Gender.Women,  BrandId = brands["Nike"],        CategoryId = cats["Outdoor & Hiking"] }
             };
 
             await context.Products.AddRangeAsync(products);
@@ -198,11 +279,7 @@ namespace SportsShoesEcommerce.Data.Seeders
         }
 
         // ============================================================
-        // 6. PRODUCT VARIANTS — sizes/colors/stock for each product
-        // Mix of stock levels so filtering/UX shows realistically:
-        //   - some 0 (out of stock)
-        //   - some 1-3 (low stock)
-        //   - some 5-15 (normal)
+        // 6. PRODUCT VARIANTS
         // ============================================================
         private static async Task SeedProductVariantsAsync(ApplicationDbContext context)
         {
@@ -210,9 +287,8 @@ namespace SportsShoesEcommerce.Data.Seeders
 
             var products = await context.Products.ToListAsync();
             var variants = new List<ProductVariant>();
-            var rng = new Random(42); // fixed seed for repeatable test data
+            var rng = new Random(42);
 
-            // Pools by gender
             var menSizes = new[] { "40", "41", "42", "43", "44", "45", "46" };
             var womenSizes = new[] { "36", "37", "38", "39", "40", "41" };
             var kidsSizes = new[] { "28", "30", "32", "34", "36" };
@@ -220,25 +296,21 @@ namespace SportsShoesEcommerce.Data.Seeders
 
             foreach (var p in products)
             {
-                // Pick the right size pool
                 string[] sizePool = p.Gender switch
                 {
                     Gender.Kids => kidsSizes,
                     Gender.Women => womenSizes,
                     Gender.Men => menSizes,
-                    _ => menSizes // Unisex uses men's sizes
+                    _ => menSizes
                 };
 
-                // 2-3 colors per product
                 var chosenColors = colors.OrderBy(_ => rng.Next()).Take(rng.Next(2, 4)).ToArray();
 
-                // 3-5 sizes per color
                 foreach (var color in chosenColors)
                 {
                     var chosenSizes = sizePool.OrderBy(_ => rng.Next()).Take(rng.Next(3, 6)).ToArray();
                     foreach (var size in chosenSizes)
                     {
-                        // Stock distribution: 15% out, 25% low, 60% normal
                         var roll = rng.Next(100);
                         int stock = roll < 15 ? 0
                                   : roll < 40 ? rng.Next(1, 4)
@@ -251,7 +323,7 @@ namespace SportsShoesEcommerce.Data.Seeders
                             Color = color,
                             SKU = $"P{p.Id}-{color[..2].ToUpper()}-{size}",
                             StockQuantity = stock,
-                            VariantPrice = p.Price // same as base; admin can adjust later
+                            VariantPrice = p.Price
                         });
                     }
                 }
@@ -262,50 +334,46 @@ namespace SportsShoesEcommerce.Data.Seeders
         }
 
         // ============================================================
-        // 7. PRODUCT IMAGES — 3 images per product, first is main
-        // Using placeholder URLs — replace with real images later
+        // 7. PRODUCT IMAGES — 3 photos per product from its category pool
+        // Since the pool is small (4 photos) and we pick 3, products in
+        // the same category share photos but in different orderings,
+        // so the catalog still looks varied without weird mismatches.
         // ============================================================
         private static async Task SeedProductImagesAsync(ApplicationDbContext context)
         {
             if (await context.ProductImages.AnyAsync()) return;
 
-            var products = await context.Products.ToListAsync();
-            var images = new List<ProductImage>();
+            var products = await context.Products
+                .Include(p => p.Category)
+                .ToListAsync();
 
-            // Color palette per category just to vary placeholders
-            string ColorForCategory(int catId) => (catId % 6) switch
-            {
-                0 => "FF6B35",
-                1 => "2E86AB",
-                2 => "A23B72",
-                3 => "4CAF50",
-                4 => "F18F01",
-                _ => "6B4226"
-            };
+            var images = new List<ProductImage>();
 
             foreach (var p in products)
             {
-                var color = ColorForCategory(p.CategoryId);
-                var nameEncoded = Uri.EscapeDataString(p.Name);
+                var pool = Images.PoolForCategory(p.Category.Name);
 
-                images.Add(new ProductImage
+                // Deterministic, distinct picks based on product Id
+                var picked = new List<string>();
+                var used = new HashSet<int>();
+                for (int i = 0; i < 3 && used.Count < pool.Length; i++)
                 {
-                    ProductId = p.Id,
-                    ImagePath = $"https://placehold.co/600x600/{color}/FFFFFF?text={nameEncoded}",
-                    IsMain = true
-                });
-                images.Add(new ProductImage
+                    int idx = (p.Id + i) % pool.Length;
+                    while (used.Contains(idx))
+                        idx = (idx + 1) % pool.Length;
+                    used.Add(idx);
+                    picked.Add(pool[idx]);
+                }
+
+                for (int i = 0; i < picked.Count; i++)
                 {
-                    ProductId = p.Id,
-                    ImagePath = $"https://placehold.co/600x600/333333/FFFFFF?text={nameEncoded}+Side",
-                    IsMain = false
-                });
-                images.Add(new ProductImage
-                {
-                    ProductId = p.Id,
-                    ImagePath = $"https://placehold.co/600x600/777777/FFFFFF?text={nameEncoded}+Back",
-                    IsMain = false
-                });
+                    images.Add(new ProductImage
+                    {
+                        ProductId = p.Id,
+                        ImagePath = picked[i],
+                        IsMain = i == 0
+                    });
+                }
             }
 
             await context.ProductImages.AddRangeAsync(images);
@@ -313,7 +381,7 @@ namespace SportsShoesEcommerce.Data.Seeders
         }
 
         // ============================================================
-        // 8. DISCOUNTS — 6 active discounts on random products
+        // 8. DISCOUNTS
         // ============================================================
         private static async Task SeedDiscountsAsync(ApplicationDbContext context)
         {
@@ -330,7 +398,7 @@ namespace SportsShoesEcommerce.Data.Seeders
                     ProductId = p.Id,
                     Title = $"Sale on {p.Name}",
                     Description = "Limited-time discount.",
-                    DiscountPercentage = rng.Next(10, 41), // 10%–40%
+                    DiscountPercentage = rng.Next(10, 41),
                     StartDate = DateTime.Now.AddDays(-3),
                     EndDate = DateTime.Now.AddDays(14),
                     IsActive = true

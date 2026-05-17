@@ -75,7 +75,19 @@ namespace SportsShoesEcommerce.Controllers
 
             return View(viewModel);
         }
+        // GET: /Home/About
+        // GET: /Home/About
+        public async Task<IActionResult> About()
+        {
+            // Fetch the approved testimonials
+            var testimonials = await _context.Testimonials
+                .Where(t => t.IsApproved == true)
+                .OrderByDescending(t => t.CreatedAt)
+                .ToListAsync();
 
+            // Hand the list of testimonials to the view!
+            return View(testimonials);
+        }
         public IActionResult Privacy()
         {
             return View();

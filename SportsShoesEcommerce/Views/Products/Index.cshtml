@@ -1,48 +1,626 @@
 ﻿@model IEnumerable<SportsShoesEcommerce.Models.Product>
-
 @{
     ViewData["Title"] = "Products";
 }
 
-<h2 class="mb-4">Products</h2>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,800;1,9..144,600;1,9..144,800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-<form asp-controller="Products" asp-action="Search" method="get" class="mb-4 d-flex">
-    <input type="text" name="searchText" value="@ViewBag.SearchText"
-           class="form-control me-2" placeholder="Search products or categories..." />
+<style>
+    :root {
+        --ns-cream: #faf6ef;
+        --ns-sand: #f3ead9;
+        --ns-peach: #f5d5b8;
+        --ns-terracotta: #c97b5e;
+        --ns-clay: #b86048;
+        --ns-coffee: #4a3729;
+        --ns-mocha: #6b4f3d;
+        --ns-sage: #8fa68a;
+        --ns-warm-gray: #a89684;
+        --ns-soft-shadow: rgba(74, 55, 41, 0.08);
+    }
 
-    <button type="submit" class="btn btn-dark">Search</button>
-</form>
+    .ns-products {
+        background: var(--ns-cream);
+        color: var(--ns-coffee);
+        font-family: 'Inter', -apple-system, sans-serif;
+        min-height: 90vh;
+        padding-bottom: 80px;
+    }
 
-<div class="row">
-    @foreach (var product in Model)
-    {
-        var mainImage = product.ProductImages?.FirstOrDefault(x => x.IsMain)?.ImagePath
-        ?? product.ProductImages?.FirstOrDefault()?.ImagePath
-        ?? "/images/no-image.png";
+        .ns-products .display-font {
+            font-family: 'Fraunces', Georgia, serif;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 0.95;
+        }
 
-        <div class="col-md-3 mb-4">
-            <div class="card h-100">
-                <img src="@mainImage" class="card-img-top" style="height:220px; object-fit:cover;" />
+        .ns-products .mono {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
 
-                <div class="card-body">
-                    <h5>@product.Name</h5>
+    /* ===== HEADER ===== */
+    .ns-products-header {
+        position: relative;
+        background: linear-gradient(160deg, var(--ns-sand) 0%, var(--ns-peach) 100%);
+        padding: 100px 0 80px;
+        overflow: hidden;
+        margin-bottom: 60px;
+    }
 
-                    <p class="text-muted">
-                        @product.Category?.Name
-                    </p>
+        .ns-products-header::before {
+            content: '';
+            position: absolute;
+            top: -120px;
+            right: -80px;
+            width: 380px;
+            height: 380px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(201, 123, 94, 0.25) 0%, transparent 70%);
+            filter: blur(40px);
+        }
 
-                    <p class="fw-bold">
-                        $@product.Price
-                    </p>
+        .ns-products-header::after {
+            content: '';
+            position: absolute;
+            bottom: -100px;
+            left: -100px;
+            width: 320px;
+            height: 320px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(143, 166, 138, 0.18) 0%, transparent 70%);
+            filter: blur(40px);
+        }
 
-                    <a asp-controller="Products"
-                       asp-action="Details"
-                       asp-route-id="@product.Id"
-                       class="btn btn-outline-dark w-100">
-                        View Details
+    .ns-products-header-inner {
+        position: relative;
+        z-index: 2;
+    }
+
+    .ns-products-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 18px;
+        color: var(--ns-clay);
+    }
+
+        .ns-products-tag::before {
+            content: '';
+            width: 28px;
+            height: 2px;
+            background: currentColor;
+        }
+
+    .ns-products-title {
+        font-size: clamp(2.8rem, 6vw, 5.5rem);
+        color: var(--ns-coffee);
+        margin: 0 0 18px;
+    }
+
+        .ns-products-title em {
+            color: var(--ns-clay);
+            font-style: italic;
+        }
+
+    .ns-products-sub {
+        font-size: 1.05rem;
+        line-height: 1.65;
+        color: var(--ns-mocha);
+        max-width: 580px;
+        margin: 0;
+    }
+
+    /* ===== SEARCH BAR ===== */
+    .ns-search-bar {
+        display: flex;
+        align-items: center;
+        background: var(--ns-cream);
+        border: 1.5px solid transparent;
+        border-radius: 60px;
+        padding: 6px 6px 6px 28px;
+        max-width: 620px;
+        margin-top: 36px;
+        box-shadow: 0 10px 30px rgba(74, 55, 41, 0.08);
+        transition: all 0.3s ease;
+    }
+
+        .ns-search-bar:focus-within {
+            border-color: var(--ns-terracotta);
+            box-shadow: 0 12px 36px rgba(201, 123, 94, 0.18);
+        }
+
+        .ns-search-bar i.search-icon {
+            color: var(--ns-warm-gray);
+            font-size: 0.95rem;
+            margin-right: 12px;
+            transition: color 0.3s ease;
+        }
+
+        .ns-search-bar:focus-within i.search-icon {
+            color: var(--ns-clay);
+        }
+
+        .ns-search-bar input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: var(--ns-coffee);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 500;
+            padding: 14px 0;
+        }
+
+            .ns-search-bar input::placeholder {
+                color: var(--ns-warm-gray);
+                font-weight: 400;
+            }
+
+        .ns-search-bar button {
+            background: var(--ns-coffee);
+            color: var(--ns-cream);
+            border: none;
+            border-radius: 50px;
+            padding: 13px 28px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+            .ns-search-bar button:hover {
+                background: var(--ns-clay);
+                transform: translateX(2px);
+                box-shadow: 0 8px 20px rgba(184, 96, 72, 0.3);
+            }
+
+            .ns-search-bar button .arrow {
+                transition: transform 0.3s ease;
+            }
+
+            .ns-search-bar button:hover .arrow {
+                transform: translateX(4px);
+            }
+
+    /* ===== TOOLBAR (count + active filter) ===== */
+    .ns-toolbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 36px;
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+
+    .ns-results-count {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.78rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--ns-mocha);
+        font-weight: 500;
+    }
+
+        .ns-results-count strong {
+            color: var(--ns-clay);
+            font-weight: 700;
+        }
+
+    .ns-active-filter {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--ns-sand);
+        color: var(--ns-coffee);
+        padding: 8px 16px 8px 18px;
+        border-radius: 50px;
+        font-size: 0.82rem;
+        font-weight: 500;
+        border: 1px solid rgba(74, 55, 41, 0.08);
+    }
+
+        .ns-active-filter .label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--ns-mocha);
+            margin-right: 4px;
+        }
+
+        .ns-active-filter a {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: var(--ns-coffee);
+            color: var(--ns-cream);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-size: 0.65rem;
+            transition: all 0.25s ease;
+        }
+
+            .ns-active-filter a:hover {
+                background: var(--ns-clay);
+                transform: rotate(90deg);
+            }
+
+    /* ===== PRODUCT GRID ===== */
+    .ns-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 26px;
+    }
+
+    .ns-card {
+        background: var(--ns-cream);
+        border: 1px solid rgba(74, 55, 41, 0.08);
+        border-radius: 24px;
+        overflow: hidden;
+        text-decoration: none;
+        color: inherit;
+        display: flex;
+        flex-direction: column;
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        box-shadow: 0 4px 16px var(--ns-soft-shadow);
+    }
+
+        .ns-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--ns-terracotta);
+            box-shadow: 0 20px 40px rgba(184, 96, 72, 0.15);
+            color: inherit;
+        }
+
+    .ns-card-media {
+        position: relative;
+        background: var(--ns-sand);
+        aspect-ratio: 1 / 1;
+        overflow: hidden;
+    }
+
+        .ns-card-media img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.7s ease;
+        }
+
+    .ns-card:hover .ns-card-media img {
+        transform: scale(1.06);
+    }
+
+    .ns-card-cat-tag {
+        position: absolute;
+        top: 14px;
+        left: 14px;
+        background: rgba(250, 246, 239, 0.92);
+        backdrop-filter: blur(8px);
+        color: var(--ns-coffee);
+        padding: 6px 12px;
+        border-radius: 50px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.62rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        font-weight: 600;
+        z-index: 2;
+    }
+
+    .ns-card-quick {
+        position: absolute;
+        bottom: 14px;
+        right: 14px;
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        background: var(--ns-coffee);
+        color: var(--ns-cream);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.95rem;
+        opacity: 0;
+        transform: translateY(8px);
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        z-index: 2;
+    }
+
+    .ns-card:hover .ns-card-quick {
+        opacity: 1;
+        transform: translateY(0);
+        background: var(--ns-clay);
+    }
+
+    .ns-card-body {
+        padding: 22px 22px 24px;
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+    }
+
+    .ns-card-name {
+        font-family: 'Fraunces', serif;
+        font-weight: 700;
+        font-size: 1.15rem;
+        color: var(--ns-coffee);
+        margin: 0 0 6px;
+        letter-spacing: -0.01em;
+        line-height: 1.3;
+    }
+
+    .ns-card-cat {
+        font-size: 0.78rem;
+        color: var(--ns-mocha);
+        margin: 0 0 16px;
+        font-weight: 400;
+    }
+
+    .ns-card-foot {
+        margin-top: auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 16px;
+        border-top: 1px solid rgba(74, 55, 41, 0.08);
+    }
+
+    .ns-card-price {
+        font-family: 'Fraunces', serif;
+        font-weight: 800;
+        font-style: italic;
+        font-size: 1.4rem;
+        color: var(--ns-clay);
+        line-height: 1;
+    }
+
+    .ns-card-link {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.68rem;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--ns-coffee);
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: all 0.3s ease;
+    }
+
+    .ns-card:hover .ns-card-link {
+        color: var(--ns-clay);
+        gap: 12px;
+    }
+
+    /* ===== EMPTY STATE ===== */
+    .ns-empty {
+        grid-column: 1 / -1;
+        text-align: center;
+        padding: 80px 30px;
+        background: var(--ns-sand);
+        border-radius: 28px;
+        border: 1.5px dashed rgba(74, 55, 41, 0.15);
+    }
+
+    .ns-empty-icon {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: var(--ns-cream);
+        color: var(--ns-clay);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.8rem;
+        margin-bottom: 24px;
+    }
+
+    .ns-empty-title {
+        font-family: 'Fraunces', serif;
+        font-weight: 800;
+        font-style: italic;
+        font-size: 2rem;
+        color: var(--ns-coffee);
+        margin: 0 0 12px;
+        letter-spacing: -0.02em;
+    }
+
+    .ns-empty-text {
+        font-size: 1rem;
+        color: var(--ns-mocha);
+        margin: 0 0 26px;
+        max-width: 440px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .ns-empty-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        background: var(--ns-coffee);
+        color: var(--ns-cream);
+        padding: 14px 28px;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        letter-spacing: 0.02em;
+        text-decoration: none;
+        transition: all 0.35s ease;
+    }
+
+        .ns-empty-btn:hover {
+            background: var(--ns-clay);
+            color: var(--ns-cream);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 24px rgba(184, 96, 72, 0.3);
+        }
+
+    /* ===== RESPONSIVE ===== */
+    @@media (max-width: 1100px) {
+        .ns-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+
+    @@media (max-width: 800px) {
+        .ns-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+        }
+
+        .ns-products-header {
+            padding: 80px 0 60px;
+            margin-bottom: 40px;
+        }
+    }
+
+    @@media (max-width: 576px) {
+        .ns-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .ns-search-bar {
+            flex-wrap: wrap;
+            padding: 14px;
+            border-radius: 22px;
+        }
+
+            .ns-search-bar input {
+                width: 100%;
+                padding: 8px 0;
+            }
+
+            .ns-search-bar button {
+                width: 100%;
+                justify-content: center;
+            }
+
+        .ns-card-body {
+            padding: 18px 18px 20px;
+        }
+    }
+</style>
+
+<div class="ns-products">
+
+    @* ===== HEADER ===== *@
+    <section class="ns-products-header">
+        <div class="container ns-products-header-inner">
+            <div class="ns-products-tag mono">Full Catalog</div>
+            <h1 class="ns-products-title display-font">
+                The <em>collection.</em>
+            </h1>
+            <p class="ns-products-sub">
+                Every shoe we stock, in one place. Filter by category, search by name,
+                or just browse — whatever your next step looks like.
+            </p>
+
+            @* Search bar *@
+            <form asp-controller="Products" asp-action="Search" method="get" class="ns-search-bar">
+                <i class="fa fa-search search-icon"></i>
+                <input type="text" name="searchText" value="@ViewBag.SearchText"
+                       placeholder="Search shoes, brands, or categories..." autocomplete="off" />
+                <button type="submit">
+                    Search
+                    <span class="arrow">→</span>
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <div class="container">
+
+        @* ===== TOOLBAR ===== *@
+        <div class="ns-toolbar">
+            <div class="ns-results-count">
+                @if (Model != null && Model.Any())
+                {
+                    <span><strong>@Model.Count()</strong> @(Model.Count() == 1 ? "Product" : "Products") Available</span>
+                }
+                else
+                {
+                    <span>No Products Found</span>
+                }
+            </div>
+
+            @if (!string.IsNullOrEmpty(ViewBag.SearchText as string))
+            {
+                <div class="ns-active-filter">
+                    <span class="label">Searching</span>
+                    <span>"@ViewBag.SearchText"</span>
+                    <a asp-controller="Products" asp-action="Index" title="Clear search">
+                        <i class="fa fa-times"></i>
                     </a>
                 </div>
-            </div>
+            }
         </div>
-    }
+
+        @* ===== GRID ===== *@
+        <div class="ns-grid">
+
+            @if (Model == null || !Model.Any())
+            {
+                <div class="ns-empty">
+                    <div class="ns-empty-icon">
+                        <i class="fa fa-shoe-prints"></i>
+                    </div>
+                    <h3 class="ns-empty-title">Nothing here yet.</h3>
+                    <p class="ns-empty-text">
+                        We couldn't find any products matching your search. Try a different keyword, or browse the full catalog.
+                    </p>
+                    <a asp-controller="Products" asp-action="Index" class="ns-empty-btn">
+                        <i class="fa fa-arrow-left"></i>
+                        View All Products
+                    </a>
+                </div>
+            }
+            else
+            {
+                @foreach (var product in Model)
+                {
+                    var mainImage = product.ProductImages?.FirstOrDefault(x => x.IsMain)?.ImagePath
+                    ?? product.ProductImages?.FirstOrDefault()?.ImagePath
+                    ?? "/images/no-image.png";
+
+                    <a asp-controller="Products" asp-action="Details" asp-route-id="@product.Id" class="ns-card">
+                        <div class="ns-card-media">
+                            @if (product.Category != null)
+                            {
+                                <span class="ns-card-cat-tag">@product.Category.Name</span>
+                            }
+                            <img src="@mainImage" alt="@product.Name" />
+                            <span class="ns-card-quick" title="View details">
+                                <i class="fa fa-arrow-right"></i>
+                            </span>
+                        </div>
+                        <div class="ns-card-body">
+                            <h3 class="ns-card-name">@product.Name</h3>
+                            <p class="ns-card-cat">@product.Category?.Name</p>
+                            <div class="ns-card-foot">
+                                <span class="ns-card-price">$@product.Price</span>
+                                <span class="ns-card-link">
+                                    View
+                                    <i class="fa fa-arrow-right" style="font-size: 0.7rem;"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </a>
+                }
+            }
+        </div>
+
+    </div>
 </div>

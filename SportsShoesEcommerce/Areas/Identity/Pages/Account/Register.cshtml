@@ -1,84 +1,612 @@
 ﻿@page
 @model RegisterModel
 @{
-    ViewData["Title"] = "Register";
+    ViewData["Title"] = "Create Account";
 }
 
-<h1>@ViewData["Title"]</h1>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,800;1,9..144,600;1,9..144,800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-<div class="row">
-    <div class="col-md-6">
-        <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post" enctype="multipart/form-data">
-            <h2>Create a new account.</h2>
-            <hr />
-            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+<style>
+    :root {
+        --ns-cream: #faf6ef;
+        --ns-sand: #f3ead9;
+        --ns-peach: #f5d5b8;
+        --ns-terracotta: #c97b5e;
+        --ns-clay: #b86048;
+        --ns-coffee: #4a3729;
+        --ns-mocha: #6b4f3d;
+        --ns-sage: #8fa68a;
+        --ns-warm-gray: #a89684;
+        --ns-soft-shadow: rgba(74, 55, 41, 0.08);
+    }
 
-            <div class="form-group mb-3">
-                <label asp-for="Input.FullName" class="form-label">Full Name</label>
-                <input asp-for="Input.FullName" class="form-control" autocomplete="name" aria-required="true" />
-                <span asp-validation-for="Input.FullName" class="text-danger"></span>
-            </div>
+    .ns-auth {
+        background: var(--ns-cream);
+        color: var(--ns-coffee);
+        font-family: 'Inter', -apple-system, sans-serif;
+        min-height: 100vh;
+        padding: 100px 0 60px;
+        position: relative;
+        overflow-x: hidden;
+    }
 
-            <div class="form-group mb-3">
-                <label asp-for="Input.Email" class="form-label">Email</label>
-                <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" />
-                <span asp-validation-for="Input.Email" class="text-danger"></span>
-            </div>
+        .ns-auth .display-font {
+            font-family: 'Fraunces', Georgia, serif;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 0.95;
+        }
 
-            <div class="form-group mb-3">
-                <label asp-for="Input.Password" class="form-label">Password</label>
-                <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" />
-                <span asp-validation-for="Input.Password" class="text-danger"></span>
-            </div>
+        .ns-auth .mono {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
 
-            <div class="form-group mb-3">
-                <label asp-for="Input.ConfirmPassword" class="form-label">Confirm Password</label>
-                <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" />
-                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
-            </div>
+    .ns-auth-wrapper {
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 0 24px;
+    }
 
-            <div class="form-group mb-3">
-                <label asp-for="Input.ProfileImage" class="form-label">Profile Image (optional)</label>
-                <input asp-for="Input.ProfileImage" class="form-control" type="file" accept="image/*" />
-                <small class="text-muted">JPG, PNG, GIF, or WEBP. Max 2 MB.</small>
-                <span asp-validation-for="Input.ProfileImage" class="text-danger"></span>
-            </div>
+    .ns-auth-card {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        background: var(--ns-cream);
+        border-radius: 32px;
+        overflow: hidden;
+        box-shadow: 0 30px 80px rgba(74, 55, 41, 0.15);
+        border: 1px solid rgba(74, 55, 41, 0.08);
+        min-height: 720px;
+    }
 
-            <button type="submit" class="btn btn-primary">Register</button>
-        </form>
-    </div>
+    /* ===== LEFT: BRAND PANEL (dark variant for register) ===== */
+    .ns-auth-brand {
+        position: relative;
+        background: linear-gradient(160deg, var(--ns-coffee) 0%, var(--ns-mocha) 100%);
+        padding: 50px 48px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        overflow: hidden;
+        color: var(--ns-cream);
+    }
 
-    <div class="col-md-6 col-md-offset-2">
-        <section>
-            <h3>Use another service to register.</h3>
-            <hr />
-            @{
-                if ((Model.ExternalLogins?.Count ?? 0) == 0)
-                {
-                    <div>
-                        <p>
-                            There are no external authentication services configured. See this <a href="https://go.microsoft.com/fwlink/?LinkID=532715">
-                                article
-                                about setting up this ASP.NET application to support logging in via external services
-                            </a>.
-                        </p>
-                    </div>
-                }
-                else
-                {
-                    <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
-                        <div>
-                            <p>
-                                @foreach (var provider in Model.ExternalLogins)
-                                {
-                                    <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
-                                }
-                            </p>
-                        </div>
-                    </form>
-                }
+        .ns-auth-brand::before {
+            content: '';
+            position: absolute;
+            top: -120px;
+            right: -80px;
+            width: 380px;
+            height: 380px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(201, 123, 94, 0.4) 0%, transparent 70%);
+            filter: blur(40px);
+        }
+
+        .ns-auth-brand::after {
+            content: '';
+            position: absolute;
+            bottom: -100px;
+            left: -100px;
+            width: 320px;
+            height: 320px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(245, 213, 184, 0.18) 0%, transparent 70%);
+            filter: blur(40px);
+        }
+
+    .ns-auth-brand-top {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+    }
+
+    .ns-auth-brand-logo {
+        font-family: 'Fraunces', serif;
+        font-weight: 800;
+        font-size: 1.4rem;
+        color: var(--ns-cream);
+        letter-spacing: -0.02em;
+    }
+
+    .ns-auth-brand-top .mono {
+        color: var(--ns-peach);
+    }
+
+    .ns-auth-brand-mid {
+        position: relative;
+        z-index: 2;
+    }
+
+    .ns-auth-brand-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 22px;
+        color: var(--ns-peach);
+    }
+
+        .ns-auth-brand-tag::before {
+            content: '';
+            width: 28px;
+            height: 2px;
+            background: currentColor;
+        }
+
+    .ns-auth-brand-title {
+        font-size: clamp(2.4rem, 4.5vw, 3.6rem);
+        color: var(--ns-cream);
+        margin: 0 0 22px;
+    }
+
+        .ns-auth-brand-title em {
+            color: var(--ns-peach);
+            font-style: italic;
+        }
+
+    .ns-auth-brand-text {
+        font-size: 1rem;
+        line-height: 1.65;
+        color: rgba(250, 246, 239, 0.75);
+        max-width: 380px;
+        margin-bottom: 28px;
+    }
+
+    /* Perks list */
+    .ns-perks {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+        .ns-perks li {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 0;
+            font-size: 0.92rem;
+            color: rgba(250, 246, 239, 0.9);
+            border-bottom: 1px solid rgba(250, 246, 239, 0.08);
+        }
+
+            .ns-perks li:last-child {
+                border-bottom: none;
             }
-        </section>
+
+    .ns-perks-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: rgba(245, 213, 184, 0.15);
+        color: var(--ns-peach);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.78rem;
+        flex-shrink: 0;
+    }
+
+    .ns-auth-brand-bottom {
+        position: relative;
+        z-index: 2;
+        padding-top: 24px;
+        border-top: 1px solid rgba(250, 246, 239, 0.12);
+        font-size: 0.82rem;
+        color: rgba(250, 246, 239, 0.6);
+        font-family: 'JetBrains Mono', monospace;
+        letter-spacing: 0.1em;
+    }
+
+    /* ===== RIGHT: FORM PANEL ===== */
+    .ns-auth-form {
+        padding: 56px 56px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        background: var(--ns-cream);
+    }
+
+    .ns-auth-form-head {
+        margin-bottom: 28px;
+    }
+
+    .ns-auth-form-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 14px;
+        color: var(--ns-clay);
+    }
+
+        .ns-auth-form-tag::before {
+            content: '';
+            width: 24px;
+            height: 2px;
+            background: currentColor;
+        }
+
+    .ns-auth-form-title {
+        font-size: 2.4rem;
+        color: var(--ns-coffee);
+        margin: 0 0 10px;
+    }
+
+        .ns-auth-form-title em {
+            color: var(--ns-clay);
+            font-style: italic;
+        }
+
+    .ns-auth-form-sub {
+        font-size: 0.95rem;
+        color: var(--ns-mocha);
+        margin: 0;
+    }
+
+    /* Form fields */
+    .ns-field {
+        margin-bottom: 16px;
+    }
+
+    .ns-field-label {
+        display: block;
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+        color: var(--ns-mocha);
+        font-weight: 600;
+        margin-bottom: 8px;
+    }
+
+    .ns-field-wrap {
+        position: relative;
+    }
+
+    .ns-field-icon {
+        position: absolute;
+        left: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--ns-warm-gray);
+        font-size: 0.95rem;
+        pointer-events: none;
+        transition: color 0.3s ease;
+    }
+
+    .ns-auth-form .form-control {
+        background: var(--ns-sand);
+        border: 1.5px solid transparent;
+        border-radius: 14px;
+        padding: 15px 20px 15px 50px;
+        font-size: 0.95rem;
+        color: var(--ns-coffee);
+        font-family: 'Inter', sans-serif;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        width: 100%;
+        height: auto;
+    }
+
+        .ns-auth-form .form-control::placeholder {
+            color: var(--ns-warm-gray);
+            font-weight: 400;
+        }
+
+        .ns-auth-form .form-control:focus {
+            background: var(--ns-cream);
+            border-color: var(--ns-terracotta);
+            box-shadow: 0 0 0 4px rgba(201, 123, 94, 0.12);
+            outline: none;
+        }
+
+    .ns-field-wrap:focus-within .ns-field-icon {
+        color: var(--ns-clay);
+    }
+
+    .ns-auth-form .text-danger {
+        font-size: 0.78rem;
+        color: var(--ns-clay) !important;
+        margin-top: 6px;
+        display: block;
+        font-weight: 500;
+    }
+
+    /* Two-column row for password + confirm */
+    .ns-field-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+    }
+
+    /* Submit button */
+    .ns-auth-submit {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        background: var(--ns-coffee);
+        color: var(--ns-cream);
+        padding: 18px 36px;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        letter-spacing: 0.02em;
+        font-family: 'Inter', sans-serif;
+        border: none;
+        cursor: pointer;
+        width: 100%;
+        margin-top: 12px;
+        transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+        .ns-auth-submit:hover {
+            background: var(--ns-clay);
+            transform: translateY(-3px);
+            box-shadow: 0 14px 30px rgba(184, 96, 72, 0.3);
+        }
+
+        .ns-auth-submit .arrow {
+            transition: transform 0.3s ease;
+        }
+
+        .ns-auth-submit:hover .arrow {
+            transform: translateX(6px);
+        }
+
+    .ns-auth-disclaimer {
+        font-size: 0.78rem;
+        color: var(--ns-warm-gray);
+        text-align: center;
+        margin: 16px 0 0;
+        line-height: 1.55;
+    }
+
+        .ns-auth-disclaimer a {
+            color: var(--ns-clay);
+            text-decoration: underline;
+            text-decoration-color: rgba(184, 96, 72, 0.35);
+            text-underline-offset: 3px;
+        }
+
+            .ns-auth-disclaimer a:hover {
+                color: var(--ns-coffee);
+            }
+
+    /* Footer link */
+    .ns-auth-footer {
+        margin-top: 24px;
+        padding-top: 22px;
+        border-top: 1px solid rgba(74, 55, 41, 0.1);
+        text-align: center;
+    }
+
+        .ns-auth-footer p {
+            font-size: 0.88rem;
+            color: var(--ns-mocha);
+            margin: 0;
+        }
+
+        .ns-auth-footer a {
+            color: var(--ns-clay);
+            font-weight: 700;
+            text-decoration: none;
+            position: relative;
+        }
+
+            .ns-auth-footer a::after {
+                content: '';
+                position: absolute;
+                left: 0;
+                bottom: -2px;
+                width: 100%;
+                height: 1.5px;
+                background: var(--ns-clay);
+                transition: background 0.3s ease;
+            }
+
+            .ns-auth-footer a:hover {
+                color: var(--ns-coffee);
+            }
+
+                .ns-auth-footer a:hover::after {
+                    background: var(--ns-coffee);
+                }
+
+    /* Validation summary */
+    .ns-auth-form .validation-summary-errors ul {
+        background: rgba(184, 96, 72, 0.08);
+        border-left: 3px solid var(--ns-clay);
+        border-radius: 10px;
+        padding: 14px 18px 14px 36px;
+        margin-bottom: 20px;
+        list-style: none;
+    }
+
+    .ns-auth-form .validation-summary-errors li {
+        color: var(--ns-clay);
+        font-size: 0.85rem;
+        font-weight: 500;
+    }
+
+    /* Responsive */
+    @@media (max-width: 900px) {
+        .ns-auth {
+            padding: 80px 0 40px;
+        }
+
+        .ns-auth-card {
+            grid-template-columns: 1fr;
+            min-height: auto;
+        }
+
+        .ns-auth-brand {
+            padding: 40px 36px;
+            min-height: 360px;
+        }
+
+        .ns-auth-form {
+            padding: 44px 36px;
+        }
+    }
+
+    @@media (max-width: 600px) {
+        .ns-field-row {
+            grid-template-columns: 1fr;
+            gap: 0;
+        }
+    }
+
+    @@media (max-width: 480px) {
+        .ns-auth {
+            padding: 70px 0 30px;
+        }
+
+        .ns-auth-wrapper {
+            padding: 0 16px;
+        }
+
+        .ns-auth-brand {
+            padding: 32px 26px;
+        }
+
+        .ns-auth-form {
+            padding: 36px 26px;
+        }
+
+        .ns-auth-form-title {
+            font-size: 2rem;
+        }
+    }
+</style>
+
+<div class="ns-auth">
+    <div class="ns-auth-wrapper">
+        <div class="ns-auth-card">
+
+            @* ===== LEFT: BRAND PANEL ===== *@
+            <div class="ns-auth-brand">
+                <div class="ns-auth-brand-top">
+                    <span class="ns-auth-brand-logo">NextStep<span style="color: var(--ns-peach);">.</span></span>
+                    <span class="mono">002 / JOIN</span>
+                </div>
+
+                <div class="ns-auth-brand-mid">
+                    <div class="ns-auth-brand-tag mono">Become a Member</div>
+                    <h1 class="ns-auth-brand-title display-font">
+                        Join the<br /><em>movement.</em>
+                    </h1>
+                    <p class="ns-auth-brand-text">
+                        Create your account and unlock the gear, the drops, and the community built for athletes who push further.
+                    </p>
+
+                    <ul class="ns-perks">
+                        <li>
+                            <span class="ns-perks-icon"><i class="fa fa-check"></i></span>
+                            Early access to new drops
+                        </li>
+                        <li>
+                            <span class="ns-perks-icon"><i class="fa fa-check"></i></span>
+                            Member-only discounts & rewards
+                        </li>
+                        <li>
+                            <span class="ns-perks-icon"><i class="fa fa-check"></i></span>
+                            Fast checkout & order tracking
+                        </li>
+                        <li>
+                            <span class="ns-perks-icon"><i class="fa fa-check"></i></span>
+                            Personalized recommendations
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="ns-auth-brand-bottom">
+                    EST. 2025 — ATHLETIC FOOTWEAR
+                </div>
+            </div>
+
+            @* ===== RIGHT: FORM PANEL ===== *@
+            <div class="ns-auth-form">
+                <div class="ns-auth-form-head">
+                    <div class="ns-auth-form-tag mono">New Account</div>
+                    <h2 class="ns-auth-form-title display-font">Create <em>account.</em></h2>
+                    <p class="ns-auth-form-sub">A few details and you're in.</p>
+                </div>
+
+                <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="ns-field">
+                        <label asp-for="Input.FullName" class="ns-field-label">Full Name</label>
+                        <div class="ns-field-wrap">
+                            <i class="fa fa-user ns-field-icon"></i>
+                            <input asp-for="Input.FullName" class="form-control"
+                                   autocomplete="name" aria-required="true"
+                                   placeholder="Your full name" />
+                        </div>
+                        <span asp-validation-for="Input.FullName" class="text-danger"></span>
+                    </div>
+
+                    <div class="ns-field">
+                        <label asp-for="Input.Email" class="ns-field-label">Email Address</label>
+                        <div class="ns-field-wrap">
+                            <i class="fa fa-envelope ns-field-icon"></i>
+                            <input asp-for="Input.Email" class="form-control"
+                                   autocomplete="username" aria-required="true"
+                                   placeholder="you@example.com" />
+                        </div>
+                        <span asp-validation-for="Input.Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="ns-field-row">
+                        <div class="ns-field">
+                            <label asp-for="Input.Password" class="ns-field-label">Password</label>
+                            <div class="ns-field-wrap">
+                                <i class="fa fa-lock ns-field-icon"></i>
+                                <input asp-for="Input.Password" class="form-control"
+                                       autocomplete="new-password" aria-required="true"
+                                       placeholder="Min 6 characters" type="password" />
+                            </div>
+                            <span asp-validation-for="Input.Password" class="text-danger"></span>
+                        </div>
+
+                        <div class="ns-field">
+                            <label asp-for="Input.ConfirmPassword" class="ns-field-label">Confirm</label>
+                            <div class="ns-field-wrap">
+                                <i class="fa fa-lock ns-field-icon"></i>
+                                <input asp-for="Input.ConfirmPassword" class="form-control"
+                                       autocomplete="new-password" aria-required="true"
+                                       placeholder="Re-enter password" type="password" />
+                            </div>
+                            <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <button id="registerSubmit" type="submit" class="ns-auth-submit">
+                        Create Account
+                        <span class="arrow">→</span>
+                    </button>
+
+                    <p class="ns-auth-disclaimer">
+                        By creating an account, you agree to our
+                        <a href="#">Terms</a> and <a href="#">Privacy Policy</a>.
+                    </p>
+                </form>
+
+                <div class="ns-auth-footer">
+                    <p>
+                        Already have an account?
+                        <a asp-page="./Login" asp-route-returnUrl="@Model.ReturnUrl">
+                            Sign in here
+                        </a>
+                    </p>
+                </div>
+            </div>
+
+        </div>
     </div>
 </div>
 
