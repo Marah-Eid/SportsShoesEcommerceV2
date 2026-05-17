@@ -732,6 +732,26 @@
             gap: 24px;
         }
     }
+
+    .ns-hero {
+        position: relative;
+        background-image: url('/images/Goat.jpeg');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+
+        .ns-hero::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+        }
+
+    .ns-hero-content {
+        position: relative;
+        z-index: 2;
+    }
 </style>
 
 <div class="ns-home">
