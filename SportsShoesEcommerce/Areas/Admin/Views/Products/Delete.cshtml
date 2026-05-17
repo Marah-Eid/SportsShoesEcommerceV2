@@ -1,0 +1,60 @@
+﻿@model SportsShoesEcommerce.Models.Product
+
+@{
+    ViewData["Title"] = "Delete Product";
+    Layout = "_AdminLayout";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow mb-4 border-bottom-danger">
+            <div class="card-header py-3 bg-danger">
+                <h6 class="m-0 font-weight-bold text-white">
+                    <i class="fas fa-exclamation-triangle mr-1"></i> Warning: Delete Product
+                </h6>
+            </div>
+            <div class="card-body text-center">
+                <h4 class="text-gray-900 mb-4">Are you sure you want to delete this product?</h4>
+
+                <div class="mb-4">
+                    @{
+                        var productImg = Model.ProductImages?.FirstOrDefault()?.ImagePath;
+                    }
+                    @if (!string.IsNullOrEmpty(productImg))
+                    {
+                        <img src="~/images/products/@productImg" class="img-thumbnail shadow-sm" style="height: 200px; object-fit: cover;" />
+                    }
+                    else
+                    {
+                        <div class="bg-light rounded d-inline-flex align-items-center justify-content-center shadow-sm" style="height: 200px; width: 200px;">
+                            <i class="fas fa-shoe-prints fa-4x text-gray-300"></i>
+                        </div>
+                    }
+                </div>
+
+                <div class="p-3 bg-light rounded mb-4 border">
+                    <h3 class="font-weight-bold text-dark">@Model.Name</h3>
+                    <p class="text-muted">Price: <span class="text-success font-weight-bold">$@Model.Price</span></p>
+                    <p class="mb-0">Brand: <strong>@Model.Brand?.Name</strong></p>
+                </div>
+
+                <p class="text-danger mb-4">
+                    <i class="fas fa-info-circle mr-1"></i> This action cannot be undone. All associated images and variants will be affected.
+                </p>
+
+                @* التعديل الجوهري: إضافة asp-area و asp-controller لضمان الحذف داخل الـ Area *@
+                <form asp-area="Admin" asp-controller="Products" asp-action="Delete">
+                    <input type="hidden" asp-for="Id" />
+
+                    <button type="submit" class="btn btn-danger btn-lg px-5 shadow">
+                        <i class="fas fa-trash-alt mr-2"></i>Yes, Delete it
+                    </button>
+
+                    <a asp-area="Admin" asp-controller="Products" asp-action="Index" class="btn btn-secondary btn-lg px-5 shadow-sm">
+                        Cancel
+                    </a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

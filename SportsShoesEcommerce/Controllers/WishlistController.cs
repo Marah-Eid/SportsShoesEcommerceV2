@@ -32,7 +32,7 @@ namespace SportsShoesEcommerce.Controllers
             return View(wishlistItems);
         }
 
-        [HttpPost]
+        
         [Authorize]
         public async Task<IActionResult> Add(int productId)
         {

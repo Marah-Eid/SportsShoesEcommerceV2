@@ -1,0 +1,112 @@
+﻿@using SportsShoesEcommerce.Models.Enums
+@model SportsShoesEcommerce.Models.Product
+
+@{
+    ViewData["Title"] = "Create Product";
+    Layout = "_AdminLayout";
+
+    // تحويل الـ ViewBag لمتغيرات صريحة لتجنب أخطاء الـ Dynamic
+    var brandList = ViewBag.BrandId as SelectList;
+    var categoryList = ViewBag.CategoryId as SelectList;
+}
+
+<div class="card shadow mb-4 border-left-primary">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary"><i class="fas fa-plus-square mr-2"></i>Create New Product</h6>
+    </div>
+    <div class="card-body">
+        @* التعديل هنا: إضافة asp-area و asp-controller لضمان عمل الفورم داخل الـ Area *@
+        <form asp-area="Admin" asp-controller="Products" asp-action="Create" method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="form-group">
+                        <label asp-for="Name" class="control-label font-weight-bold">Product Name</label>
+                        <input asp-for="Name" class="form-control" placeholder="Enter product name..." />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label asp-for="Price" class="control-label font-weight-bold">Price ($)</label>
+                        <input asp-for="Price" class="form-control" type="number" step="0.01" />
+                        <span asp-validation-for="Price" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Description" class="control-label font-weight-bold">Description</label>
+                <textarea asp-for="Description" class="form-control" rows="3" placeholder="Tell us more about the shoes..."></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label asp-for="CategoryId" class="control-label font-weight-bold">Category</label>
+                        <select asp-for="CategoryId" class="form-control" asp-items="categoryList">
+                            <option value="">-- Select Category --</option>
+                        </select>
+                        <span asp-validation-for="CategoryId" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="control-label font-weight-bold">Brand Name</label>
+                        <input name="brandName" class="form-control" placeholder="Nike, Adidas..." required />
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label asp-for="Gender" class="control-label font-weight-bold">Gender</label>
+                        <select asp-for="Gender" class="form-control" asp-items="Html.GetEnumSelectList<Gender>()"></select>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="my-4" />
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group border p-3 bg-light rounded shadow-sm">
+                        <label class="control-label font-weight-bold text-primary">
+                            <i class="fas fa-upload mr-1"></i> Upload Brand Logo
+                        </label>
+                        <input type="file" name="brandLogoFile" class="form-control-file" />
+                        <small class="text-muted d-block mt-1">Required if you entered a brand name that doesn't exist.</small>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group border p-3 bg-light rounded shadow-sm">
+                        <label class="control-label font-weight-bold text-success">
+                            <i class="fas fa-image mr-1"></i> Upload Product Image
+                        </label>
+                        <input type="file" name="imageFile" class="form-control-file" required />
+                        <small class="text-muted d-block mt-1">This will be the main display photo.</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group mt-4 pt-2">
+                <button type="submit" class="btn btn-primary btn-lg btn-block shadow">
+                    <i class="fas fa-save mr-2"></i> Create Product
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="mb-4">
+    @* التعديل هنا: إضافة asp-area و asp-controller لزر العودة *@
+    <a asp-area="Admin" asp-controller="Products" asp-action="Index" class="btn btn-secondary btn-sm shadow-sm">
+        <i class="fas fa-arrow-left mr-1"></i> Back to List
+    </a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

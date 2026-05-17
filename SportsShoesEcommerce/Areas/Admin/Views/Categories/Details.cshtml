@@ -1,0 +1,73 @@
+﻿@model SportsShoesEcommerce.Models.Category
+
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Category Details";
+}
+
+<div class="container-fluid">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">
+                <i class="fas fa-info-circle mr-2"></i>Category Information
+            </h6>
+            <div>
+                <a asp-area="Admin" asp-controller="Categories" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-sm btn-primary shadow-sm">
+                    <i class="fas fa-edit fa-sm text-white-50"></i> Edit Category
+                </a>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4 text-center border-right">
+                    <label class="font-weight-bold text-gray-800 d-block mb-3">Category Image</label>
+                    @if (!string.IsNullOrEmpty(Model.ImagePath))
+                    {
+                        <img src="~/images/categories/@Model.ImagePath" class="img-fluid rounded shadow" style="max-height: 300px; width: 100%; object-fit: cover;" alt="@Model.Name" />
+                    }
+                    else
+                    {
+                        <div class="bg-light d-flex align-items-center justify-content-center rounded" style="height: 250px;">
+                            <i class="fas fa-image fa-4x text-gray-300"></i>
+                        </div>
+                    }
+                </div>
+
+                <div class="col-md-8 pl-md-4">
+                    <div class="mb-4">
+                        <label class="text-xs font-weight-bold text-primary text-uppercase mb-1 d-block">Category Name</label>
+                        <h3 class="h4 mb-0 font-weight-bold text-gray-800">@Model.Name</h3>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="text-xs font-weight-bold text-primary text-uppercase mb-1 d-block">Description</label>
+                        <p class="lead text-gray-700">@(string.IsNullOrEmpty(Model.Description) ? "No description provided." : Model.Description)</p>
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col-6">
+                            <label class="text-xs font-weight-bold text-primary text-uppercase mb-1 d-block">Status</label>
+                            @if (Model.IsDeleted)
+                            {
+                                <span class="badge badge-danger p-2"><i class="fas fa-trash mr-1"></i> Deleted</span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-success p-2"><i class="fas fa-check-circle mr-1"></i> Active</span>
+                            }
+                        </div>
+                        <div class="col-6">
+                            <label class="text-xs font-weight-bold text-primary text-uppercase mb-1 d-block">Internal ID</label>
+                            <span class="text-gray-600 font-italic">#@Model.Id</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer bg-light text-right">
+            <a asp-area="Admin" asp-controller="Categories" asp-action="Index" class="btn btn-secondary shadow-sm">
+                <i class="fas fa-arrow-left mr-1"></i> Back to List
+            </a>
+        </div>
+    </div>
+</div>

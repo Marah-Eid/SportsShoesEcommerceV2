@@ -1,0 +1,57 @@
+﻿@model SportsShoesEcommerce.Models.Category
+
+@{
+    ViewData["Title"] = "Create Category";
+    Layout = "_AdminLayout";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow mb-4 border-left-primary">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary"><i class="fas fa-folder-plus mr-2"></i>Add New Category</h6>
+            </div>
+            <div class="card-body">
+                @* إضافة asp-area="Admin" تضمن إرسال الفورم للكنترولر الموجود داخل الـ Area *@
+                <form asp-area="Admin" asp-controller="Categories" asp-action="Create" method="post" enctype="multipart/form-data">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="form-group mb-3">
+                        <label class="control-label font-weight-bold">Category Name</label>
+                        <input asp-for="Name" class="form-control" placeholder="e.g. Running Shoes" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label class="control-label font-weight-bold">Description</label>
+                        <textarea asp-for="Description" class="form-control" rows="3" placeholder="Enter category details..."></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label class="control-label font-weight-bold">Upload Image</label>
+                        <input type="file" name="imageFile" class="form-control" accept="image/*" required />
+                    </div>
+
+                    <input type="hidden" asp-for="IsDeleted" value="false" />
+
+                    <div class="form-group mt-4 text-center">
+                        <button type="submit" class="btn btn-primary px-5 shadow-sm">
+                            <i class="fas fa-save mr-2"></i>Save Category
+                        </button>
+                        @* تعديل رابط العودة ليشمل الـ Area *@
+                        <a asp-area="Admin" asp-controller="Categories" asp-action="Index" class="btn btn-secondary px-5 shadow-sm">
+                            Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

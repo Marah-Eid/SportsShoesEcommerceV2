@@ -1,0 +1,97 @@
+﻿@model IEnumerable<SportsShoesEcommerce.Models.Product>
+
+@{
+    ViewData["Title"] = "Products Inventory";
+    Layout = "_AdminLayout";
+}
+
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800 font-weight-bold">Products Management</h1>
+</div>
+
+<div class="card shadow mb-4 border-left-primary">
+    <div class="card-header py-3 d-flex justify-content-between align-items-center bg-light">
+        <h6 class="m-0 font-weight-bold text-primary"><i class="fas fa-boxes mr-2"></i>Full Inventory</h6>
+
+        @* إضافة asp-area و asp-controller للزر الرئيسي *@
+        <a asp-area="Admin" asp-controller="Products" asp-action="Create" class="btn btn-primary btn-icon-split shadow-sm">
+            <span class="icon text-white-50">
+                <i class="fas fa-plus"></i>
+            </span>
+            <span class="text">Add New Product</span>
+        </a>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead class="thead-light text-center">
+                    <tr>
+                        <th style="width: 80px;">Image</th>
+                        <th>Product Name</th>
+                        <th>Price</th>
+                        <th>Brand</th>
+                        <th>Category</th>
+                        <th style="width: 150px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="text-center align-middle">
+                                @if (item.ProductImages != null && item.ProductImages.Any())
+                                {
+                                    var firstImage = item.ProductImages.FirstOrDefault()?.ImagePath;
+                                    <img src="~/images/products/@firstImage"
+                                         width="50" height="50"
+                                         class="rounded shadow-sm border"
+                                         style="object-fit:cover" />
+                                }
+                                else
+                                {
+                                    <div class="rounded bg-gray-200 d-flex align-items-center justify-content-center mx-auto shadow-sm" style="width: 50px; height: 50px;">
+                                        <i class="fas fa-shoe-prints text-gray-400 small"></i>
+                                    </div>
+                                }
+                            </td>
+                            <td class="align-middle font-weight-bold text-dark">@item.Name</td>
+                            <td class="align-middle text-center text-success font-weight-bold">
+                                $@item.Price.ToString("F2")
+                            </td>
+                            <td class="align-middle text-center">
+                                <span class="badge badge-light border px-2 py-1">@item.Brand?.Name</span>
+                            </td>
+                            <td class="align-middle text-center text-primary">@item.Category?.Name</td>
+                            <td class="text-center align-middle">
+                                @* أزرار الأكشن مع إضافة asp-area *@
+                                <div class="btn-group" role="group">
+                                    <a asp-area="Admin" asp-controller="Products" asp-action="Edit" asp-route-id="@item.Id"
+                                       class="btn btn-info btn-circle btn-sm shadow-sm" title="Edit">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a asp-area="Admin" asp-controller="Products" asp-action="Details" asp-route-id="@item.Id"
+                                       class="btn btn-primary btn-circle btn-sm shadow-sm" title="Details">
+                                        <i class="fas fa-info-circle"></i>
+                                    </a>
+                                    <a asp-area="Admin" asp-controller="Products" asp-action="Delete" asp-route-id="@item.Id"
+                                       class="btn btn-danger btn-circle btn-sm shadow-sm" title="Delete">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // تفعيل الـ DataTables ليصبح الجدول تفاعلي (بحث وترقيم)
+            $('#dataTable').DataTable();
+        });
+    </script>
+}

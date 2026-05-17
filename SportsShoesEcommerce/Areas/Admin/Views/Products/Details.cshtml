@@ -1,0 +1,98 @@
+﻿@model SportsShoesEcommerce.Models.Product
+
+@{
+    ViewData["Title"] = "Product Details";
+    Layout = "_AdminLayout";
+}
+
+<div class="card shadow mb-4 border-left-primary">
+    <div class="card-header py-3 d-flex justify-content-between align-items-center bg-light">
+        <h6 class="m-0 font-weight-bold text-primary">
+            <i class="fas fa-info-circle mr-1"></i> Product Information: @Model.Name
+        </h6>
+        <div>
+            @* تحديث رابط التعديل ليشمل الـ Area *@
+            <a asp-area="Admin" asp-controller="Products" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary btn-sm shadow-sm">
+                <i class="fas fa-edit fa-sm text-white-50 mr-1"></i> Edit Product
+            </a>
+            @* تحديث رابط العودة ليشمل الـ Area *@
+            <a asp-area="Admin" asp-controller="Products" asp-action="Index" class="btn btn-secondary btn-sm shadow-sm">
+                <i class="fas fa-arrow-left fa-sm mr-1"></i> Back to List
+            </a>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-5 text-center border-right">
+                @{
+                    var mainImage = Model.ProductImages?.FirstOrDefault()?.ImagePath;
+                }
+                @if (!string.IsNullOrEmpty(mainImage))
+                {
+                    <img src="~/images/products/@mainImage" class="img-fluid rounded shadow-sm border" style="max-height: 400px; object-fit: cover;" />
+                }
+                else
+                {
+                    <div class="bg-light d-flex align-items-center justify-content-center rounded border" style="height: 300px;">
+                        <i class="fas fa-image fa-4x text-gray-300"></i>
+                    </div>
+                }
+
+                <div class="mt-4 p-3 bg-light rounded border shadow-sm">
+                    <h6 class="font-weight-bold text-dark border-bottom pb-2 mb-3">Brand Identity</h6>
+                    @if (Model.Brand != null)
+                    {
+                        <img src="~/images/brands/@Model.Brand.Logo" width="70" class="img-thumbnail rounded-circle mb-2 shadow-sm" />
+                        <p class="mb-0 text-primary font-weight-bold" style="font-size: 1.1rem;">@Model.Brand.Name</p>
+                    }
+                </div>
+            </div>
+
+            <div class="col-md-7">
+                <div class="pl-md-4">
+                    <div class="d-flex align-items-center mb-2">
+                        <h2 class="text-dark font-weight-bold mb-0 mr-3">@Model.Name</h2>
+                        <span class="badge badge-pill badge-info px-3 py-2">@Model.Category?.Name</span>
+                    </div>
+                    <hr />
+
+                    <div class="row mb-3">
+                        <div class="col-sm-4 font-weight-bold text-muted">Price:</div>
+                        <div class="col-sm-8 text-success h4 font-weight-bold mb-0">$@Model.Price.ToString("F2")</div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-sm-4 font-weight-bold text-muted">Gender:</div>
+                        <div class="col-sm-8 text-dark"><i class="fas fa-user-friends mr-1 text-gray-400"></i> @Model.Gender</div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-sm-4 font-weight-bold text-muted">Created At:</div>
+                        <div class="col-sm-8 text-dark"><i class="fas fa-calendar-alt mr-1 text-gray-400"></i> @Model.CreatedAt.ToString("dd MMMM yyyy")</div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-sm-4 font-weight-bold text-muted">Status:</div>
+                        <div class="col-sm-8">
+                            @if (Model.IsDeleted)
+                            {
+                                <span class="badge badge-danger px-3 py-1"><i class="fas fa-times-circle mr-1"></i> Inactive / Deleted</span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-success px-3 py-1"><i class="fas fa-check-circle mr-1"></i> Active</span>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <h6 class="font-weight-bold text-dark border-bottom pb-2">Description:</h6>
+                        <p class="text-gray-700 pl-2 mt-2" style="font-size: 1rem; line-height: 1.7; text-align: justify;">
+                            @Model.Description
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

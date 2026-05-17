@@ -1,0 +1,122 @@
+﻿@using SportsShoesEcommerce.Models.Enums
+@model SportsShoesEcommerce.Models.Product
+
+@{
+    ViewData["Title"] = "Edit Product";
+    Layout = "_AdminLayout";
+    var brandList = ViewBag.BrandId as SelectList;
+    var categoryList = ViewBag.CategoryId as SelectList;
+}
+
+<div class="card shadow mb-4 border-left-success">
+    <div class="card-header py-3 d-flex justify-content-between align-items-center bg-light">
+        <h6 class="m-0 font-weight-bold text-success"><i class="fas fa-edit mr-2"></i>Edit Product: @Model.Name</h6>
+        @* تحديث رابط العودة ليشمل الـ Area *@
+        <a asp-area="Admin" asp-controller="Products" asp-action="Index" class="btn btn-secondary btn-sm shadow-sm">
+            <i class="fas fa-arrow-left fa-sm mr-1"></i> Back to List
+        </a>
+    </div>
+    <div class="card-body">
+        @* التعديل هنا: إضافة asp-area و asp-controller لضمان عمل الفورم داخل الـ Area *@
+        <form asp-area="Admin" asp-controller="Products" asp-action="Edit" method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            @* الحقول المخفية للحفاظ على البيانات الأساسية *@
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="CreatedAt" />
+
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="form-group mb-3">
+                        <label asp-for="Name" class="control-label font-weight-bold">Product Name</label>
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group mb-3">
+                        <label asp-for="Price" class="control-label font-weight-bold">Price ($)</label>
+                        <input asp-for="Price" class="form-control" type="number" step="0.01" />
+                        <span asp-validation-for="Price" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Description" class="control-label font-weight-bold">Description</label>
+                <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group mb-3">
+                        <label asp-for="CategoryId" class="control-label font-weight-bold">Category</label>
+                        <select asp-for="CategoryId" class="form-control" asp-items="categoryList"></select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group mb-3">
+                        <label asp-for="BrandId" class="control-label font-weight-bold">Brand</label>
+                        <select asp-for="BrandId" class="form-control" asp-items="brandList"></select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group mb-3">
+                        <label asp-for="Gender" class="control-label font-weight-bold">Gender</label>
+                        <select asp-for="Gender" class="form-control" asp-items="Html.GetEnumSelectList<Gender>()"></select>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="my-4" />
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group border p-3 bg-light rounded text-center shadow-sm">
+                        <label class="control-label font-weight-bold d-block text-primary"><i class="fas fa-image mr-1"></i> Current Product Image</label>
+                        @{
+                            var currentImg = Model.ProductImages?.FirstOrDefault()?.ImagePath;
+                        }
+                        <div class="image-preview-container my-2">
+                            @if (!string.IsNullOrEmpty(currentImg))
+                            {
+                                <img src="~/images/products/@currentImg" class="img-thumbnail shadow-sm" style="height: 150px; width: 150px; object-fit: cover;" />
+                            }
+                            else
+                            {
+                                <div class="alert alert-secondary py-3"><i class="fas fa-image fa-2x d-block mb-2"></i> No Image Assigned</div>
+                            }
+                        </div>
+                        <input type="file" name="imageFile" class="form-control-file mt-3" accept="image/*" />
+                        <small class="text-info d-block mt-2 font-italic">Upload a new file only if you want to replace the current image</small>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group border p-3 bg-light rounded text-center shadow-sm d-flex flex-column justify-content-center" style="min-height: 245px;">
+                        <label class="control-label font-weight-bold d-block text-danger"><i class="fas fa-eye-slash mr-1"></i> Visibility Status</label>
+                        <div class="mt-3">
+                            <div class="custom-control custom-switch custom-switch-md">
+                                <input type="checkbox" asp-for="IsDeleted" class="custom-control-input shadow-none" id="isDeletedCheck">
+                                <label class="custom-control-label font-weight-bold text-dark" for="isDeletedCheck" style="cursor: pointer;">Hide from Store</label>
+                            </div>
+                        </div>
+                        <p class="text-muted small mt-4 px-3 text-center">If enabled, the product will be archived and hidden from customers but kept in your records.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group mt-5">
+                <button type="submit" class="btn btn-success btn-lg btn-block shadow-sm">
+                    <i class="fas fa-save mr-2"></i> Save Changes
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
