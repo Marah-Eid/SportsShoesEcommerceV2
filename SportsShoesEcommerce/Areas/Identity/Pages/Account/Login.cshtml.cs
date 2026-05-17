@@ -77,15 +77,25 @@ namespace SportsShoesEcommerce.Areas.Identity.Pages.Account
             returnUrl ??= Url.Content("~/");
 
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-        
+
             if (ModelState.IsValid)
             {
-                // This doesn't count login failures towards account lockout
-                // To enable password failures to trigger account lockout, set lockoutOnFailure: true
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
+
+                    // 1. Fetch the user who just logged in
+                    var user = await _userManager.FindByEmailAsync(Input.Email);
+
+                    // 2. Check if they have the Admin role
+                    if (await _userManager.IsInRoleAsync(user, "Admin"))
+                    {
+                        // 3. Force them to the Admin Area Dashboard!
+                        return RedirectToAction("Index", "Home", new { area = "Admin" });
+                    }
+
+                    // 4. If they are a normal user, send them back to where they were going
                     return LocalRedirect(returnUrl);
                 }
                 if (result.RequiresTwoFactor)
