@@ -460,47 +460,86 @@
         }
 
         .ns-product-grid .card {
-            background: var(--ns-cream) !important;
-            border: 1px solid rgba(74, 55, 41, 0.08) !important;
+            background: #ffffff !important;
+            border: none !important;
             border-radius: 24px !important;
             overflow: hidden;
-            transition: all 0.4s ease;
-            color: var(--ns-coffee) !important;
-            box-shadow: 0 4px 16px var(--ns-soft-shadow);
             height: 100%;
-            width: 100%;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
         }
 
             .ns-product-grid .card:hover {
                 transform: translateY(-8px);
-                border-color: var(--ns-terracotta) !important;
-                box-shadow: 0 20px 40px rgba(184, 96, 72, 0.15);
+                box-shadow: 0 18px 38px rgba(0,0,0,0.14);
             }
 
-            .ns-product-grid .card img,
-            .ns-product-grid .card-img-top {
-                width: 100%;
-                height: 220px;
-                object-fit: cover;
+            .ns-product-grid .card-img-top,
+            .ns-product-grid .card img {
+                width: 100% !important;
+                height: 260px !important;
+                object-fit: cover !important;
+                object-position: center !important;
+                padding: 0 !important;
+                background: #ffffff !important;
+                display: block;
             }
 
         .ns-product-grid .card-body {
-            padding: 20px !important;
+            padding: 24px 22px 22px !important;
+            text-align: center;
+        }
+
+        .ns-product-grid .text-muted,
+        .ns-product-grid .small {
+            color: #6b4f3d !important;
+            font-size: 0.78rem !important;
+            font-weight: 700 !important;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: 10px !important;
         }
 
         .ns-product-grid .card-title,
         .ns-product-grid h5,
         .ns-product-grid h6 {
-            color: var(--ns-coffee) !important;
-            font-weight: 600;
+            color: #222 !important;
             font-size: 1rem !important;
+            font-weight: 700 !important;
+            line-height: 1.35 !important;
+            margin: 0 0 14px !important;
+            min-height: 44px;
+            display: block;
+            white-space: normal !important;
+            text-decoration: none !important;
         }
 
-        .ns-product-grid .text-muted {
-            color: var(--ns-mocha) !important;
+        .ns-product-grid a {
+            text-decoration: none !important;
         }
 
-    /* Responsive breakpoints */
+        .ns-product-grid del,
+        .ns-product-grid .old-price {
+            color: #7a6a5d !important;
+            margin-right: 10px;
+        }
+
+        .ns-product-grid .text-danger,
+        .ns-product-grid .price,
+        .ns-product-grid .new-price {
+            color: #e6324b !important;
+            font-weight: 800 !important;
+            font-size: 1.15rem !important;
+        }
+
+        .ns-product-grid .btn {
+            width: 100%;
+            border-radius: 999px !important;
+            padding: 11px 18px !important;
+            font-weight: 800 !important;
+            margin-top: 18px;
+        }
+
     @@media (max-width: 1100px) {
         .ns-product-grid {
             grid-template-columns: repeat(3, 1fr);
@@ -765,6 +804,40 @@
     .ns-hero-content {
         position: relative;
         z-index: 2;
+    }
+
+
+
+    .ns-product-grid .card-body h5,
+    .ns-product-grid .card-body h6,
+    .ns-product-grid .card-body .card-title {
+        display: block !important;
+        width: 100% !important;
+        min-height: 48px !important;
+        margin: 12px 0 24px !important;
+        line-height: 1.4 !important;
+        font-size: 1rem !important;
+        font-weight: 700 !important;
+        text-align: center !important;
+        white-space: normal !important;
+        overflow: visible !important;
+        position: static !important;
+        transform: none !important;
+    }
+
+    .ns-product-grid .card-body a {
+        display: block !important;
+        line-height: 1.4 !important;
+    }
+
+    .ns-product-name {
+        font-size: 1rem;
+        font-weight: 700;
+        line-height: 1.4;
+        color: #222;
+        margin: 10px 0 18px;
+        min-height: 45px;
+        text-align: center;
     }
 </style>
 
