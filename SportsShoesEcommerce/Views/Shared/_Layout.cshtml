@@ -52,6 +52,21 @@
             font-family: 'Inter', -apple-system, sans-serif;
         }
 
+        html,
+        body {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        main {
+            overflow-x: hidden;
+        }
+
         /* ============================================
                    ANNOUNCEMENT BAR
                    ============================================ */
@@ -1038,8 +1053,8 @@
                     <span>Free Shipping on Orders Over $100</span>
                 </div>
                 <div class="ns-announce-links">
-                    <a asp-controller="Home" asp-action="About">About</a>
-                    <a asp-controller="Contact" asp-action="Index">Contact</a>
+                    <a asp-area="" asp-controller="Home" asp-action="About">About</a>
+                    <a asp-area="" asp-controller="Contact" asp-action="Index">Contact</a>
                 </div>
             </div>
         </div>
@@ -1051,17 +1066,17 @@
             <nav class="ns-nav">
 
                 @* Logo *@
-                <a class="ns-nav-brand" asp-controller="Home" asp-action="Index">
+                <a class="ns-nav-brand" asp-area="" asp-controller="Home" asp-action="Index">
                     <img src="~/images/nextsteplogo.png" alt="NextStep">
                 </a>
 
                 @* Center Menu (Desktop) *@
                 <ul class="ns-nav-menu">
                     <li class="ns-nav-item">
-                        <a class="ns-nav-link" asp-controller="Home" asp-action="Index">Home</a>
+                        <a class="ns-nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                     </li>
                     <li class="ns-nav-item">
-                        <a class="ns-nav-link" asp-controller="Products" asp-action="Index">Shop All</a>
+                        <a class="ns-nav-link" asp-area="" asp-controller="Products" asp-action="Index">Shop All</a>
                     </li>
                     <li class="ns-nav-item">
                         <a class="ns-nav-link" href="#">
@@ -1075,7 +1090,7 @@
                                 foreach (var cat in categories)
                                 {
                                     <li>
-                                        <a class="ns-dropdown-item" asp-controller="Search" asp-action="Index" asp-route-q="@cat.Name">
+                                        <a class="ns-dropdown-item" asp-area="" asp-controller="Search" asp-action="Index" asp-route-q="@cat.Name">
                                             <i class="fa fa-tag"></i>
                                             <span>@cat.Name</span>
                                         </a>
@@ -1088,7 +1103,7 @@
                             }
                             <li><hr class="ns-dropdown-divider"></li>
                             <li>
-                                <a class="ns-dropdown-item" asp-controller="Products" asp-action="Index">
+                                <a class="ns-dropdown-item" asp-area="" asp-controller="Products" asp-action="Index">
                                     <i class="fa fa-arrow-right"></i>
                                     <span>View All Shoes</span>
                                 </a>
@@ -1096,7 +1111,7 @@
                         </ul>
                     </li>
                     <li class="ns-nav-item">
-                        <a class="ns-nav-link sale" asp-controller="Products" asp-action="Index" asp-route-onSale="true">
+                        <a class="ns-nav-link sale" asp-area="" asp-controller="Products" asp-action="Index" asp-route-onSale="true">
                             <i class="fa fa-fire"></i> Flash Sale
                         </a>
                     </li>
@@ -1129,8 +1144,8 @@
                                     <p class="ns-dropdown-user-name">@(currentUser?.FullName ?? "Athlete")</p>
                                     <p class="ns-dropdown-user-email">@currentUser?.Email</p>
                                 </li>
-                                <li><a class="ns-dropdown-item" asp-controller="Orders" asp-action="Index"><i class="fa fa-box"></i><span>My Orders</span></a></li>
-                                <li><a class="ns-dropdown-item" asp-controller="Testimonials" asp-action="Create"><i class="fa fa-star"></i><span>Rate Us</span></a></li>
+                                <li><a class="ns-dropdown-item" asp-area="" asp-controller="Orders" asp-action="Index"><i class="fa fa-box"></i><span>My Orders</span></a></li>
+                                <li><a class="ns-dropdown-item" asp-area="" asp-controller="Testimonials" asp-action="Create"><i class="fa fa-star"></i><span>Rate Us</span></a></li>
                                 <li><a class="ns-dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index"><i class="fa fa-user-edit"></i><span>Edit Profile</span></a></li>
                                 <li><hr class="ns-dropdown-divider"></li>
                                 <li>
@@ -1151,14 +1166,14 @@
                     </li>
 
                     <li>
-                        <a asp-controller="Wishlist" asp-action="Index" class="ns-action-btn" title="Wishlist">
+                        <a asp-area="" asp-controller="Wishlist" asp-action="Index" class="ns-action-btn" title="Wishlist">
                             <i class="fa fa-heart"></i>
                             <span class="ns-action-badge">0</span>
                         </a>
                     </li>
 
                     <li>
-                        <a asp-controller="Cart" asp-action="Index" class="ns-action-btn" title="Cart">
+                        <a asp-area="" asp-controller="Cart" asp-action="Index" class="ns-action-btn" title="Cart">
                             <i class="fa fa-shopping-bag"></i>
                             <span class="ns-action-badge">0</span>
                         </a>
@@ -1301,6 +1316,11 @@
     </footer>
 
     @* =================== SEARCH OVERLAY SCRIPT =================== *@
+
+    <script src="~/user/js/jquery-1.11.0.min.js"></script>
+    <script src="~/user/js/plugins.js"></script>
+    <script src="~/user/js/script.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         (function () {
             const overlay = document.getElementById('nsSearchOverlay');

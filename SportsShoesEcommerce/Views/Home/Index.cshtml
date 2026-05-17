@@ -531,11 +531,25 @@
         margin-bottom: 50px;
     }
 
+    .ns-brands {
+        background: var(--ns-cream);
+        padding: 90px 0;
+        width: 100%;
+        max-width: 100vw;
+        overflow: hidden;
+    }
+
+    .ns-marquee-wrap {
+        width: 100%;
+        max-width: 100%;
+        overflow: hidden;
+    }
+
     .ns-marquee {
         display: flex;
         gap: 50px;
         animation: ns-marquee 40s linear infinite;
-        width: fit-content;
+        width: max-content;
     }
 
     @@keyframes ns-marquee {
@@ -894,6 +908,7 @@
                 <h2 class="ns-section-title display-font">Trusted By The <em>Best.</em></h2>
             </div>
 
+            <div class="ns-marquee-wrap">
             <div class="ns-marquee">
                 @for (int loop = 0; loop < 2; loop++)
                 {
@@ -908,6 +923,7 @@
                         </a>
                     }
                 }
+            </div>
             </div>
         </section>
     }
