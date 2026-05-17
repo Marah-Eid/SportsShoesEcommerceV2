@@ -1,0 +1,135 @@
+﻿@model IEnumerable<SportsShoesEcommerce.Models.Discount>
+
+@{
+    ViewData["Title"] = "Discounts Management";
+    Layout = "_AdminLayout";
+    var currentDate = DateTime.Now;
+}
+
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800 font-weight-bold">Discounts Management</h1>
+    <a asp-action="Create" class="btn btn-success btn-sm shadow-sm font-weight-bold">
+        <i class="fas fa-plus-circle mr-1"></i> Create New Discount
+    </a>
+</div>
+
+<form method="get" asp-action="Index" class="bg-white p-3 rounded shadow-sm mb-4 border-left-success">
+    <div class="row align-items-end">
+
+        <div class="form-group col-md-5 mb-2 mb-md-0">
+            <label class="small font-weight-bold text-muted">Select Coupon Code</label>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text bg-light"><i class="fas fa-tag text-muted"></i></span>
+                </div>
+                <select name="selectedDiscountId" asp-items="ViewBag.DiscountsDropdown" class="form-control form-control-sm">
+                    <option value="">All Coupons</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group col-md-4 mb-2 mb-md-0">
+            <label class="small font-weight-bold text-muted">Filter by Status</label>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text bg-light"><i class="fas fa-toggle-on text-muted"></i></span>
+                </div>
+                <select name="isActive" class="form-control form-control-sm">
+                    <option value="">All Statuses</option>
+                    <option value="true" selected="@(ViewData["CurrentStatusFilter"]?.ToString() == "True")">Active (Valid)</option>
+                    <option value="false" selected="@(ViewData["CurrentStatusFilter"]?.ToString() == "False")">Expired / Inactive</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group col-md-3 mb-0 text-right">
+            <button type="submit" class="btn btn-success btn-sm px-3 font-weight-bold shadow-sm">
+                <i class="fas fa-filter mr-1"></i> Filter
+            </button>
+            <a asp-action="Index" class="btn btn-secondary btn-sm px-3 font-weight-bold shadow-sm">
+                <i class="fas fa-undo mr-1"></i> Reset
+            </a>
+        </div>
+    </div>
+</form>
+
+<div class="card shadow mb-4 border-left-success">
+    <div class="card-header py-3 bg-light">
+        <h6 class="m-0 font-weight-bold text-success"><i class="fas fa-tags mr-2"></i>Active & Registered Coupons</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover table-bordered" id="discountsTable" width="100%" cellspacing="0">
+                <thead class="thead-light text-center">
+                    <tr>
+                        <th>Coupon Code</th>
+                        <th>Target Product</th>
+                        <th>Percentage</th>
+                        <th>Price Before</th>
+                        <th>Price After</th>
+                        <th>Duration</th>
+                        <th>Status</th>
+                        <th style="width: 100px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        bool isCouponValid = item.IsActive && item.StartDate <= currentDate && item.EndDate >= currentDate;
+
+                        decimal priceAfter = item.Product != null ? item.Product.Price : 0;
+                        decimal priceBefore = item.Product != null ? priceAfter / (1 - (item.DiscountPercentage / 100m)) : 0;
+
+                        <tr>
+                            <td class="align-middle font-weight-bold text-dark">@item.Title</td>
+                            <td class="align-middle text-dark font-weight-bold">
+                                @(item.Product != null ? item.Product.Name : "N/A")
+                            </td>
+                            <td class="text-center align-middle font-weight-bold text-success">
+                                <span class="badge badge-success-light px-3 py-2">@item.DiscountPercentage% OFF</span>
+                            </td>
+                            <td class="text-center align-middle font-weight-bold text-muted" style="text-decoration: line-through;">
+                                @priceBefore.ToString("C2")
+                            </td>
+                            <td class="text-center align-middle font-weight-bold text-danger">
+                                @priceAfter.ToString("C2")
+                            </td>
+                            <td class="align-middle small">
+                                <div><i class="fas fa-calendar-alt text-success mr-1"></i> <strong>Start:</strong> @item.StartDate.ToString("yyyy-MM-dd HH:mm")</div>
+                                <div class="mt-1"><i class="fas fa-calendar-times text-danger mr-1"></i> <strong>End:</strong> @item.EndDate.ToString("yyyy-MM-dd HH:mm")</div>
+                            </td>
+                            <td class="text-center align-middle">
+                                @if (isCouponValid)
+                                {
+                                    <span class="badge badge-success px-3 py-2 shadow-sm"><i class="fas fa-check-circle mr-1"></i> Active</span>
+                                }
+                                else
+                                {
+                                    <span class="badge badge-danger px-3 py-2 shadow-sm"><i class="fas fa-times-circle mr-1"></i> Expired</span>
+                                }
+                            </td>
+                            <td class="text-center align-middle">
+                                <div class="btn-group" role="group">
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-info btn-circle btn-sm shadow-sm" title="Edit">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-circle btn-sm shadow-sm" title="Delete">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $('#discountsTable').DataTable();
+        });
+    </script>
+}

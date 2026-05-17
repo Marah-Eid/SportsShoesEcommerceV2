@@ -1,16 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SportsShoesEcommerce.Data;
 using SportsShoesEcommerce.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace SportsShoesEcommerce.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin")]
     public class CategoriesController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -20,12 +22,25 @@ namespace SportsShoesEcommerce.Areas.Admin.Controllers
             _context = context;
         }
 
-        // GET: Categories
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? selectedCategoryId)
         {
-            return View(await _context.Categories.ToListAsync());
-        }
+            // 1. جلب الاستعلام الأساسي للأقسام غير المحذوفة
+            var query = _context.Categories.Where(c => !c.IsDeleted).AsQueryable();
 
+            // 2. الفلترة بناءً على القسم الذي تم اختياره من القائمة المنسدلة
+            if (selectedCategoryId.HasValue)
+            {
+                query = query.Where(c => c.Id == selectedCategoryId);
+            }
+
+            // 3. تجهيز القائمة المنسدلة بكل الأقسام المتوفرة لتعرض في الـ View
+            ViewData["AllCategoriesDropdown"] = new SelectList(_context.Categories.Where(c => !c.IsDeleted), "Id", "Name", selectedCategoryId);
+
+            // الاحتفاظ بالـ Id المختار لتثبيته بالقائمة بعد الضغط على زر الفلترة
+            ViewData["SelectedCategoryId"] = selectedCategoryId;
+
+            return View(await query.OrderBy(c => c.Name).ToListAsync());
+        }
         // GET: Categories/Details/5
         public async Task<IActionResult> Details(int? id)
         {
