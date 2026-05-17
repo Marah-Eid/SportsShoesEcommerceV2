@@ -1,17 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text.Encodings.Web;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Logging;
 using SportsShoesEcommerce.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace SportsShoesEcommerce.Areas.Identity.Pages.Account
 {
@@ -22,7 +15,7 @@ namespace SportsShoesEcommerce.Areas.Identity.Pages.Account
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
 
-        public LoginModel(SignInManager<ApplicationUser> signInManager, 
+        public LoginModel(SignInManager<ApplicationUser> signInManager,
             ILogger<LoginModel> logger,
             UserManager<ApplicationUser> userManager)
         {
@@ -85,18 +78,14 @@ namespace SportsShoesEcommerce.Areas.Identity.Pages.Account
                 {
                     _logger.LogInformation("User logged in.");
 
-                    // 1. Fetch the user who just logged in
                     var user = await _userManager.FindByEmailAsync(Input.Email);
 
-                    // 2. Check if they have the Admin role
                     if (await _userManager.IsInRoleAsync(user, "Admin"))
                     {
-                        // 3. Force them to the Admin Area Dashboard!
-                        return RedirectToAction("Index", "Home", new { area = "Admin" });
+                        return LocalRedirect("/Admin/Home/Index");
                     }
 
-                    // 4. If they are a normal user, send them back to where they were going
-                    return LocalRedirect(returnUrl);
+                    return LocalRedirect("/Home/Index");
                 }
                 if (result.RequiresTwoFactor)
                 {
