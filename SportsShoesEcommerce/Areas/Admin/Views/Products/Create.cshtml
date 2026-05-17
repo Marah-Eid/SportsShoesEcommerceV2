@@ -4,10 +4,6 @@
 @{
     ViewData["Title"] = "Create Product";
     Layout = "_AdminLayout";
-
-    // تحويل الـ ViewBag لمتغيرات صريحة لتجنب أخطاء الـ Dynamic
-    var brandList = ViewBag.BrandId as SelectList;
-    var categoryList = ViewBag.CategoryId as SelectList;
 }
 
 <div class="card shadow mb-4 border-left-primary">
@@ -15,7 +11,6 @@
         <h6 class="m-0 font-weight-bold text-primary"><i class="fas fa-plus-square mr-2"></i>Create New Product</h6>
     </div>
     <div class="card-body">
-        @* التعديل هنا: إضافة asp-area و asp-controller لضمان عمل الفورم داخل الـ Area *@
         <form asp-area="Admin" asp-controller="Products" asp-action="Create" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
@@ -46,7 +41,7 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <label asp-for="CategoryId" class="control-label font-weight-bold">Category</label>
-                        <select asp-for="CategoryId" class="form-control" asp-items="categoryList">
+                        <select asp-for="CategoryId" class="form-control" asp-items="@(ViewData["CategoryId"] as SelectList)">
                             <option value="">-- Select Category --</option>
                         </select>
                         <span asp-validation-for="CategoryId" class="text-danger"></span>
@@ -54,14 +49,18 @@
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label class="control-label font-weight-bold">Brand Name</label>
-                        <input name="brandName" class="form-control" placeholder="Nike, Adidas..." required />
+                        <label asp-for="BrandId" class="control-label font-weight-bold">Brand</label>
+                        <select asp-for="BrandId" class="form-control" asp-items="@(ViewData["BrandId"] as SelectList)">
+                            <option value="">-- Select Brand --</option>
+                        </select>
+                        <span asp-validation-for="BrandId" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
                         <label asp-for="Gender" class="control-label font-weight-bold">Gender</label>
-                        <select asp-for="Gender" class="form-control" asp-items="Html.GetEnumSelectList<Gender>()"></select>
+                        <select asp-for="Gender" class="form-control" asp-items="Html.GetEnumSelectList<SportsShoesEcommerce.Models.Enums.Gender>()"></select>
+                        <span asp-validation-for="Gender" class="text-danger"></span>
                     </div>
                 </div>
             </div>
@@ -69,23 +68,34 @@
             <hr class="my-4" />
 
             <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group border p-3 bg-light rounded shadow-sm">
-                        <label class="control-label font-weight-bold text-primary">
-                            <i class="fas fa-upload mr-1"></i> Upload Brand Logo
-                        </label>
-                        <input type="file" name="brandLogoFile" class="form-control-file" />
-                        <small class="text-muted d-block mt-1">Required if you entered a brand name that doesn't exist.</small>
-                    </div>
-                </div>
-                <div class="col-md-6">
+                <div class="col-md-12">
                     <div class="form-group border p-3 bg-light rounded shadow-sm">
                         <label class="control-label font-weight-bold text-success">
-                            <i class="fas fa-image mr-1"></i> Upload Product Image
+                            <i class="fas fa-images mr-1"></i> Upload Product Images
                         </label>
-                        <input type="file" name="imageFile" class="form-control-file" required />
-                        <small class="text-muted d-block mt-1">This will be the main display photo.</small>
+                        <input type="file" name="imageFiles" class="form-control-file" multiple required />
+                        <small class="text-muted d-block mt-1">You can select multiple photos. The first one will be the main.</small>
                     </div>
+                </div>
+            </div>
+
+            <h4 class="h5 text-primary font-weight-bold mt-4"><i class="fas fa-layer-group mr-2"></i> Initial Product Variant (Stock)</h4>
+            <div class="row bg-light p-3 rounded mb-4 mx-0 border">
+                <div class="form-group col-md-3">
+                    <label class="control-label font-weight-bold">Size</label>
+                    <input name="Size" class="form-control" placeholder="e.g. 42" required />
+                </div>
+                <div class="form-group col-md-3">
+                    <label class="control-label font-weight-bold">Color</label>
+                    <input name="Color" class="form-control" placeholder="e.g. Black" required />
+                </div>
+                <div class="form-group col-md-3">
+                    <label class="control-label font-weight-bold">Initial Stock Quantity</label>
+                    <input name="StockQuantity" type="number" class="form-control" min="0" placeholder="e.g. 50" required />
+                </div>
+                <div class="form-group col-md-3">
+                    <label class="control-label font-weight-bold">SKU Code</label>
+                    <input name="SKU" class="form-control" placeholder="e.g. NIKE-BLK-42" required />
                 </div>
             </div>
 
@@ -99,7 +109,6 @@
 </div>
 
 <div class="mb-4">
-    @* التعديل هنا: إضافة asp-area و asp-controller لزر العودة *@
     <a asp-area="Admin" asp-controller="Products" asp-action="Index" class="btn btn-secondary btn-sm shadow-sm">
         <i class="fas fa-arrow-left mr-1"></i> Back to List
     </a>

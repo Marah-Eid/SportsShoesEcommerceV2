@@ -10,13 +10,34 @@
     <link href="~/admin/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
     <link href="~/admin/css/sb-admin-2.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        .navbar-nav.sidebar {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 1030;
+            overflow-y: auto;
+        }
+
+        #content-wrapper {
+            margin-left: 224px;
+            width: calc(100% - 224px);
+        }
+
+        .sidebar.toggled + #content-wrapper {
+            margin-left: 104px;
+            width: calc(100% - 104px);
+        }
+    </style>
 </head>
 
 <body id="page-top">
 
     <div id="wrapper">
 
-        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion fixed-nav" id="accordionSidebar">
 
             <a class="sidebar-brand d-flex align-items-center justify-content-center" asp-area="Admin" asp-controller="Home" asp-action="Index">
                 <div class="sidebar-brand-icon rotate-n-15">
@@ -60,8 +81,36 @@
             </li>
 
             <hr class="sidebar-divider">
+            <div class="sidebar-heading">Moderation</div>
 
-            <div class="sidebar-heading">Shortcuts</div>
+            <li class="nav-item @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Reviews" ? "active" : "")">
+                <a class="nav-link" asp-area="Admin" asp-controller="Reviews" asp-action="Index">
+                    <i class="fas fa-fw fa-comments"></i>
+                    <span>Product Reviews</span>
+                </a>
+            </li>
+            <li class="nav-item @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Discounts" ? "active" : "")">
+                <a class="nav-link" asp-area="Admin" asp-controller="Discounts" asp-action="Index">
+                    <i class="fas fa-fw fa-tags"></i>
+                    <span>Discounts Management</span>
+                </a>
+            </li>
+
+            <li class="nav-item @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Users" ? "active" : "")">
+                <a class="nav-link" asp-area="Admin" asp-controller="Users" asp-action="Index">
+                    <i class="fas fa-fw fa-users"></i>
+                    <span>Users Management</span>
+                </a>
+            </li>
+
+            <li class="nav-item @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Testimonials" ? "active" : "")">
+                <a class="nav-link" asp-area="Admin" asp-controller="Testimonials" asp-action="Index">
+                    <i class="fas fa-fw fa-quote-left"></i>
+                    <span>Testimonials Approval</span>
+                </a>
+            </li>
+
+
 
             <li class="nav-item">
                 <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">

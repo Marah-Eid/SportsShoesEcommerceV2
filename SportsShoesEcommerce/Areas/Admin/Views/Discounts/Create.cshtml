@@ -1,0 +1,100 @@
+﻿@model SportsShoesEcommerce.Models.Discount
+
+@{
+    ViewData["Title"] = "Create Discount Coupon";
+    Layout = "_AdminLayout";
+}
+
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800 font-weight-bold">Create New Discount</h1>
+    <a asp-action="Index" class="btn btn-secondary btn-sm shadow-sm font-weight-bold">
+        <i class="fas fa-arrow-left mr-1"></i> Back to List
+    </a>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-xl-8 col-lg-10">
+        <div class="card shadow mb-4 border-left-success">
+            <div class="card-header py-3 bg-light d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-success">
+                    <i class="fas fa-tags mr-2"></i>Coupon & Discount Information
+                </h6>
+            </div>
+            <div class="card-body">
+                <form asp-action="Create">
+                    <div asp-validation-summary="ModelOnly" class="text-danger small mb-3"></div>
+
+                    <div class="form-row">
+                        <div class="form-group col-md-8">
+                            <label class="small font-weight-bold text-dark">Target Product</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text bg-light"><i class="fas fa-box text-muted"></i></span>
+                                </div>
+                                <select asp-for="ProductId" asp-items="ViewBag.ProductsDropdown" class="form-control form-control-sm select2-setup">
+                                    <option value="">-- Choose Target Product to Apply Discount --</option>
+                                </select>
+                            </div>
+                            <span asp-validation-for="ProductId" class="text-danger small"></span>
+                        </div>
+
+                        <div class="form-group col-md-4">
+                            <label class="small font-weight-bold text-dark">Discount Percentage (%)</label>
+                            <div class="input-group">
+                                <input asp-for="DiscountPercentage" class="form-control form-control-sm text-center font-weight-bold" type="number" min="1" max="100" placeholder="e.g. 20" />
+                                <div class="input-group-append">
+                                    <span class="input-group-text bg-light font-weight-bold">%</span>
+                                </div>
+                            </div>
+                            <span asp-validation-for="DiscountPercentage" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="small font-weight-bold text-dark">Coupon Title / Code</label>
+                        <input asp-for="Title" class="form-control form-control-sm" placeholder="e.g. SUMMER2026" />
+                        <span asp-validation-for="Title" class="text-danger small"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="small font-weight-bold text-dark">Description</label>
+                        <textarea asp-for="Description" class="form-control form-control-sm" rows="2" placeholder="Describe the discount details..."></textarea>
+                        <span asp-validation-for="Description" class="text-danger small"></span>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label class="small font-weight-bold text-dark">Activation Start Date</label>
+                            <input asp-for="StartDate" class="form-control form-control-sm" type="datetime-local" />
+                            <span asp-validation-for="StartDate" class="text-danger small"></span>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="small font-weight-bold text-dark">Expiration End Date</label>
+                            <input asp-for="EndDate" class="form-control form-control-sm" type="datetime-local" />
+                            <span asp-validation-for="EndDate" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group custom-control custom-switch ml-2 mb-4">
+                        <input type="checkbox" class="custom-control-input" asp-for="IsActive" id="customSwitch1" checked>
+                        <label class="custom-control-label small font-weight-bold text-dark" for="customSwitch1">Set Active Immediately</label>
+                    </div>
+
+                    <hr />
+
+                    <div class="form-group text-right mb-0">
+                        <button type="submit" class="btn btn-success btn-sm px-4 font-weight-bold shadow-sm">
+                            <i class="fas fa-check-circle mr-1"></i> Save Coupon
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
