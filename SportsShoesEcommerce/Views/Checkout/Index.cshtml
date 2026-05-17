@@ -1,75 +1,934 @@
 ﻿@model SportsShoesEcommerce.ViewModels.CheckoutViewModel
-
 @{
     ViewData["Title"] = "Checkout";
 }
 
-<h2 class="mb-4">Checkout</h2>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,800;1,9..144,600;1,9..144,800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-<div class="row">
-    <div class="col-md-7">
-        <h4>Shipping Address</h4>
+<style>
+    :root {
+        --ns-cream: #faf6ef;
+        --ns-sand: #f3ead9;
+        --ns-peach: #f5d5b8;
+        --ns-terracotta: #c97b5e;
+        --ns-clay: #b86048;
+        --ns-coffee: #4a3729;
+        --ns-mocha: #6b4f3d;
+        --ns-sage: #8fa68a;
+        --ns-warm-gray: #a89684;
+        --ns-soft-shadow: rgba(74, 55, 41, 0.08);
+    }
 
-        <form asp-controller="Checkout" asp-action="PlaceOrder" method="post">
-            @Html.AntiForgeryToken()
+    .ns-checkout {
+        background: var(--ns-cream);
+        color: var(--ns-coffee);
+        font-family: 'Inter', -apple-system, sans-serif;
+        min-height: 80vh;
+        padding-bottom: 80px;
+    }
 
-            <div class="mb-3">
-                <label asp-for="City" class="form-label"></label>
-                <input asp-for="City" class="form-control" />
-                <span asp-validation-for="City" class="text-danger"></span>
+        .ns-checkout .display-font {
+            font-family: 'Fraunces', Georgia, serif;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 0.95;
+        }
+
+        .ns-checkout .mono {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+
+    /* ===== HEADER ===== */
+    .ns-co-header {
+        position: relative;
+        background: linear-gradient(160deg, var(--ns-sand) 0%, var(--ns-peach) 100%);
+        padding: 90px 0 70px;
+        overflow: hidden;
+        margin-bottom: 50px;
+    }
+
+        .ns-co-header::before {
+            content: '';
+            position: absolute;
+            top: -120px;
+            right: -80px;
+            width: 380px;
+            height: 380px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(201, 123, 94, 0.25) 0%, transparent 70%);
+            filter: blur(40px);
+        }
+
+        .ns-co-header::after {
+            content: '';
+            position: absolute;
+            bottom: -100px;
+            left: -100px;
+            width: 320px;
+            height: 320px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(143, 166, 138, 0.18) 0%, transparent 70%);
+            filter: blur(40px);
+        }
+
+    .ns-co-header-inner {
+        position: relative;
+        z-index: 2;
+    }
+
+    .ns-co-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 18px;
+        color: var(--ns-clay);
+    }
+
+        .ns-co-tag::before {
+            content: '';
+            width: 28px;
+            height: 2px;
+            background: currentColor;
+        }
+
+    .ns-co-title {
+        font-size: clamp(2.6rem, 6vw, 5rem);
+        color: var(--ns-coffee);
+        margin: 0 0 18px;
+    }
+
+        .ns-co-title em {
+            color: var(--ns-clay);
+            font-style: italic;
+        }
+
+    .ns-co-sub {
+        font-size: 1.05rem;
+        color: var(--ns-mocha);
+        max-width: 580px;
+        margin: 0;
+        line-height: 1.6;
+    }
+
+    /* ===== STEPPER ===== */
+    .ns-stepper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 0;
+        margin-bottom: 40px;
+        flex-wrap: wrap;
+    }
+
+    .ns-step {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.72rem;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--ns-warm-gray);
+        font-weight: 600;
+    }
+
+    .ns-step-num {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: var(--ns-sand);
+        color: var(--ns-warm-gray);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.78rem;
+        font-weight: 700;
+        border: 1.5px solid transparent;
+        transition: all 0.3s ease;
+    }
+
+    .ns-step.done .ns-step-num {
+        background: var(--ns-sage);
+        color: var(--ns-cream);
+    }
+
+    .ns-step.done {
+        color: var(--ns-coffee);
+    }
+
+    .ns-step.active .ns-step-num {
+        background: var(--ns-coffee);
+        color: var(--ns-cream);
+        box-shadow: 0 0 0 4px rgba(74, 55, 41, 0.1);
+    }
+
+    .ns-step.active {
+        color: var(--ns-coffee);
+    }
+
+    .ns-step-line {
+        width: 60px;
+        height: 1.5px;
+        background: rgba(74, 55, 41, 0.15);
+        margin: 0 14px;
+    }
+
+        .ns-step-line.done {
+            background: var(--ns-sage);
+        }
+
+    /* ===== LAYOUT ===== */
+    .ns-co-grid {
+        display: grid;
+        grid-template-columns: 1.4fr 1fr;
+        gap: 36px;
+        align-items: start;
+    }
+
+    /* ===== FORM CARD ===== */
+    .ns-co-card {
+        background: var(--ns-cream);
+        border: 1px solid rgba(74, 55, 41, 0.08);
+        border-radius: 24px;
+        padding: 36px 34px;
+        box-shadow: 0 4px 20px var(--ns-soft-shadow);
+    }
+
+    .ns-card-head {
+        margin-bottom: 28px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid rgba(74, 55, 41, 0.08);
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+
+    .ns-card-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: var(--ns-sand);
+        color: var(--ns-clay);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+        flex-shrink: 0;
+    }
+
+    .ns-card-head-text {
+        flex: 1;
+    }
+
+    .ns-card-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--ns-clay);
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.65rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        font-weight: 500;
+        margin-bottom: 6px;
+    }
+
+    .ns-card-title {
+        font-family: 'Fraunces', serif;
+        font-weight: 800;
+        font-size: 1.5rem;
+        color: var(--ns-coffee);
+        letter-spacing: -0.02em;
+        margin: 0;
+    }
+
+        .ns-card-title em {
+            color: var(--ns-clay);
+            font-style: italic;
+        }
+
+    /* Form fields */
+    .ns-field {
+        margin-bottom: 18px;
+    }
+
+    .ns-field-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+    }
+
+    .ns-field-label {
+        display: block;
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+        color: var(--ns-mocha);
+        font-weight: 600;
+        margin-bottom: 8px;
+    }
+
+    .ns-field-wrap {
+        position: relative;
+    }
+
+    .ns-field-icon {
+        position: absolute;
+        left: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--ns-warm-gray);
+        font-size: 0.95rem;
+        pointer-events: none;
+        transition: color 0.3s ease;
+    }
+
+    .ns-co-card .form-control {
+        background: var(--ns-sand);
+        border: 1.5px solid transparent;
+        border-radius: 14px;
+        padding: 16px 20px 16px 50px;
+        font-size: 0.95rem;
+        color: var(--ns-coffee);
+        font-family: 'Inter', sans-serif;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        width: 100%;
+        height: auto;
+    }
+
+        .ns-co-card .form-control::placeholder {
+            color: var(--ns-warm-gray);
+            font-weight: 400;
+        }
+
+        .ns-co-card .form-control:focus {
+            background: var(--ns-cream);
+            border-color: var(--ns-terracotta);
+            box-shadow: 0 0 0 4px rgba(201, 123, 94, 0.12);
+            outline: none;
+        }
+
+    .ns-field-wrap:focus-within .ns-field-icon {
+        color: var(--ns-clay);
+    }
+
+    .ns-co-card .text-danger {
+        font-size: 0.78rem;
+        color: var(--ns-clay) !important;
+        margin-top: 6px;
+        display: block;
+        font-weight: 500;
+    }
+
+    /* Payment method (visual only) */
+    .ns-pay-methods {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin-bottom: 8px;
+    }
+
+    .ns-pay-method {
+        background: var(--ns-sand);
+        border: 1.5px solid transparent;
+        border-radius: 14px;
+        padding: 16px 18px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+        .ns-pay-method.active {
+            background: var(--ns-cream);
+            border-color: var(--ns-terracotta);
+            box-shadow: 0 0 0 4px rgba(201, 123, 94, 0.12);
+        }
+
+    .ns-pay-method-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: var(--ns-cream);
+        color: var(--ns-clay);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.85rem;
+        flex-shrink: 0;
+    }
+
+    .ns-pay-method.active .ns-pay-method-icon {
+        background: var(--ns-coffee);
+        color: var(--ns-peach);
+    }
+
+    .ns-pay-method-text {
+        flex: 1;
+    }
+
+    .ns-pay-method-name {
+        font-size: 0.88rem;
+        font-weight: 600;
+        color: var(--ns-coffee);
+        margin: 0;
+    }
+
+    .ns-pay-method-desc {
+        font-size: 0.72rem;
+        color: var(--ns-mocha);
+        margin: 2px 0 0;
+    }
+
+    /* Place order button */
+    .ns-place-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        background: var(--ns-coffee);
+        color: var(--ns-cream);
+        padding: 18px 36px;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        font-family: 'Inter', sans-serif;
+        border: none;
+        cursor: pointer;
+        width: 100%;
+        margin-top: 16px;
+        transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+        .ns-place-btn:hover {
+            background: var(--ns-clay);
+            transform: translateY(-3px);
+            box-shadow: 0 14px 30px rgba(184, 96, 72, 0.3);
+        }
+
+        .ns-place-btn .arrow {
+            transition: transform 0.3s ease;
+        }
+
+        .ns-place-btn:hover .arrow {
+            transform: translateX(6px);
+        }
+
+    .ns-co-card-disclaimer {
+        font-size: 0.78rem;
+        color: var(--ns-warm-gray);
+        text-align: center;
+        margin: 16px 0 0;
+        line-height: 1.55;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+    }
+
+        .ns-co-card-disclaimer i {
+            color: var(--ns-sage);
+        }
+
+    /* Validation summary */
+    .ns-co-card .validation-summary-errors ul {
+        background: rgba(184, 96, 72, 0.08);
+        border-left: 3px solid var(--ns-clay);
+        border-radius: 10px;
+        padding: 14px 18px 14px 36px;
+        margin-bottom: 20px;
+        list-style: none;
+    }
+
+    .ns-co-card .validation-summary-errors li {
+        color: var(--ns-clay);
+        font-size: 0.85rem;
+        font-weight: 500;
+    }
+
+    /* ===== SUMMARY SIDEBAR ===== */
+    .ns-summary {
+        background: var(--ns-coffee);
+        color: var(--ns-cream);
+        border-radius: 24px;
+        padding: 32px 30px;
+        position: sticky;
+        top: 100px;
+        box-shadow: 0 20px 50px rgba(74, 55, 41, 0.2);
+        overflow: hidden;
+    }
+
+        .ns-summary::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            right: -60px;
+            width: 240px;
+            height: 240px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(201, 123, 94, 0.3) 0%, transparent 70%);
+            filter: blur(40px);
+            pointer-events: none;
+        }
+
+    .ns-summary-inner {
+        position: relative;
+        z-index: 2;
+    }
+
+    .ns-summary-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 14px;
+        color: var(--ns-peach);
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.68rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        font-weight: 500;
+    }
+
+        .ns-summary-tag::before {
+            content: '';
+            width: 24px;
+            height: 2px;
+            background: currentColor;
+        }
+
+    .ns-summary-title {
+        font-family: 'Fraunces', serif;
+        font-weight: 800;
+        font-size: 1.8rem;
+        color: var(--ns-cream);
+        margin: 0 0 24px;
+        letter-spacing: -0.02em;
+    }
+
+        .ns-summary-title em {
+            color: var(--ns-peach);
+            font-style: italic;
+        }
+
+    /* Items list */
+    .ns-summary-items {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        padding-bottom: 18px;
+        border-bottom: 1px solid rgba(250, 246, 239, 0.12);
+        margin-bottom: 18px;
+        max-height: 360px;
+        overflow-y: auto;
+    }
+
+        .ns-summary-items::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .ns-summary-items::-webkit-scrollbar-track {
+            background: rgba(250, 246, 239, 0.05);
+            border-radius: 10px;
+        }
+
+        .ns-summary-items::-webkit-scrollbar-thumb {
+            background: rgba(250, 246, 239, 0.25);
+            border-radius: 10px;
+        }
+
+    .ns-summary-item {
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+    }
+
+    .ns-summary-item-qty {
+        flex-shrink: 0;
+        min-width: 32px;
+        height: 32px;
+        padding: 0 8px;
+        border-radius: 50px;
+        background: rgba(245, 213, 184, 0.15);
+        color: var(--ns-peach);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.78rem;
+        font-weight: 700;
+    }
+
+    .ns-summary-item-info {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .ns-summary-item-name {
+        font-family: 'Fraunces', serif;
+        font-weight: 700;
+        font-size: 0.95rem;
+        color: var(--ns-cream);
+        margin: 0 0 4px;
+        line-height: 1.3;
+    }
+
+    .ns-summary-item-meta {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.62rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: rgba(250, 246, 239, 0.55);
+        margin: 0;
+    }
+
+    .ns-summary-item-price {
+        font-family: 'Fraunces', serif;
+        font-style: italic;
+        font-weight: 800;
+        font-size: 1rem;
+        color: var(--ns-peach);
+        flex-shrink: 0;
+        align-self: center;
+    }
+
+    /* Totals */
+    .ns-summary-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 0;
+        font-size: 0.92rem;
+    }
+
+    .ns-summary-row-label {
+        color: rgba(250, 246, 239, 0.7);
+        font-weight: 500;
+    }
+
+    .ns-summary-row-value {
+        color: var(--ns-cream);
+        font-weight: 600;
+    }
+
+        .ns-summary-row-value.free {
+            color: var(--ns-peach);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+    .ns-summary-total {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        padding-top: 18px;
+        margin-top: 10px;
+        border-top: 1px solid rgba(250, 246, 239, 0.12);
+    }
+
+    .ns-summary-total-label {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.7rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: rgba(250, 246, 239, 0.6);
+        font-weight: 600;
+    }
+
+    .ns-summary-total-val {
+        font-family: 'Fraunces', serif;
+        font-weight: 800;
+        font-style: italic;
+        font-size: 2.4rem;
+        color: var(--ns-peach);
+        line-height: 1;
+        letter-spacing: -0.02em;
+    }
+
+    .ns-summary-perks {
+        list-style: none;
+        padding: 22px 0 0;
+        margin: 18px 0 0;
+        border-top: 1px solid rgba(250, 246, 239, 0.12);
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+        .ns-summary-perks li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.82rem;
+            color: rgba(250, 246, 239, 0.7);
+        }
+
+            .ns-summary-perks li i {
+                color: var(--ns-peach);
+                font-size: 0.75rem;
+                width: 16px;
+                flex-shrink: 0;
+            }
+
+    /* Responsive */
+    @@media (max-width: 992px) {
+        .ns-co-grid {
+            grid-template-columns: 1fr;
+            gap: 28px;
+        }
+
+        .ns-summary {
+            position: static;
+        }
+
+        .ns-step-line {
+            width: 30px;
+            margin: 0 6px;
+        }
+    }
+
+    @@media (max-width: 600px) {
+        .ns-field-row {
+            grid-template-columns: 1fr;
+            gap: 0;
+        }
+
+        .ns-pay-methods {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @@media (max-width: 576px) {
+        .ns-co-header {
+            padding: 70px 0 60px;
+            margin-bottom: 36px;
+        }
+
+        .ns-co-card {
+            padding: 28px 22px;
+        }
+
+        .ns-summary {
+            padding: 26px 22px;
+        }
+
+        .ns-summary-total-val {
+            font-size: 2rem;
+        }
+
+        .ns-step span:not(.ns-step-num) {
+            display: none;
+        }
+    }
+</style>
+
+<div class="ns-checkout">
+
+    @* ===== HEADER ===== *@
+    <section class="ns-co-header">
+        <div class="container ns-co-header-inner">
+            <div class="ns-co-tag mono">Final Step</div>
+            <h1 class="ns-co-title display-font">
+                Ready to <em>checkout?</em>
+            </h1>
+            <p class="ns-co-sub">
+                Just a few more details and we'll get your order on its way.
+            </p>
+        </div>
+    </section>
+
+    <div class="container">
+
+        @* ===== STEPPER ===== *@
+        <div class="ns-stepper">
+            <div class="ns-step done">
+                <span class="ns-step-num"><i class="fa fa-check" style="font-size: 0.7rem;"></i></span>
+                <span>Cart</span>
+            </div>
+            <div class="ns-step-line done"></div>
+            <div class="ns-step active">
+                <span class="ns-step-num">2</span>
+                <span>Checkout</span>
+            </div>
+            <div class="ns-step-line"></div>
+            <div class="ns-step">
+                <span class="ns-step-num">3</span>
+                <span>Confirmation</span>
+            </div>
+        </div>
+
+        <div class="ns-co-grid">
+
+            @* ===== FORM ===== *@
+            <div class="ns-co-card">
+
+                <div class="ns-card-head">
+                    <div class="ns-card-icon">
+                        <i class="fa fa-location-dot"></i>
+                    </div>
+                    <div class="ns-card-head-text">
+                        <div class="ns-card-tag">Step 2 of 3</div>
+                        <h2 class="ns-card-title">Shipping <em>address.</em></h2>
+                    </div>
+                </div>
+
+                <form asp-controller="Checkout" asp-action="PlaceOrder" method="post">
+                    @Html.AntiForgeryToken()
+
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="ns-field">
+                        <label asp-for="Street" class="ns-field-label">Street Address</label>
+                        <div class="ns-field-wrap">
+                            <i class="fa fa-road ns-field-icon"></i>
+                            <input asp-for="Street" class="form-control" placeholder="123 Main Street, Apt 4B" />
+                        </div>
+                        <span asp-validation-for="Street" class="text-danger"></span>
+                    </div>
+
+                    <div class="ns-field-row">
+                        <div class="ns-field">
+                            <label asp-for="City" class="ns-field-label">City</label>
+                            <div class="ns-field-wrap">
+                                <i class="fa fa-city ns-field-icon"></i>
+                                <input asp-for="City" class="form-control" placeholder="Amman" />
+                            </div>
+                            <span asp-validation-for="City" class="text-danger"></span>
+                        </div>
+
+                        <div class="ns-field">
+                            <label asp-for="PostalCode" class="ns-field-label">Postal Code</label>
+                            <div class="ns-field-wrap">
+                                <i class="fa fa-mail-bulk ns-field-icon"></i>
+                                <input asp-for="PostalCode" class="form-control" placeholder="11181" />
+                            </div>
+                            <span asp-validation-for="PostalCode" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    @* ===== PAYMENT (visual only) ===== *@
+                    <div class="ns-card-head" style="margin-top: 32px;">
+                        <div class="ns-card-icon">
+                            <i class="fa fa-credit-card"></i>
+                        </div>
+                        <div class="ns-card-head-text">
+                            <div class="ns-card-tag">Payment Method</div>
+                            <h2 class="ns-card-title">How will you <em>pay?</em></h2>
+                        </div>
+                    </div>
+
+                    <div class="ns-pay-methods">
+                        <div class="ns-pay-method active">
+                            <div class="ns-pay-method-icon">
+                                <i class="fa fa-hand-holding-dollar"></i>
+                            </div>
+                            <div class="ns-pay-method-text">
+                                <p class="ns-pay-method-name">Cash on Delivery</p>
+                                <p class="ns-pay-method-desc">Pay when it arrives</p>
+                            </div>
+                        </div>
+                        <div class="ns-pay-method" style="opacity: 0.55; cursor: not-allowed;">
+                            <div class="ns-pay-method-icon">
+                                <i class="fa fa-credit-card"></i>
+                            </div>
+                            <div class="ns-pay-method-text">
+                                <p class="ns-pay-method-name">Card</p>
+                                <p class="ns-pay-method-desc">Coming soon</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="ns-place-btn">
+                        Place Order
+                        <span class="arrow">→</span>
+                    </button>
+
+                    <p class="ns-co-card-disclaimer">
+                        <i class="fa fa-shield-halved"></i>
+                        Your information is encrypted and securely processed.
+                    </p>
+                </form>
             </div>
 
-            <div class="mb-3">
-                <label asp-for="Street" class="form-label"></label>
-                <input asp-for="Street" class="form-control" />
-                <span asp-validation-for="Street" class="text-danger"></span>
-            </div>
+            @* ===== ORDER SUMMARY ===== *@
+            <aside>
+                <div class="ns-summary">
+                    <div class="ns-summary-inner">
 
-            <div class="mb-3">
-                <label asp-for="PostalCode" class="form-label"></label>
-                <input asp-for="PostalCode" class="form-control" />
-                <span asp-validation-for="PostalCode" class="text-danger"></span>
-            </div>
+                        <div class="ns-summary-tag">Order Summary</div>
+                        <h3 class="ns-summary-title">
+                            Almost <em>yours.</em>
+                        </h3>
 
-            <button type="submit" class="btn btn-dark">
-                Place Order
-            </button>
-        </form>
-    </div>
+                        <div class="ns-summary-items">
+                            @foreach (var item in Model.Cart.Items)
+                            {
+                                <div class="ns-summary-item">
+                                    <span class="ns-summary-item-qty">×@item.Quantity</span>
+                                    <div class="ns-summary-item-info">
+                                        <p class="ns-summary-item-name">@item.ProductName</p>
+                                        <p class="ns-summary-item-meta">
+                                            @if (!string.IsNullOrEmpty(item.Size))
+                                            {
+                                                <span>Size @item.Size</span>
+                                            }
+                                            @if (!string.IsNullOrEmpty(item.Size) && !string.IsNullOrEmpty(item.Color))
+                                            {
+                                                <span> · </span>
+                                            }
+                                            @if (!string.IsNullOrEmpty(item.Color))
+                                            {
+                                                <span>@item.Color</span>
+                                            }
+                                        </p>
+                                    </div>
+                                    <span class="ns-summary-item-price">$@item.Total.ToString("0.00")</span>
+                                </div>
+                            }
+                        </div>
 
-    <div class="col-md-5">
-        <h4>Order Summary</h4>
+                        <div class="ns-summary-row">
+                            <span class="ns-summary-row-label">Subtotal</span>
+                            <span class="ns-summary-row-value">$@Model.Cart.TotalPrice.ToString("0.00")</span>
+                        </div>
 
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Product</th>
-                    <th>Qty</th>
-                    <th>Total</th>
-                </tr>
-            </thead>
+                        <div class="ns-summary-row">
+                            <span class="ns-summary-row-label">Shipping</span>
+                            <span class="ns-summary-row-value free">Free</span>
+                        </div>
 
-            <tbody>
-                @foreach (var item in Model.Cart.Items)
-                {
-                    <tr>
-                        <td>
-                            @item.ProductName
-                            <br />
-                            <small class="text-muted">
-                                Size: @item.Size | Color: @item.Color
-                            </small>
-                        </td>
-                        <td>@item.Quantity</td>
-                        <td>$@item.Total</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+                        <div class="ns-summary-row">
+                            <span class="ns-summary-row-label">Tax</span>
+                            <span class="ns-summary-row-value">Included</span>
+                        </div>
 
-        <h4 class="text-end">
-            Total: $@Model.Cart.TotalPrice
-        </h4>
+                        <div class="ns-summary-total">
+                            <span class="ns-summary-total-label">Total</span>
+                            <span class="ns-summary-total-val">$@Model.Cart.TotalPrice.ToString("0.00")</span>
+                        </div>
+
+                        <ul class="ns-summary-perks">
+                            <li><i class="fa fa-truck"></i> 24-hour shipping</li>
+                            <li><i class="fa fa-undo"></i> 30-day free returns</li>
+                            <li><i class="fa fa-shield-halved"></i> Secure checkout</li>
+                        </ul>
+
+                    </div>
+                </div>
+            </aside>
+
+        </div>
+
     </div>
 </div>
 
