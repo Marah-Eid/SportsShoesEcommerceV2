@@ -1,5 +1,5 @@
 ﻿@{
-    if (ViewData.TryGetValue("ParentLayout", out var parentLayout) && parentLayout !=  null)
+    if (ViewData.TryGetValue("ParentLayout", out var parentLayout) && parentLayout != null)
     {
         Layout = parentLayout.ToString();
     }
@@ -9,17 +9,220 @@
     }
 }
 
-<h1>Manage your account</h1>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,800;1,9..144,600;1,9..144,800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-<div>
-    <h2>Change your account settings</h2>
-    <hr />
-    <div class="row">
-        <div class="col-md-3">
-            <partial name="_ManageNav" />
+<style>
+    :root {
+        --ns-cream: #faf6ef;
+        --ns-sand: #f3ead9;
+        --ns-peach: #f5d5b8;
+        --ns-terracotta: #c97b5e;
+        --ns-clay: #b86048;
+        --ns-coffee: #4a3729;
+        --ns-mocha: #6b4f3d;
+        --ns-sage: #8fa68a;
+        --ns-warm-gray: #a89684;
+        --ns-soft-shadow: rgba(74, 55, 41, 0.08);
+    }
+
+    .ns-manage {
+        background: var(--ns-cream);
+        color: var(--ns-coffee);
+        font-family: 'Inter', -apple-system, sans-serif;
+        min-height: 80vh;
+        padding-bottom: 80px;
+    }
+
+        .ns-manage .display-font {
+            font-family: 'Fraunces', Georgia, serif;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 0.95;
+        }
+
+        .ns-manage .mono {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+
+    /* ===== HEADER ===== */
+    .ns-manage-header {
+        position: relative;
+        background: linear-gradient(160deg, var(--ns-sand) 0%, var(--ns-peach) 100%);
+        padding: 90px 0 70px;
+        overflow: hidden;
+        margin-bottom: 50px;
+    }
+
+        .ns-manage-header::before {
+            content: '';
+            position: absolute;
+            top: -120px;
+            right: -80px;
+            width: 380px;
+            height: 380px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(201, 123, 94, 0.25) 0%, transparent 70%);
+            filter: blur(40px);
+        }
+
+        .ns-manage-header::after {
+            content: '';
+            position: absolute;
+            bottom: -100px;
+            left: -100px;
+            width: 320px;
+            height: 320px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(143, 166, 138, 0.18) 0%, transparent 70%);
+            filter: blur(40px);
+        }
+
+    .ns-manage-header-inner {
+        position: relative;
+        z-index: 2;
+    }
+
+    .ns-manage-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 18px;
+        color: var(--ns-clay);
+    }
+
+        .ns-manage-tag::before {
+            content: '';
+            width: 28px;
+            height: 2px;
+            background: currentColor;
+        }
+
+    .ns-manage-title {
+        font-size: clamp(2.6rem, 6vw, 5rem);
+        color: var(--ns-coffee);
+        margin: 0 0 18px;
+    }
+
+        .ns-manage-title em {
+            color: var(--ns-clay);
+            font-style: italic;
+        }
+
+    .ns-manage-sub {
+        font-size: 1.05rem;
+        color: var(--ns-mocha);
+        max-width: 580px;
+        margin: 0;
+        line-height: 1.6;
+    }
+
+    /* ===== LAYOUT ===== */
+    .ns-manage-grid {
+        display: grid;
+        grid-template-columns: 280px 1fr;
+        gap: 36px;
+        align-items: start;
+    }
+
+    /* ===== CONTENT AREA ===== */
+    .ns-manage-content {
+        min-width: 0;
+    }
+
+        /* Override default Bootstrap form/heading styles so nested pages inherit the brand look */
+        .ns-manage-content h1,
+        .ns-manage-content h2,
+        .ns-manage-content h3,
+        .ns-manage-content h4 {
+            font-family: 'Fraunces', Georgia, serif;
+            font-weight: 800;
+            color: var(--ns-coffee);
+            letter-spacing: -0.02em;
+        }
+
+        .ns-manage-content > h4:first-child,
+        .ns-manage-content > h3:first-child,
+        .ns-manage-content > h2:first-child,
+        .ns-manage-content > h1:first-child {
+            font-size: 1.8rem;
+            margin-bottom: 24px;
+            padding-bottom: 18px;
+            border-bottom: 1px solid rgba(74, 55, 41, 0.08);
+        }
+
+        .ns-manage-content .card,
+        .ns-manage-content .panel {
+            background: var(--ns-cream);
+            border: 1px solid rgba(74, 55, 41, 0.08);
+            border-radius: 22px;
+            box-shadow: 0 4px 20px var(--ns-soft-shadow);
+        }
+
+        /* Status alerts */
+        .ns-manage-content .alert-success,
+        .ns-manage-content .alert-info {
+            background: rgba(143, 166, 138, 0.12);
+            border: none;
+            border-left: 3px solid var(--ns-sage);
+            border-radius: 12px;
+            color: var(--ns-coffee);
+            padding: 14px 20px;
+            font-weight: 500;
+        }
+
+        .ns-manage-content .alert-danger {
+            background: rgba(184, 96, 72, 0.08);
+            border: none;
+            border-left: 3px solid var(--ns-clay);
+            border-radius: 12px;
+            color: var(--ns-clay);
+            padding: 14px 20px;
+            font-weight: 500;
+        }
+
+    @@media (max-width: 992px) {
+        .ns-manage-grid {
+            grid-template-columns: 1fr;
+            gap: 24px;
+        }
+    }
+
+    @@media (max-width: 576px) {
+        .ns-manage-header {
+            padding: 70px 0 60px;
+            margin-bottom: 36px;
+        }
+    }
+</style>
+
+<div class="ns-manage">
+
+    @* ===== HEADER ===== *@
+    <section class="ns-manage-header">
+        <div class="container ns-manage-header-inner">
+            <div class="ns-manage-tag mono">Account Settings</div>
+            <h1 class="ns-manage-title display-font">Manage your <em>account.</em></h1>
+            <p class="ns-manage-sub">
+                Update your profile, change your password, manage logins, and control your personal data — all from one place.
+            </p>
         </div>
-        <div class="col-md-9">
-            @RenderBody()
+    </section>
+
+    <div class="container">
+        <div class="ns-manage-grid">
+
+            <aside>
+                <partial name="_ManageNav" />
+            </aside>
+
+            <div class="ns-manage-content">
+                @RenderBody()
+            </div>
+
         </div>
     </div>
 </div>

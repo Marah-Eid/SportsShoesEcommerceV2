@@ -665,15 +665,41 @@
             font-weight: 800;
         }
 
+    /* ===== TESTIMONIALS SLIDER FIX ===== */
     .ns-testimonial-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        display: flex; /* Changes from grid to flex row */
+        overflow-x: auto; /* Allows horizontal scrolling */
+        scroll-snap-type: x mandatory; /* Makes it snap cleanly like a mobile app */
         gap: 24px;
+        padding-bottom: 24px; /* Leaves room for the scrollbar */
         position: relative;
         z-index: 2;
+        /* Custom scrollbar colors */
+        scrollbar-width: thin;
+        scrollbar-color: var(--ns-terracotta) var(--ns-sand);
     }
 
+        /* Scrollbar styling for Chrome/Safari */
+        .ns-testimonial-grid::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .ns-testimonial-grid::-webkit-scrollbar-track {
+            background: var(--ns-sand);
+            border-radius: 10px;
+        }
+
+        .ns-testimonial-grid::-webkit-scrollbar-thumb {
+            background-color: var(--ns-terracotta);
+            border-radius: 10px;
+        }
+
     .ns-testimonial {
+        flex: 0 0 auto; /* Forces the cards to NOT shrink */
+        min-width: 320px; /* Sets a strict width for each card so they slide */
+        max-width: 380px;
+        scroll-snap-align: start; /* Snaps the card to the edge */
+
         background: var(--ns-cream);
         border: 1px solid rgba(74, 55, 41, 0.08);
         border-radius: 28px;
