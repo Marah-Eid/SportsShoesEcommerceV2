@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SportsShoesEcommerce.Data;
@@ -32,11 +31,10 @@ namespace SportsShoesEcommerce.Controllers
             return View(wishlistItems);
         }
 
-        
+
         [Authorize]
         public async Task<IActionResult> Add(int productId)
         {
-            // 1. Get the logged-in User ID directly (No _userManager needed!)
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             if (userId == null)
@@ -44,10 +42,8 @@ namespace SportsShoesEcommerce.Controllers
                 return Redirect("/Identity/Account/Login");
             }
 
-            // 2. Look for an existing size/color variant for this product
             var variant = await _context.ProductVariants.FirstOrDefaultAsync(v => v.ProductId == productId);
 
-            // 3. Auto-create variant if it's missing 
             if (variant == null)
             {
                 variant = new ProductVariant
@@ -55,13 +51,11 @@ namespace SportsShoesEcommerce.Controllers
                     ProductId = productId,
                     Size = "Standard",
                     Color = "Default"
-                    // Removed 'Stock' here to perfectly match your database tables!
                 };
                 _context.ProductVariants.Add(variant);
                 await _context.SaveChangesAsync();
             }
 
-            // 4. Prevent the Duplicate Crash
             var existingItem = await _context.Wishlists
                 .FirstOrDefaultAsync(w => w.ProductVariantId == variant.Id && w.UserId == userId);
 
@@ -71,7 +65,6 @@ namespace SportsShoesEcommerce.Controllers
             }
             else
             {
-                // 5. Save it safely using the Variant ID and direct userId
                 var wishlistItem = new Wishlist
                 {
                     ProductVariantId = variant.Id,
@@ -85,7 +78,6 @@ namespace SportsShoesEcommerce.Controllers
                 TempData["SuccessMessage"] = "Shoe added to your wishlist!";
             }
 
-            // 6. Send them right back to the exact page they were just looking at!
             string referer = Request.Headers["Referer"].ToString();
             return Redirect(string.IsNullOrEmpty(referer) ? "/" : referer);
         }

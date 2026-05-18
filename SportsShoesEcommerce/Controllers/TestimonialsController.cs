@@ -3,12 +3,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SportsShoesEcommerce.Data;
 using SportsShoesEcommerce.Models;
-using System;
-using System.Threading.Tasks;
 
 namespace SportsShoesEcommerce.Controllers
 {
-    // The [Authorize] tag means ONLY logged-in users can reach this page!
     [Authorize]
     public class TestimonialsController : Controller
     {
@@ -21,14 +18,12 @@ namespace SportsShoesEcommerce.Controllers
             _userManager = userManager;
         }
 
-        // GET: Loads the Rate Us Page
         [HttpGet]
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Saves the Review to the Database
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(int rating, string content)
@@ -39,7 +34,6 @@ namespace SportsShoesEcommerce.Controllers
                 return View();
             }
 
-            // Find out who is currently logged in
             var user = await _userManager.GetUserAsync(User);
 
             var testimonial = new Testimonial
@@ -47,14 +41,13 @@ namespace SportsShoesEcommerce.Controllers
                 UserId = user.Id,
                 Rating = rating,
                 Content = content,
-                IsApproved = false, // Sent to Admin for review!
+                IsApproved = false,
                 CreatedAt = DateTime.Now
             };
 
             _context.Testimonials.Add(testimonial);
             await _context.SaveChangesAsync();
 
-            // Send a success message to the Home Page
             TempData["SuccessMessage"] = "Thank you for your review! It has been submitted and is pending admin approval.";
             return RedirectToAction("Index", "Home");
         }

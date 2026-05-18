@@ -1144,6 +1144,22 @@
                                     <p class="ns-dropdown-user-name">@(currentUser?.FullName ?? "Athlete")</p>
                                     <p class="ns-dropdown-user-email">@currentUser?.Email</p>
                                 </li>
+
+                                @* Admin Dashboard Button *@
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <li>
+                                        <a class="ns-dropdown-item"
+                                           asp-area="Admin"
+                                           asp-controller="Home"
+                                           asp-action="Index">
+                                            <i class="fa fa-shield-alt"></i>
+                                            <span>Admin Dashboard</span>
+                                        </a>
+                                    </li>
+                                }
+
+
                                 <li><a class="ns-dropdown-item" asp-area="" asp-controller="Orders" asp-action="Index"><i class="fa fa-box"></i><span>My Orders</span></a></li>
                                 <li><a class="ns-dropdown-item" asp-area="" asp-controller="Testimonials" asp-action="Create"><i class="fa fa-star"></i><span>Rate Us</span></a></li>
                                 <li><a class="ns-dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index"><i class="fa fa-user-edit"></i><span>Edit Profile</span></a></li>
@@ -1321,6 +1337,7 @@
     <script src="~/user/js/plugins.js"></script>
     <script src="~/user/js/script.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         (function () {
             const overlay = document.getElementById('nsSearchOverlay');
@@ -1354,6 +1371,42 @@
             });
         })();
     </script>
+
+    @if (TempData["Success"] != null)
+    {
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: '@TempData["Success"]',
+                confirmButtonColor: '#b86048'
+            });
+        </script>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: '@TempData["Error"]',
+                confirmButtonColor: '#d33'
+            });
+        </script>
+    }
+
+    @if (TempData["Info"] != null)
+    {
+        <script>
+            Swal.fire({
+                icon: 'info',
+                title: 'Info',
+                text: '@TempData["Info"]',
+                confirmButtonColor: '#4a3729'
+            });
+        </script>
+    }
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>

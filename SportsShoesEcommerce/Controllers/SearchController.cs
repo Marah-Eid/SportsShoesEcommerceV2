@@ -2,8 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using SportsShoesEcommerce.Data;
 using SportsShoesEcommerce.Models.ViewModels;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SportsShoesEcommerce.Controllers
 {
@@ -22,8 +20,7 @@ namespace SportsShoesEcommerce.Controllers
 
             if (!string.IsNullOrWhiteSpace(q))
             {
-                // We removed .ToLower() because SQL Server is already case-insensitive.
-                // We added strict null checks (p.Category != null) to prevent database crashes!
+
 
                 viewModel.Products = await _context.Products
                     .Include(p => p.Brand)

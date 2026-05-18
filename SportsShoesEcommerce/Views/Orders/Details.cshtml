@@ -4,74 +4,605 @@
     ViewData["Title"] = "Order Details";
 }
 
-<h2 class="mb-4">Order Details</h2>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,800;1,9..144,600;1,9..144,800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-<div class="card mb-4">
-    <div class="card-body">
-        <h5>Order #@Model.Id</h5>
+<style>
+    :root {
+        --ns-cream: #faf6ef;
+        --ns-sand: #f3ead9;
+        --ns-peach: #f5d5b8;
+        --ns-terracotta: #c97b5e;
+        --ns-clay: #b86048;
+        --ns-coffee: #4a3729;
+        --ns-mocha: #6b4f3d;
+        --ns-sage: #8fa68a;
+        --ns-warm-gray: #a89684;
+    }
 
-        <p><strong>Date:</strong> @Model.OrderDate.ToString("dd MMM yyyy hh:mm tt")</p>
-        <p><strong>Order Status:</strong> @Model.OrderStatus</p>
-        <p><strong>Payment Status:</strong> @Model.Payment?.PaymentStatus</p>
-        <p><strong>Payment Method:</strong> @Model.Payment?.PaymentMethod</p>
-        <p><strong>Total:</strong> $@Model.TotalPrice</p>
-    </div>
-</div>
+    .ns-order-details {
+        background: var(--ns-cream);
+        min-height: 100vh;
+        padding: 100px 0 70px;
+        font-family: 'Inter', sans-serif;
+        color: var(--ns-coffee);
+    }
 
-<div class="card mb-4">
-    <div class="card-body">
-        <h5>Shipping Address</h5>
+    .ns-order-wrapper {
+        max-width: 1240px;
+        margin: 0 auto;
+        padding: 0 24px;
+    }
 
-        <p><strong>City:</strong> @Model.Address?.City</p>
-        <p><strong>Street:</strong> @Model.Address?.Street</p>
-        <p><strong>Postal Code:</strong> @Model.Address?.PostalCode</p>
-    </div>
-</div>
+    /* HERO */
 
-<h4>Products</h4>
+    .ns-order-hero {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 30px;
+        margin-bottom: 42px;
+    }
 
-<table class="table table-bordered align-middle">
-    <thead>
-        <tr>
-            <th>Product</th>
-            <th>Variant</th>
-            <th>Price</th>
-            <th>Quantity</th>
-            <th>Total</th>
-        </tr>
-    </thead>
+    .ns-order-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 16px;
+        color: var(--ns-clay);
+        font-family: 'JetBrains Mono', monospace;
+        font-size: .72rem;
+        letter-spacing: .18em;
+        text-transform: uppercase;
+        font-weight: 500;
+    }
 
-    <tbody>
-        @foreach (var item in Model.OrderItems)
-        {
-            <tr>
-                <td>@item.ProductVariant?.Product?.Name</td>
-
-                <td>
-                    Size: @item.ProductVariant?.Size
-                    <br />
-                    Color: @item.ProductVariant?.Color
-                </td>
-
-                <td>$@item.Price</td>
-                <td>@item.Quantity</td>
-                <td>$@(item.Price * item.Quantity)</td>
-            </tr>
+        .ns-order-tag::before {
+            content: '';
+            width: 26px;
+            height: 2px;
+            background: currentColor;
         }
-    </tbody>
-</table>
 
-<div class="text-end">
-    <a asp-controller="Orders"
-       asp-action="Invoice"
-       asp-route-id="@Model.Id"
-       class="btn btn-outline-secondary">
-        View Invoice
-    </a>
+    .ns-order-title {
+        font-family: 'Fraunces', serif;
+        font-size: clamp(2.5rem, 5vw, 4.3rem);
+        line-height: .92;
+        letter-spacing: -0.04em;
+        font-weight: 800;
+        color: var(--ns-coffee);
+        margin: 0 0 14px;
+    }
 
-    <a asp-controller="Orders"
-       asp-action="MyOrders"
-       class="btn btn-dark">
-        Back to My Orders
-    </a>
+        .ns-order-title em {
+            color: var(--ns-clay);
+            font-style: italic;
+        }
+
+    .ns-order-subtitle {
+        color: var(--ns-mocha);
+        max-width: 620px;
+        line-height: 1.7;
+        margin: 0;
+    }
+
+    .ns-order-marker {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: .72rem;
+        letter-spacing: .18em;
+        text-transform: uppercase;
+        color: var(--ns-warm-gray);
+    }
+
+    /* GRID */
+
+    .ns-order-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 26px;
+        margin-bottom: 30px;
+    }
+
+    /* CARDS */
+
+    .ns-card {
+        background: rgba(255,255,255,.75);
+        backdrop-filter: blur(10px);
+        border-radius: 30px;
+        border: 1px solid rgba(74,55,41,.08);
+        box-shadow: 0 24px 70px rgba(74,55,41,.08);
+        overflow: hidden;
+    }
+
+    .ns-card-head {
+        padding: 28px 34px;
+        border-bottom: 1px solid rgba(74,55,41,.08);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .ns-card-title {
+        font-family: 'Fraunces', serif;
+        font-size: 1.5rem;
+        margin: 0;
+        color: var(--ns-coffee);
+        font-weight: 700;
+    }
+
+    .ns-card-body {
+        padding: 34px;
+    }
+
+    /* INFO LIST */
+
+    .ns-info-list {
+        display: flex;
+        flex-direction: column;
+        gap: 22px;
+    }
+
+    .ns-info-item {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+        padding-bottom: 18px;
+        border-bottom: 1px solid rgba(74,55,41,.08);
+    }
+
+        .ns-info-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+    .ns-info-label {
+        font-size: .74rem;
+        letter-spacing: .15em;
+        text-transform: uppercase;
+        color: var(--ns-warm-gray);
+        font-weight: 700;
+    }
+
+    .ns-info-value {
+        color: var(--ns-coffee);
+        font-weight: 600;
+        text-align: right;
+    }
+
+    /* STATUS */
+
+    .ns-status {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px 16px;
+        border-radius: 50px;
+        font-size: .8rem;
+        font-weight: 700;
+    }
+
+    .ns-status-processing {
+        background: rgba(201,123,94,.14);
+        color: var(--ns-clay);
+    }
+
+    .ns-status-completed,
+    .ns-status-delivered {
+        background: rgba(143,166,138,.18);
+        color: #557051;
+    }
+
+    .ns-status-pending {
+        background: rgba(245,213,184,.5);
+        color: #9d684c;
+    }
+
+    .ns-status-cancelled {
+        background: rgba(190,70,70,.12);
+        color: #b64d4d;
+    }
+
+    /* PRODUCTS */
+
+    .ns-products-card {
+        margin-top: 10px;
+    }
+
+    .ns-products-head {
+        padding: 28px 34px;
+        border-bottom: 1px solid rgba(74,55,41,.08);
+    }
+
+    .ns-products-title {
+        font-family: 'Fraunces', serif;
+        font-size: 1.7rem;
+        margin: 0;
+        color: var(--ns-coffee);
+    }
+
+    .ns-table-wrap {
+        overflow-x: auto;
+    }
+
+    .ns-products-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+        .ns-products-table thead {
+            background: var(--ns-coffee);
+        }
+
+        .ns-products-table th {
+            padding: 22px 26px;
+            color: var(--ns-cream);
+            font-size: .76rem;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .ns-products-table td {
+            padding: 24px 26px;
+            border-bottom: 1px solid rgba(74,55,41,.08);
+            vertical-align: middle;
+            color: var(--ns-coffee);
+            font-weight: 500;
+        }
+
+        .ns-products-table tbody tr {
+            transition: .25s ease;
+        }
+
+            .ns-products-table tbody tr:hover {
+                background: rgba(243,234,217,.42);
+            }
+
+        .ns-products-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+    .ns-product-name {
+        font-weight: 700;
+        color: var(--ns-coffee);
+    }
+
+    .ns-variant {
+        line-height: 1.7;
+        color: var(--ns-mocha);
+    }
+
+    .ns-price {
+        font-weight: 700;
+    }
+
+    /* ACTIONS */
+
+    .ns-actions {
+        display: flex;
+        justify-content: flex-end;
+        flex-wrap: wrap;
+        gap: 14px;
+        margin-top: 30px;
+    }
+
+    .ns-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 16px 24px;
+        border-radius: 16px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: .9rem;
+        transition: .25s ease;
+    }
+
+    .ns-btn-dark {
+        background: var(--ns-coffee);
+        color: var(--ns-cream);
+    }
+
+        .ns-btn-dark:hover {
+            background: var(--ns-clay);
+            color: var(--ns-cream);
+            transform: translateY(-2px);
+        }
+
+    .ns-btn-light {
+        border: 1px solid rgba(74,55,41,.12);
+        background: transparent;
+        color: var(--ns-coffee);
+    }
+
+        .ns-btn-light:hover {
+            background: var(--ns-sand);
+            color: var(--ns-coffee);
+        }
+
+    /* RESPONSIVE */
+
+    @@media (max-width: 992px) {
+
+        .ns-order-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .ns-order-hero {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .ns-products-table {
+            min-width: 850px;
+        }
+    }
+
+    @@media (max-width: 600px) {
+
+        .ns-order-details {
+            padding: 80px 0 50px;
+        }
+
+        .ns-order-wrapper {
+            padding: 0 16px;
+        }
+
+        .ns-card-body,
+        .ns-card-head,
+        .ns-products-head {
+            padding: 24px;
+        }
+
+        .ns-info-item {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .ns-info-value {
+            text-align: left;
+        }
+
+        .ns-actions {
+            flex-direction: column;
+        }
+
+        .ns-btn {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+</style>
+
+@{
+    var statusClass = Model.OrderStatus.ToString().ToLower() switch
+    {
+        "processing" => "ns-status-processing",
+        "completed" => "ns-status-completed",
+        "delivered" => "ns-status-delivered",
+        "pending" => "ns-status-pending",
+        "cancelled" => "ns-status-cancelled",
+        _ => "ns-status-processing"
+    };
+}
+
+<div class="ns-order-details">
+
+    <div class="ns-order-wrapper">
+
+        <!-- HERO -->
+        <div class="ns-order-hero">
+
+            <div>
+                <div class="ns-order-tag">
+                    Order Overview
+                </div>
+
+                <h1 class="ns-order-title">
+                    Order <em>#@Model.Id</em>
+                </h1>
+
+                <p class="ns-order-subtitle">
+                    Review your order details, shipping information,
+                    payment status, and purchased products.
+                </p>
+            </div>
+
+            <div class="ns-order-marker">
+                005 / ORDER DETAILS
+            </div>
+
+        </div>
+
+        <!-- TOP GRID -->
+        <div class="ns-order-grid">
+
+            <!-- ORDER INFO -->
+            <div class="ns-card">
+
+                <div class="ns-card-head">
+                    <h3 class="ns-card-title">
+                        Order Information
+                    </h3>
+                </div>
+
+                <div class="ns-card-body">
+
+                    <div class="ns-info-list">
+
+                        <div class="ns-info-item">
+                            <span class="ns-info-label">Order Date</span>
+                            <span class="ns-info-value">
+                                @Model.OrderDate.ToString("dd MMM yyyy hh:mm tt")
+                            </span>
+                        </div>
+
+                        <div class="ns-info-item">
+                            <span class="ns-info-label">Order Status</span>
+
+                            <span class="ns-status @statusClass">
+                                @Model.OrderStatus
+                            </span>
+                        </div>
+
+                        <div class="ns-info-item">
+                            <span class="ns-info-label">Payment Status</span>
+                            <span class="ns-info-value">
+                                @Model.Payment?.PaymentStatus
+                            </span>
+                        </div>
+
+                        <div class="ns-info-item">
+                            <span class="ns-info-label">Payment Method</span>
+                            <span class="ns-info-value">
+                                @Model.Payment?.PaymentMethod
+                            </span>
+                        </div>
+
+                        <div class="ns-info-item">
+                            <span class="ns-info-label">Total Amount</span>
+                            <span class="ns-info-value ns-price">
+                                $@Model.TotalPrice
+                            </span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- SHIPPING -->
+            <div class="ns-card">
+
+                <div class="ns-card-head">
+                    <h3 class="ns-card-title">
+                        Shipping Address
+                    </h3>
+                </div>
+
+                <div class="ns-card-body">
+
+                    <div class="ns-info-list">
+
+                        <div class="ns-info-item">
+                            <span class="ns-info-label">City</span>
+                            <span class="ns-info-value">
+                                @Model.Address?.City
+                            </span>
+                        </div>
+
+                        <div class="ns-info-item">
+                            <span class="ns-info-label">Street</span>
+                            <span class="ns-info-value">
+                                @Model.Address?.Street
+                            </span>
+                        </div>
+
+                        <div class="ns-info-item">
+                            <span class="ns-info-label">Postal Code</span>
+                            <span class="ns-info-value">
+                                @Model.Address?.PostalCode
+                            </span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- PRODUCTS -->
+        <div class="ns-card ns-products-card">
+
+            <div class="ns-products-head">
+                <h3 class="ns-products-title">
+                    Purchased Products
+                </h3>
+            </div>
+
+            <div class="ns-table-wrap">
+
+                <table class="ns-products-table">
+
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Variant</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        @foreach (var item in Model.OrderItems)
+                        {
+                            <tr>
+
+                                <td>
+                                    <span class="ns-product-name">
+                                        @item.ProductVariant?.Product?.Name
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <div class="ns-variant">
+                                        Size: @item.ProductVariant?.Size
+                                        <br />
+                                        Color: @item.ProductVariant?.Color
+                                    </div>
+                                </td>
+
+                                <td class="ns-price">
+                                    $@item.Price
+                                </td>
+
+                                <td>
+                                    @item.Quantity
+                                </td>
+
+                                <td class="ns-price">
+                                    $@(item.Price * item.Quantity)
+                                </td>
+
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+        <!-- ACTIONS -->
+        <div class="ns-actions">
+
+            <a asp-controller="Orders"
+               asp-action="Invoice"
+               asp-route-id="@Model.Id"
+               class="ns-btn ns-btn-light">
+
+                <i class="fa fa-file-invoice"></i>
+                View Invoice
+
+            </a>
+
+            <a asp-controller="Orders"
+               asp-action="MyOrders"
+               class="ns-btn ns-btn-dark">
+
+                <i class="fa fa-arrow-left"></i>
+                Back to My Orders
+
+            </a>
+
+        </div>
+
+    </div>
+
 </div>

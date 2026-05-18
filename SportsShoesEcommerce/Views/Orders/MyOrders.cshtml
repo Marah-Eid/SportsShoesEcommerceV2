@@ -4,67 +4,454 @@
     ViewData["Title"] = "My Orders";
 }
 
-<h2 class="mb-4">My Orders</h2>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,800;1,9..144,600;1,9..144,800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-@if (!Model.Any())
-{
-    <div class="alert alert-info">
-        You have no orders yet.
-    </div>
-}
-else
-{
-    <table class="table table-bordered align-middle">
-        <thead>
-            <tr>
-                <th>Order #</th>
-                <th>Date</th>
-                <th>Status</th>
-                <th>Payment</th>
-                <th>Total</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
+<style>
+    :root {
+        --ns-cream: #faf6ef;
+        --ns-sand: #f3ead9;
+        --ns-peach: #f5d5b8;
+        --ns-terracotta: #c97b5e;
+        --ns-clay: #b86048;
+        --ns-coffee: #4a3729;
+        --ns-mocha: #6b4f3d;
+        --ns-sage: #8fa68a;
+        --ns-warm-gray: #a89684;
+        --ns-soft-shadow: rgba(74, 55, 41, 0.08);
+    }
 
-        <tbody>
-            @foreach (var order in Model)
-            {
-                <tr>
-                    <td>#@order.Id</td>
+    .ns-orders {
+        background: var(--ns-cream);
+        min-height: 100vh;
+        padding: 100px 0 70px;
+        font-family: 'Inter', sans-serif;
+        color: var(--ns-coffee);
+    }
 
-                    <td>
-                        @order.OrderDate.ToString("dd MMM yyyy")
-                    </td>
+    .ns-orders-wrapper {
+        max-width: 1250px;
+        margin: 0 auto;
+        padding: 0 24px;
+    }
 
-                    <td>
-                        @order.OrderStatus
-                    </td>
+    /* ===== HERO ===== */
 
-                    <td>
-                        @order.Payment?.PaymentStatus
-                    </td>
+    .ns-orders-hero {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 30px;
+        margin-bottom: 48px;
+    }
 
-                    <td>
-                        $@order.TotalPrice
-                    </td>
+    .ns-orders-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 18px;
+        color: var(--ns-clay);
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.72rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        font-weight: 500;
+    }
 
-                    <td>
-                        <a asp-controller="Orders"
-                           asp-action="Details"
-                           asp-route-id="@order.Id"
-                           class="btn btn-sm btn-dark">
-                            Details
-                        </a>
+        .ns-orders-tag::before {
+            content: '';
+            width: 28px;
+            height: 2px;
+            background: currentColor;
+        }
 
-                        <a asp-controller="Orders"
-                           asp-action="Invoice"
-                           asp-route-id="@order.Id"
-                           class="btn btn-sm btn-outline-secondary">
-                            Invoice
-                        </a>
-                    </td>
-                </tr>
+    .ns-orders-title {
+        font-family: 'Fraunces', serif;
+        font-size: clamp(2.5rem, 5vw, 4.5rem);
+        line-height: .92;
+        letter-spacing: -0.04em;
+        margin: 0 0 16px;
+        color: var(--ns-coffee);
+        font-weight: 800;
+    }
+
+        .ns-orders-title em {
+            color: var(--ns-clay);
+            font-style: italic;
+        }
+
+    .ns-orders-subtitle {
+        max-width: 580px;
+        font-size: 1rem;
+        line-height: 1.7;
+        color: var(--ns-mocha);
+        margin: 0;
+    }
+
+    .ns-orders-marker {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: .72rem;
+        letter-spacing: .18em;
+        text-transform: uppercase;
+        color: var(--ns-warm-gray);
+        white-space: nowrap;
+    }
+
+    /* ===== EMPTY ===== */
+
+    .ns-empty {
+        background: white;
+        border-radius: 30px;
+        padding: 80px 40px;
+        text-align: center;
+        border: 1px solid rgba(74,55,41,.08);
+        box-shadow: 0 20px 60px rgba(74,55,41,.08);
+    }
+
+    .ns-empty-icon {
+        width: 90px;
+        height: 90px;
+        margin: 0 auto 24px;
+        border-radius: 50%;
+        background: var(--ns-sand);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        color: var(--ns-clay);
+    }
+
+    .ns-empty h3 {
+        font-family: 'Fraunces', serif;
+        font-size: 2rem;
+        margin-bottom: 12px;
+        color: var(--ns-coffee);
+    }
+
+    .ns-empty p {
+        color: var(--ns-mocha);
+        margin-bottom: 28px;
+    }
+
+    .ns-shop-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        background: var(--ns-coffee);
+        color: var(--ns-cream);
+        text-decoration: none;
+        padding: 16px 28px;
+        border-radius: 50px;
+        font-weight: 600;
+        transition: .3s ease;
+    }
+
+        .ns-shop-btn:hover {
+            background: var(--ns-clay);
+            color: var(--ns-cream);
+            transform: translateY(-3px);
+        }
+
+    /* ===== ORDERS TABLE ===== */
+
+    .ns-orders-card {
+        background: rgba(255,255,255,.72);
+        backdrop-filter: blur(10px);
+        border-radius: 32px;
+        overflow: hidden;
+        border: 1px solid rgba(74,55,41,.08);
+        box-shadow: 0 30px 80px rgba(74,55,41,.12);
+    }
+
+    .ns-orders-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+        .ns-orders-table thead {
+            background: var(--ns-coffee);
+        }
+
+        .ns-orders-table th {
+            padding: 24px 28px;
+            color: var(--ns-cream);
+            font-size: .78rem;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            font-weight: 600;
+            border: none;
+        }
+
+        .ns-orders-table td {
+            padding: 26px 28px;
+            vertical-align: middle;
+            border-bottom: 1px solid rgba(74,55,41,.08);
+            font-weight: 500;
+            color: var(--ns-coffee);
+        }
+
+        .ns-orders-table tbody tr {
+            transition: .25s ease;
+        }
+
+            .ns-orders-table tbody tr:hover {
+                background: rgba(243,234,217,.45);
             }
-        </tbody>
-    </table>
-}
+
+        .ns-orders-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+    .ns-order-id {
+        font-weight: 700;
+        color: var(--ns-clay);
+    }
+
+    .ns-price {
+        font-weight: 700;
+        color: var(--ns-coffee);
+    }
+
+    /* ===== STATUS ===== */
+
+    .ns-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 16px;
+        border-radius: 50px;
+        font-size: .8rem;
+        font-weight: 700;
+        text-transform: capitalize;
+    }
+
+    .ns-status-processing {
+        background: rgba(201,123,94,.14);
+        color: var(--ns-clay);
+    }
+
+    .ns-status-completed,
+    .ns-status-delivered {
+        background: rgba(143,166,138,.18);
+        color: #557051;
+    }
+
+    .ns-status-pending {
+        background: rgba(245,213,184,.55);
+        color: #9a674e;
+    }
+
+    .ns-status-cancelled {
+        background: rgba(190,70,70,.12);
+        color: #b44c4c;
+    }
+
+    /* ===== ACTION BUTTONS ===== */
+
+    .ns-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .ns-btn {
+        padding: 12px 18px;
+        border-radius: 14px;
+        text-decoration: none;
+        font-size: .85rem;
+        font-weight: 600;
+        transition: .25s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .ns-btn-dark {
+        background: var(--ns-coffee);
+        color: var(--ns-cream);
+    }
+
+        .ns-btn-dark:hover {
+            background: var(--ns-clay);
+            color: var(--ns-cream);
+            transform: translateY(-2px);
+        }
+
+    .ns-btn-light {
+        background: transparent;
+        border: 1px solid rgba(74,55,41,.12);
+        color: var(--ns-coffee);
+    }
+
+        .ns-btn-light:hover {
+            background: var(--ns-sand);
+            color: var(--ns-coffee);
+        }
+
+    /* ===== RESPONSIVE ===== */
+
+    @@media (max-width: 992px) {
+
+        .ns-orders-hero {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .ns-orders-card {
+            overflow-x: auto;
+        }
+
+        .ns-orders-table {
+            min-width: 950px;
+        }
+    }
+
+    @@media (max-width: 600px) {
+
+        .ns-orders {
+            padding: 80px 0 50px;
+        }
+
+        .ns-orders-wrapper {
+            padding: 0 16px;
+        }
+
+        .ns-orders-title {
+            font-size: 2.5rem;
+        }
+
+        .ns-empty {
+            padding: 60px 24px;
+        }
+    }
+</style>
+
+<div class="ns-orders">
+    <div class="ns-orders-wrapper">
+
+        <!-- HERO -->
+        <div class="ns-orders-hero">
+            <div>
+                <div class="ns-orders-tag">Customer Dashboard</div>
+
+                <h1 class="ns-orders-title">
+                    My <em>Orders.</em>
+                </h1>
+
+                <p class="ns-orders-subtitle">
+                    Track your purchases, review invoices, and stay updated on every order you've placed with NextStep.
+                </p>
+            </div>
+
+            <div class="ns-orders-marker">
+                004 / ORDER HISTORY
+            </div>
+        </div>
+
+        @if (!Model.Any())
+        {
+            <div class="ns-empty">
+                <div class="ns-empty-icon">
+                    <i class="fa fa-box-open"></i>
+                </div>
+
+                <h3>No orders yet.</h3>
+
+                <p>
+                    Looks like you haven’t placed any orders yet.
+                    Start exploring the latest sneakers and performance footwear.
+                </p>
+
+                <a asp-controller="Shop"
+                   asp-action="Index"
+                   class="ns-shop-btn">
+                    Start Shopping
+                    <span>→</span>
+                </a>
+            </div>
+        }
+        else
+        {
+            <div class="ns-orders-card">
+
+                <table class="ns-orders-table">
+                    <thead>
+                        <tr>
+                            <th>Order</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Payment</th>
+                            <th>Total</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach (var order in Model)
+                        {
+                            var statusClass = order.OrderStatus.ToString().ToLower() switch
+                            {
+                                "processing" => "ns-status-processing",
+                                "completed" => "ns-status-completed",
+                                "delivered" => "ns-status-delivered",
+                                "pending" => "ns-status-pending",
+                                "cancelled" => "ns-status-cancelled",
+                                _ => "ns-status-processing"
+                            };
+
+                            <tr>
+                                <td>
+                                    <span class="ns-order-id">
+                                        #@order.Id
+                                    </span>
+                                </td>
+
+                                <td>
+                                    @order.OrderDate.ToString("dd MMM yyyy")
+                                </td>
+
+                                <td>
+                                    <span class="ns-status @statusClass">
+                                        @order.OrderStatus
+                                    </span>
+                                </td>
+
+                                <td>
+                                    @order.Payment?.PaymentStatus
+                                </td>
+
+                                <td class="ns-price">
+                                    $@order.TotalPrice
+                                </td>
+
+                                <td>
+                                    <div class="ns-actions">
+
+                                        <a asp-controller="Orders"
+                                           asp-action="Details"
+                                           asp-route-id="@order.Id"
+                                           class="ns-btn ns-btn-dark">
+                                            <i class="fa fa-eye"></i>
+                                            Details
+                                        </a>
+
+                                        <a asp-controller="Orders"
+                                           asp-action="Invoice"
+                                           asp-route-id="@order.Id"
+                                           class="ns-btn ns-btn-light">
+                                            <i class="fa fa-file-invoice"></i>
+                                            Invoice
+                                        </a>
+
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+
+                </table>
+
+            </div>
+        }
+
+    </div>
+</div>

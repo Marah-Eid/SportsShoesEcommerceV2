@@ -1,21 +1,139 @@
 ﻿@{
-    ViewData["Title"] = "Payment Success";
+    ViewData["Title"] = "Order Confirmed — NextStep";
 }
 
-<div class="text-center mt-5">
-    <h2 class="text-success">Payment Successful</h2>
-    <p>Your order has been placed successfully.</p>
+<style>
+    .ns-success-wrap {
+        min-height: 80vh;
+        display: flex;
+        align-items: center;
+    }
 
-    <a asp-controller="Orders"
-       asp-action="Details"
-       asp-route-id="@ViewBag.OrderId"
-       class="btn btn-dark">
-        View Order Details
-    </a>
+    .ns-success-icon {
+        font-size: 4rem;
+        color: var(--ns-clay);
+        margin-bottom: 20px;
+    }
 
-    <a asp-controller="Products"
-       asp-action="Index"
-       class="btn btn-outline-secondary">
-        Continue Shopping
-    </a>
+    .ns-success-title {
+        font-size: clamp(2.5rem, 5vw, 4rem);
+        font-family: 'Fraunces', serif;
+        font-weight: 800;
+        letter-spacing: -0.03em;
+        line-height: 1;
+        color: var(--ns-coffee);
+        margin-top: 10px;
+    }
+
+    .ns-success-text {
+        max-width: 520px;
+        margin: 20px auto 40px;
+        color: var(--ns-mocha);
+        font-size: 1.05rem;
+        line-height: 1.7;
+    }
+
+    .ns-success-actions {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .ns-success-id {
+        margin-top: 60px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.75rem;
+        color: var(--ns-warm-gray);
+        letter-spacing: 0.12em;
+    }
+
+    /* Reuse your existing button style (fallback if missing) */
+    .ns-btn-primary {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        background: var(--ns-coffee);
+        color: var(--ns-cream);
+        padding: 16px 34px;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        text-decoration: none;
+        transition: 0.3s ease;
+        border: none;
+    }
+
+    .ns-btn-primary:hover {
+        background: var(--ns-clay);
+        transform: translateY(-3px);
+    }
+
+    .ns-section-link {
+        color: var(--ns-coffee);
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.82rem;
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        border-bottom: 2px solid var(--ns-clay);
+        transition: all 0.3s;
+        padding-bottom: 4px;
+    }
+
+    .ns-section-link:hover {
+        color: var(--ns-clay);
+        gap: 16px;
+    }
+</style>
+
+<div class="ns-home">
+
+    <section class="ns-section ns-success-wrap">
+        <div class="container text-center">
+
+            <div class="ns-success-icon">
+                <i class="fa fa-check-circle"></i>
+            </div>
+
+            <div class="ns-section-tag mono justify-content-center">
+                Order Complete
+            </div>
+
+            <h1 class="ns-success-title">
+                Payment <em style="color: var(--ns-clay); font-style: italic;">Successful.</em>
+            </h1>
+
+            <p class="ns-success-text">
+                Your order has been placed successfully and is now being prepared.
+                We’ll notify you once it’s on the way.
+            </p>
+
+            <div class="ns-success-actions">
+
+                <a asp-controller="Orders"
+                   asp-action="Details"
+                   asp-route-id="@ViewBag.OrderId"
+                   class="ns-btn-primary">
+                    View Order →
+                </a>
+
+                <a asp-controller="Products"
+                   asp-action="Index"
+                   class="ns-section-link">
+                    Continue Shopping →
+                </a>
+
+            </div>
+
+            <div class="ns-success-id">
+                ORDER ID: #@ViewBag.OrderId
+            </div>
+
+        </div>
+    </section>
+
 </div>

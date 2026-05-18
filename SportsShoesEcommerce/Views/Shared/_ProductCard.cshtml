@@ -1,12 +1,10 @@
 ﻿@model SportsShoesEcommerce.Models.Product
 
 @{
-    // 1. Defend against missing images
     var mainImage = Model.ProductImages?.FirstOrDefault(x => x.IsMain)?.ImagePath
                     ?? Model.ProductImages?.FirstOrDefault()?.ImagePath
                     ?? "/images/single-product-item1.jpg";
 
-    // 2. Check for active discounts to show the red sale badge!
     var activeDiscount = Model.Discounts?.FirstOrDefault(d => d.IsActive && d.StartDate <= DateTime.Now && d.EndDate >= DateTime.Now);
     decimal salePrice = Model.Price;
 
@@ -28,7 +26,7 @@
 
         <a asp-controller="Products" asp-action="Details" asp-route-id="@Model.Id" class="text-center p-3 d-block text-decoration-none">
             <img src="@mainImage" class="card-img-top" alt="@Model.Name" style="height: 220px; object-fit: contain;">
-        </a>
+        
 
         <div class="card-body text-center pt-0 d-flex flex-column">
             <p class="text-muted small mb-1 text-uppercase fw-bold">@(Model.Brand?.Name ?? "NextStep")</p>
@@ -51,5 +49,6 @@
                 @Model.Name
             </div>
         </div>
+        </a>
     </div>
 </div>

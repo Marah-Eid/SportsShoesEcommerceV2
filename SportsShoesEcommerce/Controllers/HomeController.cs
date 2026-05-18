@@ -3,10 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using SportsShoesEcommerce.Data;
 using SportsShoesEcommerce.Models;
 using SportsShoesEcommerce.Models.ViewModels;
-using System;
 using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SportsShoesEcommerce.Controllers
 {
@@ -21,13 +18,11 @@ namespace SportsShoesEcommerce.Controllers
 
         public async Task<IActionResult> Index()
         {
-            // 1. Fetch Top 3 Categories for the Promo Cards
             var featuredCategories = await _context.Categories
                 .Where(c => c.IsDeleted == false)
                 .Take(3)
                 .ToListAsync();
 
-            // 2. Fetch Top 8 Discounted Products
             var featuredProducts = await _context.Products
                 .Include(p => p.Brand)
                 .Include(p => p.Category)
@@ -38,7 +33,6 @@ namespace SportsShoesEcommerce.Controllers
                 .Take(8)
                 .ToListAsync();
 
-            // Fallback: If there are no active sales, just show the 8 newest products
             if (!featuredProducts.Any())
             {
                 featuredProducts = await _context.Products
@@ -52,12 +46,10 @@ namespace SportsShoesEcommerce.Controllers
                     .ToListAsync();
             }
 
-            // 3. Fetch Brands
             var brands = await _context.Brands
                 .Where(b => b.IsDeleted == false)
                 .ToListAsync();
 
-            // 4. Fetch Approved Testimonials
             var testimonials = await _context.Testimonials
                 .Include(t => t.User)
                 .Where(t => t.IsApproved == true)
@@ -75,17 +67,14 @@ namespace SportsShoesEcommerce.Controllers
 
             return View(viewModel);
         }
-        // GET: /Home/About
-        // GET: /Home/About
+
         public async Task<IActionResult> About()
         {
-            // Fetch the approved testimonials
             var testimonials = await _context.Testimonials
                 .Where(t => t.IsApproved == true)
                 .OrderByDescending(t => t.CreatedAt)
                 .ToListAsync();
 
-            // Hand the list of testimonials to the view!
             return View(testimonials);
         }
         public IActionResult Privacy()

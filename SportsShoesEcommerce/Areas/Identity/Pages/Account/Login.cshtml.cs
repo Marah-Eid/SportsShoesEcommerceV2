@@ -85,7 +85,7 @@ namespace SportsShoesEcommerce.Areas.Identity.Pages.Account
                         return LocalRedirect("/Admin/Home/Index");
                     }
 
-                    return LocalRedirect("/Home/Index");
+                    return LocalRedirect(returnUrl);
                 }
                 if (result.RequiresTwoFactor)
                 {
