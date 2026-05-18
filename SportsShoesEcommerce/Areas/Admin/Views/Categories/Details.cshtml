@@ -23,7 +23,7 @@
                     <label class="font-weight-bold text-gray-800 d-block mb-3">Category Image</label>
                     @if (!string.IsNullOrEmpty(Model.ImagePath))
                     {
-                        <img src="~/images/categories/@Model.ImagePath" class="img-fluid rounded shadow" style="max-height: 300px; width: 100%; object-fit: cover;" alt="@Model.Name" />
+                        <img src="/images/categories/@Model.ImagePath" class="img-fluid rounded shadow" style="max-height: 300px; width: 100%; object-fit: cover;" alt="@Model.Name" />
                     }
                     else
                     {

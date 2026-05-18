@@ -2,7 +2,7 @@
 
 @{
     ViewData["Title"] = "Testimonials Management";
-    Layout = "_AdminLayout"; // تأكد من ربطه بالثيم الخاص بك
+    Layout = "_AdminLayout"; 
 }
 
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
@@ -63,7 +63,15 @@
                                                 <i class="fas fa-check"></i> Approve
                                             </button>
                                         </form>
+
+                                        <form asp-action="Reject" asp-route-id="@item.Id" method="post" class="d-inline mr-1" onsubmit="return confirm('Are you sure you want to reject and delete this testimonial?');">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="btn btn-warning btn-sm shadow-sm text-dark" title="Reject">
+                                                <i class="fas fa-times"></i> Reject
+                                            </button>
+                                        </form>
                                     }
+
                                     <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info btn-circle btn-sm shadow-sm mr-1" title="Details">
                                         <i class="fas fa-info-circle"></i>
                                     </a>

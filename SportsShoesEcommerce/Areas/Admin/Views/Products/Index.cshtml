@@ -85,7 +85,7 @@
                                 @if (item.ProductImages != null && item.ProductImages.Any())
                                 {
                                     var firstImage = item.ProductImages.FirstOrDefault()?.ImagePath;
-                                    <img src="~/images/products/@firstImage" width="50" height="50" class="rounded shadow-sm border" style="object-fit:cover" />
+                                    <img src="@firstImage" width="50" height="50" class="rounded shadow-sm border" style="object-fit:cover" />
                                 }
                                 else
                                 {

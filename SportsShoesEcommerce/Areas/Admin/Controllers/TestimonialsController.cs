@@ -1,13 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SportsShoesEcommerce.Data;
-using SportsShoesEcommerce.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SportsShoesEcommerce.Areas.Admin.Controllers
 {
@@ -75,6 +69,36 @@ namespace SportsShoesEcommerce.Areas.Admin.Controllers
             }
 
             await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        // 4. GET: Delete (This fixes the error when clicking the Delete link)
+        [HttpGet]
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null) return NotFound();
+
+            var testimonial = await _context.Testimonials
+                .Include(t => t.User)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (testimonial == null) return NotFound();
+
+            return View(testimonial);
+        }
+
+        // 5. POST: Reject (Instantly deletes a pending testimonial from the grid)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Reject(int id)
+        {
+            var testimonial = await _context.Testimonials.FindAsync(id);
+            if (testimonial != null)
+            {
+                _context.Testimonials.Remove(testimonial);
+                await _context.SaveChangesAsync();
+            }
+
             return RedirectToAction(nameof(Index));
         }
 

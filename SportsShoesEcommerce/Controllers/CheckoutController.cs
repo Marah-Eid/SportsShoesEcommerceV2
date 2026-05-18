@@ -22,6 +22,15 @@ namespace SportsShoesEcommerce.Controllers
 
         public async Task<IActionResult> Index()
         {
+            var sessionCart = HttpContext.Session.GetString("Cart");
+            if (!string.IsNullOrEmpty(sessionCart) && sessionCart != "[]")
+            {
+                TempData["Info"] = "Please review your cart. Your guest items have been saved!";
+                return RedirectToAction("Index", "Cart");
+            }
+
+
+
             var userId = GetUserId();
 
             var cart = await _context.Carts
